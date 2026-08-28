@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ConflabCode</title>
+  <meta name="description" content="ConflabCode is a VS Code extension for directed multi-agent software work, with tasks, stages, baton handoffs, checkpoints, and a project-scoped workspace.">
+  <style>
+    :root{
+      --bg:#040812;
+      --panel:rgba(8,16,28,.76);
+      --line:rgba(175,210,255,.12);
+      --text:#edf3f8;
+      --muted:#a9b8ca;
+      --blue:#4eb4ff;
+      --red:#ff5347;
+      --gold:#f2d39a;
+      --shadow:0 36px 100px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 15% 12%, rgba(255,83,71,.08), transparent 22%),
+        radial-gradient(circle at 84% 14%, rgba(78,180,255,.1), transparent 24%),
+        linear-gradient(180deg, #03070f 0%, #060d16 28%, #08111b 100%);
+      font-family:"Segoe UI Variable","Trebuchet MS","Segoe UI",sans-serif;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.28;
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(180deg, rgba(0,0,0,.75), rgba(0,0,0,.06));
+    }
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.18;
+      background:
+        radial-gradient(circle at 14% 24%, rgba(255,83,71,.24), transparent 20%),
+        radial-gradient(circle at 84% 26%, rgba(78,180,255,.28), transparent 22%),
+        radial-gradient(circle at 52% 16%, rgba(187,120,255,.18), transparent 24%),
+        linear-gradient(180deg, rgba(4,8,18,.16), rgba(4,8,18,.68));
+      filter:blur(18px);
+    }
+    a{color:inherit;text-decoration:none}
+    .shell{
+      width:min(1500px, calc(100vw - 24px));
+      margin:0 auto;
+    }
+    .hero-shell{
+      width:min(1860px, calc(100vw - 8px));
+      margin:0 auto;
+    }
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(20px);
+      background:linear-gradient(180deg, rgba(4,8,18,.9), rgba(4,8,18,.62));
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .topbar-inner{
+      min-height:84px;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:20px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:18px;
+    }
+    .brand img{
+      width:320px;
+      height:auto;
+      filter:drop-shadow(0 12px 30px rgba(78,180,255,.16));
+    }
+    .brand-mark{
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      opacity:.95;
+    }
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:22px;
+    }
+    .nav a{
+      color:var(--muted);
+      font-size:13px;
+      letter-spacing:.05em;
+      padding:8px 0;
+      border-bottom:1px solid transparent;
+      transition:.18s ease;
+    }
+    .nav a:hover{
+      color:var(--text);
+      border-color:rgba(255,255,255,.22);
+    }
+    section[id]{
+      scroll-margin-top:120px;
+    }
+    .hero{
+      position:relative;
+      padding:8px 0 24px;
+    }
+    .hero-stage{
+      position:relative;
+      overflow:hidden;
+      min-height:calc(100vh - 112px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:42px;
+      box-shadow:var(--shadow);
+      background:
+        linear-gradient(180deg, rgba(2,5,11,.16), rgba(2,5,11,.62)),
+        url("assets/images/conflabcode-title.png") center top / cover no-repeat;
+    }
+    .hero-stage::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 22% 46%, rgba(255,83,71,.22), transparent 24%),
+        radial-gradient(circle at 78% 46%, rgba(78,180,255,.24), transparent 26%),
+        radial-gradient(circle at 50% 32%, rgba(255,255,255,.08), transparent 16%),
+        linear-gradient(180deg, rgba(2,5,11,.1) 0%, rgba(2,5,11,.16) 32%, rgba(2,5,11,.82) 100%);
+      pointer-events:none;
+    }
+    .hero-stage::after{
+      content:"";
+      position:absolute;
+      left:-2%;
+      right:-2%;
+      bottom:-4%;
+      height:42%;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0), rgba(3,7,14,.92) 80%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 1px, transparent 1px 66px),
+        repeating-linear-gradient(180deg, rgba(255,255,255,.04) 0 1px, transparent 1px 54px);
+      clip-path:polygon(9% 24%, 91% 24%, 100% 100%, 0% 100%);
+      opacity:.34;
+      transform:perspective(1000px) rotateX(73deg);
+      transform-origin:center bottom;
+    }
+    .hero-grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:30px;
+      align-items:end;
+      min-height:calc(100vh - 112px);
+      padding:40px;
+    }
+    .hero-copy{
+      position:relative;
+      align-self:start;
+      margin-top:8px;
+      max-width:760px;
+      padding:36px 36px 30px;
+      border-radius:32px;
+      border:1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(6,12,22,.8), rgba(5,11,19,.68)),
+        radial-gradient(circle at 0% 0%, rgba(255,83,71,.08), transparent 24%);
+      backdrop-filter:blur(12px);
+      box-shadow:0 26px 70px rgba(0,0,0,.35);
+    }
+    .hero-copy::before{
+      content:"";
+      position:absolute;
+      inset:0 auto 0 0;
+      width:3px;
+      background:linear-gradient(180deg, rgba(255,83,71,.9), rgba(78,180,255,.9));
+      opacity:.9;
+    }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      min-height:32px;
+      padding:0 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.05);
+      color:var(--gold);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    h1{
+      margin:18px 0 14px;
+      max-width:10ch;
+      font-size:clamp(62px, 7vw, 110px);
+      line-height:.92;
+      letter-spacing:-.055em;
+      font-family:Georgia,"Times New Roman",serif;
+      text-wrap:balance;
+    }
+    .hero-copy p{
+      margin:0;
+      max-width:60ch;
+      color:#dde7ef;
+      font-size:19px;
+      line-height:1.82;
+    }
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin:28px 0 22px;
+    }
+    .button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:52px;
+      padding:0 22px;
+      border-radius:16px;
+      border:1px solid transparent;
+      font-size:14px;
+      font-weight:700;
+      letter-spacing:.02em;
+      transition:.18s ease;
+    }
+    .button.primary{
+      background:linear-gradient(135deg, #f16053, #8e132a 72%);
+      color:#fff4f1;
+      box-shadow:0 18px 40px rgba(255,83,71,.22);
+    }
+    .button.secondary{
+      background:rgba(255,255,255,.045);
+      border-color:rgba(255,255,255,.12);
+      color:var(--text);
+    }
+    .button:hover{
+      transform:translateY(-1px);
+    }
+    .hero-points{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:12px;
+    }
+    .hero-point{
+      padding:14px 14px 15px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      backdrop-filter:blur(6px);
+    }
+    .hero-point strong{
+      display:block;
+      margin-bottom:5px;
+      font-size:14px;
+    }
+    .hero-point span{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.58;
+    }
+    .hero-visual{
+      position:relative;
+      align-self:end;
+      display:grid;
+      gap:14px;
+      padding:48px 8px 18px 0;
+    }
+    .hero-stack{
+      position:relative;
+      display:grid;
+      gap:16px;
+      justify-items:end;
+    }
+    .battle-card{
+      width:min(520px, 100%);
+      overflow:hidden;
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.1);
+      background:linear-gradient(180deg, rgba(6,11,20,.92), rgba(8,14,25,.84));
+      backdrop-filter:blur(10px);
+      box-shadow:0 24px 80px rgba(0,0,0,.36);
+    }
+    .battle-card.large{
+      transform:translateX(-46px);
+    }
+    .battle-card.small{
+      width:min(420px, 92%);
+      transform:translateX(8px);
+    }
+    .battle-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      min-height:48px;
+      padding:0 16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    .signal-row{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .signal{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#4a5a70;
+    }
+    .signal.red{background:var(--red)}
+    .signal.blue{background:var(--blue)}
+    .battle-body{
+      padding:18px 18px 20px;
+    }
+    .battle-body pre{
+      margin:0;
+      color:#dcedff;
+      font:14px/1.72 Consolas,"Courier New",monospace;
+      white-space:pre-wrap;
+    }
+    .command-badge{
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:0 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.04);
+      color:#d9e7f6;
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    .command-ribbon{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+    .command-stat{
+      position:relative;
+      overflow:hidden;
+      padding:20px 18px;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(9,16,27,.84), rgba(6,12,22,.72));
+      box-shadow:0 20px 50px rgba(0,0,0,.24);
+    }
+    .command-stat::before{
+      content:"";
+      position:absolute;
+      inset:0 auto 0 0;
+      width:2px;
+      opacity:.8;
+      background:linear-gradient(180deg, rgba(255,83,71,.92), rgba(78,180,255,.92));
+    }
+    .command-stat strong{
+      display:block;
+      margin-bottom:8px;
+      color:var(--gold);
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .command-stat span{
+      display:block;
+      font-size:17px;
+      line-height:1.52;
+    }
+    section{
+      padding:38px 0 16px;
+    }
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:20px;
+      margin-bottom:18px;
+    }
+    .section-head h2{
+      margin:0;
+      font-size:clamp(32px, 4vw, 48px);
+      line-height:1;
+      letter-spacing:-.045em;
+      font-family:Georgia,"Times New Roman",serif;
+    }
+    .section-head p{
+      margin:0;
+      max-width:58ch;
+      color:var(--muted);
+      line-height:1.78;
+    }
+    .bento{
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:18px;
+      margin-top:18px;
+    }
+    .panel{
+      overflow:hidden;
+      border-radius:30px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(8,15,26,.84), rgba(6,11,20,.78));
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+    .panel.copy{
+      padding:30px;
+    }
+    .panel.copy h3{
+      margin:0 0 12px;
+      font-size:30px;
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+    .panel.copy p{
+      margin:0 0 16px;
+      color:var(--muted);
+      line-height:1.8;
+    }
+    .panel.copy ul{
+      margin:18px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .panel.copy li{
+      padding:13px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.07);
+      background:rgba(255,255,255,.035);
+      color:#dfe8ef;
+    }
+    .diagram{
+      display:grid;
+      gap:12px;
+      padding:12px;
+    }
+    .pane{
+      overflow:hidden;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+    }
+    .pane-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,.07);
+      color:var(--muted);
+      font-size:13px;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+    }
+    .pane-body{
+      padding:16px;
+      color:#dbe5ed;
+      line-height:1.75;
+    }
+    .token-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+    .token{
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:0 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#d4dfeb;
+      font-size:12px;
+    }
+    .flow{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:16px;
+      margin-top:18px;
+    }
+    .flow-card{
+      position:relative;
+      overflow:hidden;
+      padding:22px 20px;
+      border-radius:26px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(8,15,26,.88), rgba(6,11,20,.84));
+      box-shadow:0 22px 60px rgba(0,0,0,.28);
+    }
+    .flow-card::after{
+      content:"";
+      position:absolute;
+      inset:auto 0 0 0;
+      height:3px;
+      opacity:.82;
+      background:linear-gradient(90deg, var(--red), var(--blue));
+    }
+    .flow-card strong{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:44px;
+      height:44px;
+      margin-bottom:16px;
+      border-radius:14px;
+      color:#fff5f2;
+      font-size:17px;
+      background:linear-gradient(135deg, rgba(255,83,71,.85), rgba(78,180,255,.8));
+    }
+    .flow-card h3{
+      margin:0 0 10px;
+      font-size:22px;
+      letter-spacing:-.03em;
+    }
+    .flow-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.76;
+    }
+    .compare-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:16px;
+      margin-top:18px;
+    }
+    .compare-card{
+      padding:22px 20px;
+      border-radius:26px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(8,15,26,.86), rgba(6,11,20,.78));
+      box-shadow:0 22px 58px rgba(0,0,0,.24);
+    }
+    .compare-card strong{
+      display:block;
+      margin-bottom:10px;
+      color:var(--gold);
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    .compare-card h3{
+      margin:0 0 10px;
+      font-size:25px;
+      letter-spacing:-.035em;
+    }
+    .compare-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.74;
+    }
+    .cta{
+      position:relative;
+      overflow:hidden;
+      margin:36px 0 48px;
+      padding:30px;
+      border-radius:34px;
+      border:1px solid rgba(255,255,255,.09);
+      background:
+        radial-gradient(circle at 12% 20%, rgba(255,83,71,.16), transparent 22%),
+        radial-gradient(circle at 84% 20%, rgba(78,180,255,.2), transparent 24%),
+        linear-gradient(135deg, rgba(8,15,26,.96), rgba(10,16,27,.92));
+      box-shadow:var(--shadow);
+    }
+    .cta::before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:3px;
+      background:linear-gradient(90deg, var(--red), var(--blue));
+      opacity:.9;
+    }
+    .cta h2{
+      margin:0 0 10px;
+      font-size:clamp(36px, 5vw, 58px);
+      line-height:.96;
+      letter-spacing:-.055em;
+      font-family:Georgia,"Times New Roman",serif;
+    }
+    .cta p{
+      margin:0;
+      max-width:58ch;
+      color:var(--muted);
+      line-height:1.82;
+    }
+    .cta-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:22px;
+    }
+    .site-footer{
+      padding:0 0 42px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .site-footer-inner{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:16px;
+      padding-top:16px;
+      border-top:1px solid rgba(255,255,255,.07);
+    }
+    @media (max-width: 1080px){
+      .hero-stage,
+      .hero-grid{
+        min-height:0;
+      }
+      .hero-shell{
+        width:min(100vw - 10px, 100%);
+      }
+      .hero-grid,
+      .bento,
+      .flow,
+      .compare-grid,
+      .command-ribbon{
+        grid-template-columns:1fr;
+      }
+      .hero-visual{
+        padding-top:0;
+      }
+      .battle-card.large,
+      .battle-card.small{
+        width:100%;
+        transform:none;
+      }
+    }
+    @media (max-width: 760px){
+      .shell{
+        width:min(100vw - 22px, 100%);
+      }
+      .hero-shell{
+        width:min(100vw - 6px, 100%);
+      }
+      .topbar-inner,
+      .section-head,
+      .site-footer-inner{
+        display:block;
+      }
+      .nav{
+        margin-top:10px;
+        justify-content:center;
+        gap:16px;
+      }
+      .brand{
+        gap:12px;
+      }
+      .brand img{
+        width:230px;
+      }
+      .brand-mark{
+        display:block;
+        font-size:10px;
+        letter-spacing:.18em;
+        margin-top:6px;
+      }
+      .hero{
+        padding-top:10px;
+      }
+      .hero-grid{
+        padding:18px;
+      }
+      .hero-copy,
+      .panel.copy,
+      .cta{
+        padding:22px 20px;
+      }
+      .hero-points{
+        grid-template-columns:1fr;
+      }
+      h1{
+        max-width:none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <img src="assets/images/conflabcode-logo.png" alt="ConflabCode logo">
+        <span class="brand-mark">Multi-Provider Agent Workflow</span>
+      </div>
+      <nav class="nav" aria-label="Sections">
+        <a href="index.html">All Products</a>
+        <a href="#what-it-is">What It Is</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#difference">Why It Matters</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-shell">
+        <div class="hero-stage">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <span class="eyebrow">ConflabCode</span>
+              <h1>Stand between the minds.</h1>
+              <p>
+                By day you're a mild-mannered product manager. By night you battle AI tooth and nail. ConflabCode is a VS Code extension for directed multi-agent software work, built around the Director's position between powerful systems where coding gets framed, challenged, implemented, and verified with structure instead of one long fragile prompt stream.
+              </p>
+              <div class="hero-actions">
+                <a class="button primary" href="#what-it-is">See the product story</a>
+                <a class="button secondary" href="index.html">Back to product chooser</a>
+              </div>
+              <div class="hero-points">
+                <div class="hero-point">
+                  <strong>Director in the middle</strong>
+                  <span>The visual center is the human who directs the work, not a passive spectator watching two models talk.</span>
+                </div>
+                <div class="hero-point">
+                  <strong>Battlefield energy</strong>
+                  <span>Red and blue pressure, dark deck metal, and a command-stage atmosphere fit the product better than polite enterprise polish.</span>
+                </div>
+                <div class="hero-point">
+                  <strong>Visible workflow spine</strong>
+                  <span>Tasks, stages, checkpoints, summaries, and baton continuity turn coding into a guided operation with memory.</span>
+                </div>
+                <div class="hero-point">
+                  <strong>Built for live projects</strong>
+                  <span>Everything lives inside VS Code with repo context, native sessions, and a project-scoped `.ConflabCode` workspace.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-visual" aria-hidden="true">
+              <div class="hero-stack">
+                <div class="command-badge">Command Deck Overlay</div>
+                <div class="battle-card large">
+                  <div class="battle-head">
+                    <div class="signal-row">
+                      <span class="signal red"></span>
+                      <span class="signal blue"></span>
+                    </div>
+                    <span>Task Theater</span>
+                  </div>
+                  <div class="battle-body">
+                    <pre>task: TASK-008
+stage: Implementation
+director: Human
+
+lead:
+  Codex
+
+reviewer:
+  Claude Code
+
+project root:
+  /.ConflabCode</pre>
+                  </div>
+                </div>
+                <div class="battle-card small">
+                  <div class="battle-head">
+                    <div class="signal-row">
+                      <span class="signal red"></span>
+                      <span class="signal blue"></span>
+                    </div>
+                    <span>Round Spine</span>
+                  </div>
+                  <div class="battle-body">
+                    <pre>Brainstorm -> Design
+-> Implementation -> Verification
+
+baton handoff:
+warm replacement agent
+keeps long work alive</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="command-ribbon">
+          <div class="command-stat">
+            <strong>Tasks</strong>
+            <span>Real task objects with categories, descriptions, locking, reopening, and project-scoped history.</span>
+          </div>
+          <div class="command-stat">
+            <strong>Roles</strong>
+            <span>Lead and Reviewer assignments make collaboration directional instead of letting two agents freestyle in parallel.</span>
+          </div>
+          <div class="command-stat">
+            <strong>Documents</strong>
+            <span>Brainstorm Notes, Design Spec, Implementation Plan, and Verification Plan hold the center of gravity.</span>
+          </div>
+          <div class="command-stat">
+            <strong>Continuity</strong>
+            <span>Summaries, logs, journals, and baton handoffs preserve momentum across long coding runs.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="what-it-is">
+      <div class="shell">
+        <div class="section-head">
+          <h2>What It Is</h2>
+          <p>
+            ConflabCode grew out of the earlier two-agent experiments and the M-PACT shared-memory work, but it formalizes that collaboration inside VS Code as a dedicated coding product rather than a general conversation tool.
+          </p>
+        </div>
+        <div class="bento">
+          <article class="panel copy">
+            <h3>A coding product with a command posture</h3>
+            <p>
+              ConflabCode is explicitly for generating code. It uses a three-panel workspace with two agent windows and one shared work surface, so the Director can frame the task, target one or both agents, watch the work unfold, and keep the stage document at the center of the session.
+            </p>
+            <p>
+              The extension creates a project-scoped `.ConflabCode` folder at the repository root, which gives it a durable place for task history and internal state. Instead of making software work disappear into chat transcripts, it keeps the work legible through stage documents, summaries, logs, journals, and checkpoints.
+            </p>
+            <ul>
+              <li>Built around tasks instead of loose prompting.</li>
+              <li>Uses Lead and Reviewer roles per stage.</li>
+              <li>Keeps one shared center panel for the current document of record.</li>
+              <li>Supports both human-led and AI Director-driven work.</li>
+              <li>Lets long-running coding sessions survive context limits through baton handoffs.</li>
+            </ul>
+          </article>
+
+          <div class="panel diagram">
+            <div class="pane">
+              <div class="pane-head">
+                <span>Workspace</span>
+                <span>Three-panel layout</span>
+              </div>
+              <div class="pane-body">
+                Left agent, right agent, and a shared center panel. The Director panel and stage selector sit above the work so orchestration stays visible.
+                <div class="token-row">
+                  <span class="token">agent 1</span>
+                  <span class="token">agent 2</span>
+                  <span class="token">director</span>
+                  <span class="token">shared document</span>
+                </div>
+              </div>
+            </div>
+            <div class="pane">
+              <div class="pane-head">
+                <span>Context Management</span>
+                <span>Baton system</span>
+              </div>
+              <div class="pane-body">
+                When an agent nears its context limit, ConflabCode warms a replacement agent of the same provider and passes a baton containing recent transcripts, older summaries, and tool-call history.
+                <div class="token-row">
+                  <span class="token">warm runner</span>
+                  <span class="token">recent rounds</span>
+                  <span class="token">older summaries</span>
+                  <span class="token">near-infinite feel</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow">
+      <div class="shell">
+        <div class="section-head">
+          <h2>The Workflow Shape</h2>
+          <p>
+            ConflabCode gives software work a visible lifecycle. Each stage has its own document and its own kind of collaboration, which is the main difference between this product and a generic coding chat.
+          </p>
+        </div>
+        <div class="flow">
+          <article class="flow-card">
+            <strong>01</strong>
+            <h3>Brainstorm</h3>
+            <p>
+              Explore the problem conversationally, then capture durable Brainstorm Notes when the Director decides the ideas are ready to record.
+            </p>
+          </article>
+          <article class="flow-card">
+            <strong>02</strong>
+            <h3>Design</h3>
+            <p>
+              Turn ideas into a Design Spec with unresolved, agreed, and removed items so the team can see where consensus actually stands.
+            </p>
+          </article>
+          <article class="flow-card">
+            <strong>03</strong>
+            <h3>Implementation</h3>
+            <p>
+              Import the design into an Implementation Plan, work slice by slice, and let Lead and Reviewer pressure-test the code as it takes shape.
+            </p>
+          </article>
+          <article class="flow-card">
+            <strong>04</strong>
+            <h3>Verification</h3>
+            <p>
+              Generate verification items from the implementation work, confirm what passed, surface what failed, and close the task with a final checkpoint.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="difference">
+      <div class="shell">
+        <div class="section-head">
+          <h2>Why This Page Helps</h2>
+          <p>
+            The standalone Conflab page is about broad multi-agent conversation work. ConflabCode deserves a page that speaks directly to developers, repository work, and the mechanics of getting code shipped.
+          </p>
+        </div>
+        <div class="compare-grid">
+          <article class="compare-card">
+            <strong>Clarity</strong>
+            <h3>Developers land in the right story</h3>
+            <p>
+              Visitors looking for a coding tool immediately see tasks, stages, checkpoints, VS Code, and a stronger sense of directed pressure rather than a softer general-purpose showcase.
+            </p>
+          </article>
+          <article class="compare-card">
+            <strong>Specificity</strong>
+            <h3>The product can talk concretely</h3>
+            <p>
+              This page can mention targeting, Steer, AI Director, the task tree, the center-panel documents, and the baton without feeling like a tangent.
+            </p>
+          </article>
+          <article class="compare-card">
+            <strong>Future Growth</strong>
+            <h3>There is room to deepen it later</h3>
+            <p>
+              When you have screenshots, docs, and download flows for the extension, they can slot into this darker visual world naturally without disturbing the standalone app story.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="cta">
+          <h2>Let ConflabCode feel like its own arena.</h2>
+          <p>
+            The product family now has a clean fork: Conflab for broad multi-agent conversation work, ConflabCode for directed software work in VS Code. This page now leans into the darker command-deck identity that fits that second branch much better.
+          </p>
+          <div class="cta-actions">
+            <a class="button primary" href="index.html">Back to all products</a>
+            <a class="button secondary" href="conflab.html">View Conflab</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell site-footer-inner">
+      <div>&copy; Copyright: David Todd - June, 2026</div>
+      <div>ConflabCode page styled from the title-screen visual language and June 11, 2026 documentation notes.</div>
+    </div>
+  </footer>
+</body>
+</html>
