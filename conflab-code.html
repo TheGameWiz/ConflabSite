@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ConflabCode</title>
-  <meta name="description" content="ConflabCode is a VS Code extension for directed multi-agent software work, with tasks, stages, baton handoffs, checkpoints, and a project-scoped workspace.">
+  <meta name="description" content="ConflabCode is a standalone desktop application for macOS and Windows that brings Claude Code and Codex into one directed software-development workspace.">
   <style>
     :root{
       --bg:#040812;
@@ -21,6 +21,7 @@
     html{scroll-behavior:smooth}
     body{
       margin:0;
+      overflow-x:hidden;
       color:var(--text);
       background:
         radial-gradient(circle at 15% 12%, rgba(255,83,71,.08), transparent 22%),
@@ -163,17 +164,20 @@
       position:relative;
       z-index:1;
       display:grid;
-      grid-template-columns:1.08fr .92fr;
-      gap:30px;
-      align-items:end;
+      grid-template-columns:minmax(380px, .78fr) minmax(0, 1.22fr);
+      gap:36px;
+      align-items:center;
       min-height:calc(100vh - 112px);
       padding:40px;
+    }
+    .hero-grid > *{
+      min-width:0;
     }
     .hero-copy{
       position:relative;
       align-self:start;
       margin-top:8px;
-      max-width:760px;
+      max-width:680px;
       padding:36px 36px 30px;
       border-radius:32px;
       border:1px solid var(--line);
@@ -207,9 +211,9 @@
     }
     h1{
       margin:18px 0 14px;
-      max-width:10ch;
-      font-size:clamp(62px, 7vw, 110px);
-      line-height:.92;
+      max-width:12ch;
+      font-size:clamp(54px, 6vw, 94px);
+      line-height:.94;
       letter-spacing:-.055em;
       font-family:Georgia,"Times New Roman",serif;
       text-wrap:balance;
@@ -219,7 +223,7 @@
       max-width:60ch;
       color:#dde7ef;
       font-size:19px;
-      line-height:1.82;
+      line-height:1.72;
     }
     .hero-actions{
       display:flex;
@@ -277,10 +281,196 @@
     }
     .hero-visual{
       position:relative;
-      align-self:end;
+      align-self:center;
       display:grid;
       gap:14px;
       padding:48px 8px 18px 0;
+    }
+    .app-window{
+      position:relative;
+      overflow:hidden;
+      margin:0;
+      border-radius:24px;
+      border:1px solid rgba(160,205,255,.22);
+      background:#050a12;
+      box-shadow:0 34px 100px rgba(0,0,0,.56), 0 0 0 1px rgba(255,255,255,.04) inset;
+    }
+    .app-window::before{
+      content:"Real application interface";
+      display:block;
+      padding:11px 16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(90deg, rgba(255,83,71,.1), rgba(78,180,255,.1));
+      color:var(--gold);
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    .app-window img{
+      display:block;
+      width:100%;
+      height:auto;
+    }
+    .shot-focus{
+      position:relative;
+      overflow:hidden;
+      aspect-ratio:16 / 9;
+      background:#03070d;
+      cursor:zoom-in;
+    }
+    .shot-focus:focus-visible{
+      outline:3px solid var(--gold);
+      outline-offset:-3px;
+    }
+    .shot-focus img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+    .region-highlight{
+      position:absolute;
+      left:calc(var(--x) * 1%);
+      top:calc(var(--y) * 1%);
+      width:calc(var(--w) * 1%);
+      height:calc(var(--h) * 1%);
+      border:2px solid rgba(242,211,154,.96);
+      border-radius:7px;
+      background:transparent;
+      box-shadow:0 0 0 9999px rgba(2,6,13,.26);
+      pointer-events:none;
+    }
+    body.modal-open{
+      overflow:hidden;
+    }
+    .shot-overlay{
+      position:fixed;
+      inset:0;
+      z-index:80;
+      display:grid;
+      place-items:center;
+      padding:18px;
+      background:rgba(2,6,14,.88);
+      backdrop-filter:blur(10px);
+    }
+    .shot-overlay[hidden],
+    .fullscreen-overlay[hidden]{
+      display:none;
+    }
+    .focus-panel{
+      width:min(96vw, 1320px);
+      max-height:94vh;
+      overflow:auto;
+      padding:16px;
+      border:1px solid rgba(175,210,255,.28);
+      border-radius:20px;
+      background:#08111d;
+      box-shadow:0 36px 120px rgba(0,0,0,.68);
+    }
+    .focus-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:12px;
+    }
+    .focus-header h2{
+      margin:0;
+      font-size:clamp(20px, 3vw, 30px);
+      font-family:Georgia,"Times New Roman",serif;
+      letter-spacing:-.03em;
+    }
+    .focus-actions{
+      display:flex;
+      gap:8px;
+    }
+    .icon-button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:0 14px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:11px;
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font:inherit;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .icon-button:hover{
+      background:rgba(255,255,255,.1);
+    }
+    .focus-viewport{
+      position:relative;
+      width:100%;
+      height:min(72vh, 760px);
+      overflow:hidden;
+      border:1px solid rgba(175,210,255,.22);
+      border-radius:14px;
+      background:#02060b;
+      cursor:zoom-in;
+    }
+    .focus-viewport img{
+      position:absolute;
+      max-width:none;
+      user-select:none;
+    }
+    .focus-marker{
+      position:absolute;
+      border:3px solid rgba(242,211,154,.98);
+      border-radius:8px;
+      background:transparent;
+      box-shadow:0 0 0 1px rgba(0,0,0,.55);
+      pointer-events:none;
+    }
+    .focus-caption{
+      margin:12px 2px 0;
+      color:var(--muted);
+      line-height:1.65;
+    }
+    .fullscreen-overlay{
+      position:fixed;
+      inset:0;
+      z-index:100;
+      display:grid;
+      place-items:center;
+      padding:12px;
+      background:#01040a;
+      cursor:zoom-out;
+    }
+    .fullscreen-overlay img{
+      display:block;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      user-select:none;
+      pointer-events:none;
+    }
+    .fullscreen-hint{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      margin:0;
+      padding:8px 12px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:10px;
+      background:rgba(8,17,29,.9);
+      color:var(--muted);
+      font-size:12px;
+      pointer-events:none;
+    }
+    .app-window figcaption{
+      padding:12px 16px 14px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.55;
+    }
+    .hero-visual .app-window{
+      transform:perspective(1600px) rotateY(-2deg) rotateX(.6deg);
+      transform-origin:center;
     }
     .hero-stack{
       position:relative;
@@ -575,6 +765,101 @@
       color:var(--muted);
       line-height:1.74;
     }
+    .feature-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:16px;
+      margin-top:18px;
+    }
+    .feature-card{
+      position:relative;
+      overflow:hidden;
+      min-height:260px;
+      padding:26px 24px;
+      border-radius:28px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(8,15,26,.9), rgba(6,11,20,.8));
+      box-shadow:0 22px 58px rgba(0,0,0,.24);
+    }
+    .feature-card::after{
+      content:"";
+      position:absolute;
+      inset:auto 0 0 0;
+      height:2px;
+      opacity:.7;
+      background:linear-gradient(90deg, var(--red), var(--blue));
+    }
+    .feature-card.wide{
+      grid-column:span 2;
+    }
+    .feature-card .kicker{
+      display:block;
+      margin-bottom:14px;
+      color:var(--gold);
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    .feature-card h3{
+      margin:0 0 12px;
+      font-size:clamp(24px, 2.5vw, 34px);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+    .feature-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.76;
+    }
+    .stage-visual{
+      margin-top:20px;
+    }
+    .showcase{
+      display:grid;
+      gap:22px;
+      margin-top:18px;
+    }
+    .showcase-row{
+      display:grid;
+      grid-template-columns:minmax(0, 1.28fr) minmax(300px, .72fr);
+      gap:22px;
+      align-items:center;
+      padding:18px;
+      border-radius:32px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(8,15,26,.86), rgba(6,11,20,.76));
+      box-shadow:var(--shadow);
+    }
+    .showcase-row.reverse{
+      grid-template-columns:minmax(300px, .72fr) minmax(0, 1.28fr);
+    }
+    .showcase-row.reverse .showcase-copy{
+      order:-1;
+    }
+    .showcase-copy{
+      padding:18px 20px;
+    }
+    .showcase-copy .kicker{
+      display:block;
+      margin-bottom:12px;
+      color:var(--gold);
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    .showcase-copy h3{
+      margin:0 0 12px;
+      font-size:clamp(28px, 3vw, 42px);
+      line-height:1.02;
+      letter-spacing:-.045em;
+    }
+    .showcase-copy p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.78;
+    }
     .cta{
       position:relative;
       overflow:hidden;
@@ -642,8 +927,17 @@
       .bento,
       .flow,
       .compare-grid,
+      .feature-grid,
+      .showcase-row,
+      .showcase-row.reverse,
       .command-ribbon{
         grid-template-columns:1fr;
+      }
+      .feature-card.wide{
+        grid-column:auto;
+      }
+      .showcase-row.reverse .showcase-copy{
+        order:0;
       }
       .hero-visual{
         padding-top:0;
@@ -669,7 +963,10 @@
       .nav{
         margin-top:10px;
         justify-content:center;
-        gap:16px;
+        gap:8px 12px;
+      }
+      .nav a{
+        font-size:11px;
       }
       .brand{
         gap:12px;
@@ -678,10 +975,7 @@
         width:230px;
       }
       .brand-mark{
-        display:block;
-        font-size:10px;
-        letter-spacing:.18em;
-        margin-top:6px;
+        display:none;
       }
       .hero{
         padding-top:10px;
@@ -700,6 +994,31 @@
       h1{
         max-width:none;
       }
+      .eyebrow{
+        max-width:100%;
+        min-height:0;
+        padding:9px 11px;
+        white-space:normal;
+        line-height:1.45;
+        letter-spacing:.12em;
+      }
+      .shot-overlay{
+        padding:5px;
+      }
+      .focus-panel{
+        width:100%;
+        max-height:98vh;
+        border-radius:12px;
+      }
+      .focus-header{
+        align-items:flex-start;
+      }
+      .focus-viewport{
+        height:68vh;
+      }
+      .icon-button{
+        padding:0 10px;
+      }
     }
   </style>
 </head>
@@ -712,9 +1031,10 @@
       </div>
       <nav class="nav" aria-label="Sections">
         <a href="index.html">All Products</a>
-        <a href="#what-it-is">What It Is</a>
-        <a href="#workflow">Workflow</a>
-        <a href="#difference">Why It Matters</a>
+        <a href="#what-it-is">Inside the App</a>
+        <a href="#ways-to-work">Ways to Work</a>
+        <a href="#workflow">Stages</a>
+        <a href="#controls">Control</a>
       </nav>
     </div>
   </header>
@@ -725,99 +1045,63 @@
         <div class="hero-stage">
           <div class="hero-grid">
             <div class="hero-copy">
-              <span class="eyebrow">ConflabCode</span>
-              <h1>Stand between the minds.</h1>
+              <span class="eyebrow">Standalone desktop app · macOS + Windows</span>
+              <h1>Two coding agents. One directed workspace.</h1>
               <p>
-                By day you're a mild-mannered product manager. By night you battle AI tooth and nail. ConflabCode is a VS Code extension for directed multi-agent software work, built around the Director's position between powerful systems where coding gets framed, challenged, implemented, and verified with structure instead of one long fragile prompt stream.
+                ConflabCode puts Claude Code and Codex in the same conversation. You direct the work while two differently trained agents challenge decisions, write code, review each other, and keep the original intent visible.
               </p>
               <div class="hero-actions">
-                <a class="button primary" href="#what-it-is">See the product story</a>
-                <a class="button secondary" href="index.html">Back to product chooser</a>
+                <a class="button primary" href="#what-it-is">See inside the app</a>
+                <a class="button secondary" href="#workflow">Explore the stages</a>
               </div>
               <div class="hero-points">
                 <div class="hero-point">
-                  <strong>Director in the middle</strong>
-                  <span>The visual center is the human who directs the work, not a passive spectator watching two models talk.</span>
+                  <strong>Same conversation</strong>
+                  <span>Both agents see the shared work and each other's contributions.</span>
                 </div>
                 <div class="hero-point">
-                  <strong>Battlefield energy</strong>
-                  <span>Red and blue pressure, dark deck metal, and a command-stage atmosphere fit the product better than polite enterprise polish.</span>
+                  <strong>Automatic continuity</strong>
+                  <span>Context handoffs keep long-running work moving without gauge-watching.</span>
                 </div>
                 <div class="hero-point">
-                  <strong>Visible workflow spine</strong>
-                  <span>Tasks, stages, checkpoints, summaries, and baton continuity turn coding into a guided operation with memory.</span>
+                  <strong>Real cross-review</strong>
+                  <span>Assign Lead and Reviewer roles independently at every stage.</span>
                 </div>
                 <div class="hero-point">
-                  <strong>Built for live projects</strong>
-                  <span>Everything lives inside VS Code with repo context, native sessions, and a project-scoped `.ConflabCode` workspace.</span>
+                  <strong>One-click consensus</strong>
+                  <span>Pool what both agents see into one consolidated opinion.</span>
                 </div>
               </div>
             </div>
 
-            <div class="hero-visual" aria-hidden="true">
-              <div class="hero-stack">
-                <div class="command-badge">Command Deck Overlay</div>
-                <div class="battle-card large">
-                  <div class="battle-head">
-                    <div class="signal-row">
-                      <span class="signal red"></span>
-                      <span class="signal blue"></span>
-                    </div>
-                    <span>Task Theater</span>
-                  </div>
-                  <div class="battle-body">
-                    <pre>task: TASK-008
-stage: Implementation
-director: Human
-
-lead:
-  Codex
-
-reviewer:
-  Claude Code
-
-project root:
-  /.ConflabCode</pre>
-                  </div>
+            <div class="hero-visual">
+              <figure class="app-window">
+                <div class="shot-focus" style="--x:20;--y:12;--w:60;--h:72" data-region="20,12,60,72" data-title="The ConflabCode workspace" role="button" tabindex="0" aria-label="Enlarge the ConflabCode workspace screenshot">
+                  <img src="assets/images/conflabcode-three-panel.png" alt="The ConflabCode three-panel workspace with Claude Code, shared project work, and Codex" width="3840" height="2160">
+                  <span class="region-highlight" aria-hidden="true"></span>
                 </div>
-                <div class="battle-card small">
-                  <div class="battle-head">
-                    <div class="signal-row">
-                      <span class="signal red"></span>
-                      <span class="signal blue"></span>
-                    </div>
-                    <span>Round Spine</span>
-                  </div>
-                  <div class="battle-body">
-                    <pre>Brainstorm -> Design
--> Implementation -> Verification
-
-baton handoff:
-warm replacement agent
-keeps long work alive</pre>
-                  </div>
-                </div>
-              </div>
+                <figcaption>The real ConflabCode workspace: two agent panels, one shared work surface, and the Director controls above them.</figcaption>
+              </figure>
             </div>
           </div>
         </div>
 
         <div class="command-ribbon">
           <div class="command-stat">
-            <strong>Tasks</strong>
-            <span>Real task objects with categories, descriptions, locking, reopening, and project-scoped history.</span>
+            <strong>Desktop Native</strong>
+            <span>A standalone Electron application for macOS and Windows—not a VS Code extension.</span>
           </div>
           <div class="command-stat">
-            <strong>Roles</strong>
-            <span>Lead and Reviewer assignments make collaboration directional instead of letting two agents freestyle in parallel.</span>
+            <strong>You Direct</strong>
+            <span>Talk to both agents, target one, lock a target, or assign stage-specific roles.</span>
           </div>
           <div class="command-stat">
-            <strong>Documents</strong>
-            <span>Brainstorm Notes, Design Spec, Implementation Plan, and Verification Plan hold the center of gravity.</span>
+            <strong>Up to Ten</strong>
+            <span>Run as many as ten ConflabCode instances at once across active projects.</span>
           </div>
           <div class="command-stat">
-            <strong>Continuity</strong>
-            <span>Summaries, logs, journals, and baton handoffs preserve momentum across long coding runs.</span>
+            <strong>Your Local Agents</strong>
+            <span>Coordinates the Claude Code and Codex CLIs already installed on your machine.</span>
           </div>
         </div>
       </div>
@@ -826,61 +1110,90 @@ keeps long work alive</pre>
     <section id="what-it-is">
       <div class="shell">
         <div class="section-head">
-          <h2>What It Is</h2>
+          <h2>Two agents in the same conversation</h2>
           <p>
-            ConflabCode grew out of the earlier two-agent experiments and the M-PACT shared-memory work, but it formalizes that collaboration inside VS Code as a dedicated coding product rather than a general conversation tool.
+            Not two isolated sessions passing summaries back and forth. Claude Code and Codex work inside one supervised desktop application, with the shared history and project state kept visible between them.
           </p>
         </div>
         <div class="bento">
           <article class="panel copy">
-            <h3>A coding product with a command posture</h3>
+            <h3>You stay in the middle</h3>
             <p>
-              ConflabCode is explicitly for generating code. It uses a three-panel workspace with two agent windows and one shared work surface, so the Director can frame the task, target one or both agents, watch the work unfold, and keep the stage document at the center of the session.
+              Talk to both agents at once, click into either panel to address one directly, or lock targeting with a right click. When one agent responds, the other receives that contribution as context on its next round—not as an instruction it must blindly follow.
             </p>
             <p>
-              The extension creates a project-scoped `.ConflabCode` folder at the repository root, which gives it a durable place for task history and internal state. Instead of making software work disappear into chat transcripts, it keeps the work legible through stage documents, summaries, logs, journals, and checkpoints.
+              Because the agents are trained differently, they investigate differently. The point is not duplicate output. It is a Lead with a real Reviewer, two independent readings of the same problem, and a Director who decides what happens next.
             </p>
             <ul>
-              <li>Built around tasks instead of loose prompting.</li>
-              <li>Uses Lead and Reviewer roles per stage.</li>
-              <li>Keeps one shared center panel for the current document of record.</li>
-              <li>Supports both human-led and AI Director-driven work.</li>
-              <li>Lets long-running coding sessions survive context limits through baton handoffs.</li>
+              <li>Separate Claude Code and Codex work panels.</li>
+              <li>A shared center surface for objectives, stage documents, and history.</li>
+              <li>Human or AI Director control over each round.</li>
+              <li>Share Responses, Reach Consensus, and Review actions built into the workspace.</li>
             </ul>
           </article>
 
-          <div class="panel diagram">
-            <div class="pane">
-              <div class="pane-head">
-                <span>Workspace</span>
-                <span>Three-panel layout</span>
-              </div>
-              <div class="pane-body">
-                Left agent, right agent, and a shared center panel. The Director panel and stage selector sit above the work so orchestration stays visible.
-                <div class="token-row">
-                  <span class="token">agent 1</span>
-                  <span class="token">agent 2</span>
-                  <span class="token">director</span>
-                  <span class="token">shared document</span>
-                </div>
-              </div>
+          <figure class="app-window">
+            <div class="shot-focus" style="--x:0;--y:0;--w:42;--h:9" data-region="0,0,42,9" data-title="Two agents in one live task" role="button" tabindex="0" aria-label="Enlarge the live ConflabCode task screenshot">
+              <img src="assets/images/conflabcode-workspace.png" alt="A live ConflabCode task showing Claude Code, Codex, shared history, and consensus controls" width="3840" height="2160">
+              <span class="region-highlight" aria-hidden="true"></span>
             </div>
-            <div class="pane">
-              <div class="pane-head">
-                <span>Context Management</span>
-                <span>Baton system</span>
-              </div>
-              <div class="pane-body">
-                When an agent nears its context limit, ConflabCode warms a replacement agent of the same provider and passes a baton containing recent transcripts, older summaries, and tool-call history.
-                <div class="token-row">
-                  <span class="token">warm runner</span>
-                  <span class="token">recent rounds</span>
-                  <span class="token">older summaries</span>
-                  <span class="token">near-infinite feel</span>
-                </div>
-              </div>
-            </div>
-          </div>
+            <figcaption>A long-running task with both agents present, shared history in the center, and response-sharing and consensus controls always within reach.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="ways-to-work">
+      <div class="shell">
+        <div class="section-head">
+          <h2>As light—or as structured—as the work requires</h2>
+          <p>
+            A one-line correction should not need ceremony. A consequential build should not depend on one fragile prompt stream. ConflabCode supports both ends of that range.
+          </p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card wide">
+            <span class="kicker">Flexible workflow</span>
+            <h3>Quick fixes, freeform objectives, or a governed build</h3>
+            <p>
+              Ask a Lead to move a button and let it work immediately, with review one click away. Give ConflabCode a handful of loose objectives and let Freeform carry them through design review, implementation, and verification. Or use the full staged workflow when every decision needs a visible record.
+            </p>
+          </article>
+          <article class="feature-card">
+            <span class="kicker">Automatic continuity</span>
+            <h3>Context that manages itself</h3>
+            <p>
+              Set context thresholds by model. When an agent reaches one, ConflabCode prepares a fresh instance and transfers the working history so the project continues without manual context bookkeeping.
+            </p>
+          </article>
+          <article class="feature-card">
+            <span class="kicker">Intent, preserved</span>
+            <h3>Every stage checks the original goal</h3>
+            <p>
+              Brainstorm notes feed Design, Design feeds Implementation, and Verification checks the resulting work. Review is anchored to what you asked for, not merely the last agent's description.
+            </p>
+          </article>
+          <article class="feature-card">
+            <span class="kicker">One click</span>
+            <h3>Reach consensus without averaging away disagreement</h3>
+            <p>
+              Orient both agents on the same question, let each catch what the other missed, and consolidate their findings into one opinion you can act on.
+            </p>
+          </article>
+          <article class="feature-card">
+            <span class="kicker">More work, fewer retries</span>
+            <h3>Ten instances and a safer tool layer</h3>
+            <p>
+              Run up to ten ConflabCode instances at once. Built-in tools also catch common quoting, path, and edit failures and retry them before they consume another full provider round trip.
+            </p>
+          </article>
+          <article class="feature-card">
+            <span class="kicker">Your operating rules</span>
+            <h3>Behavior Policy and Rules you control</h3>
+            <p>
+              Define what Lead, Reviewer, and Director mean at each stage. Keep global rules for the way you work everywhere and project rules for the exceptions that belong to one codebase.
+            </p>
+          </article>
         </div>
       </div>
     </section>
@@ -888,73 +1201,101 @@ keeps long work alive</pre>
     <section id="workflow">
       <div class="shell">
         <div class="section-head">
-          <h2>The Workflow Shape</h2>
+          <h2>A visible workflow from idea to verification</h2>
           <p>
-            ConflabCode gives software work a visible lifecycle. Each stage has its own document and its own kind of collaboration, which is the main difference between this product and a generic coding chat.
+            Structured work moves through four connected stages. Each stage has its own document, its own Lead and Reviewer assignments, and a clear relationship to the work that came before it.
           </p>
         </div>
         <div class="flow">
           <article class="flow-card">
             <strong>01</strong>
             <h3>Brainstorm</h3>
-            <p>
-              Explore the problem conversationally, then capture durable Brainstorm Notes when the Director decides the ideas are ready to record.
-            </p>
+            <p>Explore the problem conversationally, then capture the notes that should survive into the design.</p>
           </article>
           <article class="flow-card">
             <strong>02</strong>
             <h3>Design</h3>
-            <p>
-              Turn ideas into a Design Spec with unresolved, agreed, and removed items so the team can see where consensus actually stands.
-            </p>
+            <p>Turn those notes into explicit design items and keep unresolved questions visible instead of guessing.</p>
           </article>
           <article class="flow-card">
             <strong>03</strong>
             <h3>Implementation</h3>
-            <p>
-              Import the design into an Implementation Plan, work slice by slice, and let Lead and Reviewer pressure-test the code as it takes shape.
-            </p>
+            <p>Import the accepted design, build in traceable slices, and let the Reviewer pressure-test the result.</p>
           </article>
           <article class="flow-card">
             <strong>04</strong>
             <h3>Verification</h3>
-            <p>
-              Generate verification items from the implementation work, confirm what passed, surface what failed, and close the task with a final checkpoint.
-            </p>
+            <p>Check the implementation against the approved intent, surface failures, and preserve the final evidence.</p>
           </article>
         </div>
+        <figure class="app-window stage-visual">
+          <div class="shot-focus" style="--x:33;--y:13;--w:34;--h:45" data-region="33,13,34,45" data-title="Structured Design stage" role="button" tabindex="0" aria-label="Enlarge the ConflabCode Design stage screenshot">
+            <img src="assets/images/conflabcode-design-stage.png" alt="ConflabCode Design stage with seven imported design items between Claude Code and Codex" width="3840" height="2160">
+            <span class="region-highlight" aria-hidden="true"></span>
+          </div>
+          <figcaption>Ten brainstorm notes have become seven visible Design items. The center document is the shared record; Lead and Reviewer remain independent on either side.</figcaption>
+        </figure>
       </div>
     </section>
 
-    <section id="difference">
+    <section id="controls">
       <div class="shell">
         <div class="section-head">
-          <h2>Why This Page Helps</h2>
+          <h2>The structure stays under your control</h2>
           <p>
-            The standalone Conflab page is about broad multi-agent conversation work. ConflabCode deserves a page that speaks directly to developers, repository work, and the mechanics of getting code shipped.
+            Continuity, provenance, and agent behavior are visible parts of the product—not hidden assumptions. The highlighted regions below are taken directly from the application.
           </p>
         </div>
-        <div class="compare-grid">
-          <article class="compare-card">
-            <strong>Clarity</strong>
-            <h3>Developers land in the right story</h3>
-            <p>
-              Visitors looking for a coding tool immediately see tasks, stages, checkpoints, VS Code, and a stronger sense of directed pressure rather than a softer general-purpose showcase.
-            </p>
+        <div class="showcase">
+          <article class="showcase-row">
+            <figure class="app-window">
+              <div class="shot-focus" style="--x:0;--y:3;--w:25;--h:90" data-region="0,3,25,90" data-title="Context and workspace settings" role="button" tabindex="0" aria-label="Enlarge the ConflabCode settings screenshot">
+                <img src="assets/images/conflabcode-settings.png" alt="ConflabCode settings showing provider configuration, context thresholds, filesystem access, and display controls" width="3840" height="2160">
+                <span class="region-highlight" aria-hidden="true"></span>
+              </div>
+              <figcaption>Model-aware baton thresholds and context settings live alongside the workspace's provider and access controls.</figcaption>
+            </figure>
+            <div class="showcase-copy">
+              <span class="kicker">Context that manages itself</span>
+              <h3>Choose the threshold. Stop watching the gauge.</h3>
+              <p>
+                Large model windows can become expensive and unfocused before they become full. Smaller windows need more runway. ConflabCode lets you set the handoff threshold by context size, then manages the transition when work reaches it.
+              </p>
+            </div>
           </article>
-          <article class="compare-card">
-            <strong>Specificity</strong>
-            <h3>The product can talk concretely</h3>
-            <p>
-              This page can mention targeting, Steer, AI Director, the task tree, the center-panel documents, and the baton without feeling like a tangent.
-            </p>
+
+          <article class="showcase-row reverse">
+            <figure class="app-window">
+              <div class="shot-focus" style="--x:20;--y:12;--w:60;--h:72" data-region="20,12,60,72" data-title="Implementation provenance" role="button" tabindex="0" aria-label="Enlarge the ConflabCode provenance screenshot">
+                <img src="assets/images/conflabcode-provenance.png" alt="A ConflabCode implementation item expanded to show its complete provenance trail" width="3840" height="2160">
+                <span class="region-highlight" aria-hidden="true"></span>
+              </div>
+              <figcaption>An Implementation item expanded to its event trail, source Design item, approvals, later touches, and round history.</figcaption>
+            </figure>
+            <div class="showcase-copy">
+              <span class="kicker">Provenance that survives handoffs</span>
+              <h3>Follow a decision back to where it started.</h3>
+              <p>
+                Design items retain their Brainstorm source. Implementation items retain their Design source. Verification can follow the chain instead of trusting a handoff summary, and later changes remain visible without silently erasing earlier approval.
+              </p>
+            </div>
           </article>
-          <article class="compare-card">
-            <strong>Future Growth</strong>
-            <h3>There is room to deepen it later</h3>
-            <p>
-              When you have screenshots, docs, and download flows for the extension, they can slot into this darker visual world naturally without disturbing the standalone app story.
-            </p>
+
+          <article class="showcase-row">
+            <figure class="app-window">
+              <div class="shot-focus" style="--x:27;--y:22;--w:46;--h:58" data-region="27,22,46,58" data-title="Behavior Policy editor" role="button" tabindex="0" aria-label="Enlarge the ConflabCode Behavior Policy screenshot">
+                <img src="assets/images/conflabcode-policy.png" alt="The ConflabCode Behavior Policy editor with editable operating rules" width="3840" height="2160">
+                <span class="region-highlight" aria-hidden="true"></span>
+              </div>
+              <figcaption>The Behavior Policy editor. Defaults are supplied, but the working definition of each role remains yours.</figcaption>
+            </figure>
+            <div class="showcase-copy">
+              <span class="kicker">Behavior Policy and Rules</span>
+              <h3>Define how the agents work with you.</h3>
+              <p>
+                Behavior Policy describes the Lead, Reviewer, and Director responsibilities for each stage. Rules capture your global working preferences and project-specific expectations. A full reset restores the shipped defaults whenever you need it.
+              </p>
+            </div>
           </article>
         </div>
       </div>
@@ -963,13 +1304,13 @@ keeps long work alive</pre>
     <section>
       <div class="shell">
         <div class="cta">
-          <h2>Let ConflabCode feel like its own arena.</h2>
+          <h2>Put two different coding minds on the same task.</h2>
           <p>
-            The product family now has a clean fork: Conflab for broad multi-agent conversation work, ConflabCode for directed software work in VS Code. This page now leans into the darker command-deck identity that fits that second branch much better.
+            ConflabCode is a standalone desktop application for macOS and Windows, built for software work that benefits from independent reasoning, visible review, and continuity across long-running projects.
           </p>
           <div class="cta-actions">
-            <a class="button primary" href="index.html">Back to all products</a>
-            <a class="button secondary" href="conflab.html">View Conflab</a>
+            <a class="button primary" href="#what-it-is">Explore ConflabCode</a>
+            <a class="button secondary" href="index.html">Return to Product Chooser</a>
           </div>
         </div>
       </div>
@@ -978,9 +1319,172 @@ keeps long work alive</pre>
 
   <footer class="site-footer">
     <div class="shell site-footer-inner">
-      <div>&copy; Copyright: David Todd - June, 2026</div>
-      <div>ConflabCode page styled from the title-screen visual language and June 11, 2026 documentation notes.</div>
+      <div>&copy; 2026 David Todd</div>
+      <div>ConflabCode · Standalone desktop application for macOS and Windows</div>
     </div>
   </footer>
+
+  <div class="shot-overlay" id="focus-dialog" role="dialog" aria-modal="true" aria-labelledby="focus-title" aria-describedby="focus-caption" tabindex="-1" hidden>
+    <div class="focus-panel">
+      <div class="focus-header">
+        <h2 id="focus-title">Focused screenshot view</h2>
+        <div class="focus-actions">
+          <button class="icon-button" id="focus-fullscreen" type="button">Full screen</button>
+          <button class="icon-button" id="focus-close" type="button" aria-label="Close focused screenshot">Close</button>
+        </div>
+      </div>
+      <div class="focus-viewport" id="focus-viewport" role="button" tabindex="0" aria-label="Open the complete screenshot full screen">
+        <img id="focus-image" alt="">
+        <span class="focus-marker" id="focus-marker" aria-hidden="true"></span>
+      </div>
+      <p class="focus-caption" id="focus-caption"></p>
+    </div>
+  </div>
+
+  <div class="fullscreen-overlay" id="fullscreen-overlay" role="dialog" aria-modal="true" aria-label="Complete screenshot view. Click anywhere or press Escape to return to the focused view." tabindex="-1" hidden>
+    <img id="fullscreen-image" alt="">
+    <p class="fullscreen-hint">Click anywhere or press Escape to return to the focused view</p>
+  </div>
+
+  <script>
+    (() => {
+      const triggers = [...document.querySelectorAll('.shot-focus')];
+      const focusDialog = document.getElementById('focus-dialog');
+      const focusViewport = document.getElementById('focus-viewport');
+      const focusImage = document.getElementById('focus-image');
+      const focusMarker = document.getElementById('focus-marker');
+      const focusTitle = document.getElementById('focus-title');
+      const focusCaption = document.getElementById('focus-caption');
+      const focusClose = document.getElementById('focus-close');
+      const focusFullscreen = document.getElementById('focus-fullscreen');
+      const fullscreenOverlay = document.getElementById('fullscreen-overlay');
+      const fullscreenImage = document.getElementById('fullscreen-image');
+      const referenceWidth = 3840;
+      const referenceHeight = 2160;
+      const referenceRegionWidth = referenceWidth * .432;
+      const referenceRegionHeight = referenceHeight * .128;
+      const focusMargin = 28;
+      let activeTrigger = null;
+
+      const parseRegion = trigger => trigger.dataset.region.split(',').map(Number);
+
+      function baselineScale(viewportWidth, viewportHeight) {
+        const fit = Math.min(viewportWidth / referenceWidth, viewportHeight / referenceHeight);
+        const focus = Math.min(
+          viewportWidth / (referenceRegionWidth * 1.45),
+          viewportHeight / (referenceRegionHeight * 1.7),
+          1.15
+        );
+        return Math.max(fit, focus) * 1.15;
+      }
+
+      function layoutFocusedImage() {
+        if (!activeTrigger || !focusImage.naturalWidth) return;
+        const [x, y, width, height] = parseRegion(activeTrigger);
+        const viewportWidth = focusViewport.clientWidth;
+        const viewportHeight = focusViewport.clientHeight;
+        const naturalWidth = focusImage.naturalWidth;
+        const naturalHeight = focusImage.naturalHeight;
+        const regionWidth = naturalWidth * width / 100;
+        const regionHeight = naturalHeight * height / 100;
+        const regionFit = Math.max(.05, Math.min(
+          (viewportWidth - focusMargin * 2) / regionWidth,
+          (viewportHeight - focusMargin * 2) / regionHeight
+        ));
+        const scale = Math.min(baselineScale(viewportWidth, viewportHeight), regionFit);
+        const renderedWidth = naturalWidth * scale;
+        const renderedHeight = naturalHeight * scale;
+        const centerX = naturalWidth * (x + width / 2) / 100;
+        const centerY = naturalHeight * (y + height / 2) / 100;
+        const desiredLeft = viewportWidth / 2 - centerX * scale;
+        const desiredTop = viewportHeight / 2 - centerY * scale;
+        const left = renderedWidth >= viewportWidth
+          ? Math.min(0, Math.max(viewportWidth - renderedWidth, desiredLeft))
+          : desiredLeft;
+        const top = renderedHeight >= viewportHeight
+          ? Math.min(0, Math.max(viewportHeight - renderedHeight, desiredTop))
+          : desiredTop;
+
+        Object.assign(focusImage.style, {
+          width: `${renderedWidth}px`,
+          height: `${renderedHeight}px`,
+          left: `${left}px`,
+          top: `${top}px`
+        });
+        Object.assign(focusMarker.style, {
+          left: `${left + naturalWidth * x / 100 * scale}px`,
+          top: `${top + naturalHeight * y / 100 * scale}px`,
+          width: `${regionWidth * scale}px`,
+          height: `${regionHeight * scale}px`
+        });
+      }
+
+      function openFocused(trigger) {
+        activeTrigger = trigger;
+        const sourceImage = trigger.querySelector('img');
+        const caption = trigger.closest('figure')?.querySelector('figcaption')?.textContent?.trim() || '';
+        focusTitle.textContent = trigger.dataset.title || 'ConflabCode screenshot';
+        focusCaption.textContent = `${caption} Click the image for the complete full-screen view.`;
+        focusImage.alt = sourceImage.alt;
+        focusImage.src = sourceImage.currentSrc || sourceImage.src;
+        focusDialog.hidden = false;
+        document.body.classList.add('modal-open');
+        if (focusImage.complete) requestAnimationFrame(layoutFocusedImage);
+        focusClose.focus();
+      }
+
+      function closeFocused() {
+        if (focusDialog.hidden) return;
+        focusDialog.hidden = true;
+        document.body.classList.remove('modal-open');
+        const returnTarget = activeTrigger;
+        activeTrigger = null;
+        returnTarget?.focus();
+      }
+
+      function openFullscreen() {
+        if (!activeTrigger) return;
+        fullscreenImage.src = focusImage.src;
+        fullscreenImage.alt = focusImage.alt;
+        fullscreenOverlay.hidden = false;
+        fullscreenOverlay.focus();
+      }
+
+      function returnToFocused() {
+        if (fullscreenOverlay.hidden) return;
+        fullscreenOverlay.hidden = true;
+        focusFullscreen.focus();
+      }
+
+      triggers.forEach(trigger => {
+        trigger.addEventListener('click', () => openFocused(trigger));
+        trigger.addEventListener('keydown', event => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          openFocused(trigger);
+        });
+      });
+
+      focusImage.addEventListener('load', layoutFocusedImage);
+      focusClose.addEventListener('click', closeFocused);
+      focusFullscreen.addEventListener('click', openFullscreen);
+      focusViewport.addEventListener('click', openFullscreen);
+      focusViewport.addEventListener('keydown', event => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        openFullscreen();
+      });
+      focusDialog.addEventListener('click', event => {
+        if (event.target === focusDialog) closeFocused();
+      });
+      fullscreenOverlay.addEventListener('click', returnToFocused);
+      window.addEventListener('resize', layoutFocusedImage);
+      document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        if (!fullscreenOverlay.hidden) returnToFocused();
+        else if (!focusDialog.hidden) closeFocused();
+      });
+    })();
+  </script>
 </body>
 </html>
