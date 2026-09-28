@@ -60,8 +60,49 @@
       margin:0 auto;
     }
     .hero-shell{
-      width:min(1860px, calc(100vw - 8px));
+      width:100%;
       margin:0 auto;
+    }
+    .fullscreen-toggle{
+      position:fixed;
+      top:16px;
+      right:16px;
+      z-index:70;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:44px;
+      height:44px;
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:14px;
+      color:rgba(255,255,255,.9);
+      background:rgba(4,8,18,.52);
+      box-shadow:0 18px 46px rgba(0,0,0,.34);
+      backdrop-filter:blur(14px);
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .fullscreen-toggle:hover,
+    .fullscreen-toggle:focus-visible,
+    .fullscreen-toggle.is-active{
+      color:#fff;
+      border-color:rgba(255,255,255,.42);
+      background:rgba(255,255,255,.1);
+      outline:none;
+    }
+    .fullscreen-toggle[hidden]{
+      display:none;
+    }
+    .fullscreen-toggle svg{
+      width:22px;
+      height:22px;
+    }
+    .fullscreen-toggle path{
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
     }
     .topbar{
       position:sticky;
@@ -77,6 +118,7 @@
       grid-template-columns:auto 1fr;
       align-items:center;
       gap:20px;
+      padding-right:64px;
     }
     .brand{
       display:flex;
@@ -119,15 +161,15 @@
     }
     .hero{
       position:relative;
-      padding:8px 0 24px;
+      padding:0 0 24px;
     }
     .hero-stage{
       position:relative;
       overflow:hidden;
-      min-height:calc(100vh - 112px);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:42px;
-      box-shadow:var(--shadow);
+      min-height:calc(100svh - 84px);
+      border:0;
+      border-radius:0;
+      box-shadow:none;
       background:
         linear-gradient(180deg, rgba(2,5,11,.16), rgba(2,5,11,.62)),
         url("assets/images/conflabcode-title.jpg") center top / cover no-repeat;
@@ -167,8 +209,8 @@
       grid-template-columns:minmax(380px, .78fr) minmax(0, 1.22fr);
       gap:36px;
       align-items:center;
-      min-height:calc(100vh - 112px);
-      padding:40px;
+      min-height:calc(100svh - 84px);
+      padding:clamp(28px, 4vw, 62px);
     }
     .hero-grid > *{
       min-width:0;
@@ -317,7 +359,7 @@
       overflow:hidden;
       aspect-ratio:16 / 9;
       background:#03070d;
-      cursor:zoom-in;
+      cursor:pointer;
     }
     .shot-focus:focus-visible{
       outline:3px solid var(--gold);
@@ -328,107 +370,8 @@
       height:100%;
       object-fit:contain;
     }
-    .region-highlight{
-      position:absolute;
-      left:calc(var(--x) * 1%);
-      top:calc(var(--y) * 1%);
-      width:calc(var(--w) * 1%);
-      height:calc(var(--h) * 1%);
-      border:2px solid rgba(242,211,154,.96);
-      border-radius:7px;
-      background:transparent;
-      box-shadow:0 0 0 9999px rgba(2,6,13,.26);
-      pointer-events:none;
-    }
-    body.modal-open{
-      overflow:hidden;
-    }
-    .shot-overlay{
-      position:fixed;
-      inset:0;
-      z-index:80;
-      display:grid;
-      place-items:center;
-      padding:18px;
-      background:rgba(2,6,14,.88);
-      backdrop-filter:blur(10px);
-    }
-    .shot-overlay[hidden],
     .fullscreen-overlay[hidden]{
       display:none;
-    }
-    .focus-panel{
-      width:min(96vw, 1320px);
-      max-height:94vh;
-      overflow:auto;
-      padding:16px;
-      border:1px solid rgba(175,210,255,.28);
-      border-radius:20px;
-      background:#08111d;
-      box-shadow:0 36px 120px rgba(0,0,0,.68);
-    }
-    .focus-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      margin-bottom:12px;
-    }
-    .focus-header h2{
-      margin:0;
-      font-size:clamp(20px, 3vw, 30px);
-      font-family:Georgia,"Times New Roman",serif;
-      letter-spacing:-.03em;
-    }
-    .focus-actions{
-      display:flex;
-      gap:8px;
-    }
-    .icon-button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:0 14px;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:11px;
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      font:inherit;
-      font-size:12px;
-      font-weight:700;
-      cursor:pointer;
-    }
-    .icon-button:hover{
-      background:rgba(255,255,255,.1);
-    }
-    .focus-viewport{
-      position:relative;
-      width:100%;
-      height:min(72vh, 760px);
-      overflow:hidden;
-      border:1px solid rgba(175,210,255,.22);
-      border-radius:14px;
-      background:#02060b;
-      cursor:zoom-in;
-    }
-    .focus-viewport img{
-      position:absolute;
-      max-width:none;
-      user-select:none;
-    }
-    .focus-marker{
-      position:absolute;
-      border:3px solid rgba(242,211,154,.98);
-      border-radius:8px;
-      background:transparent;
-      box-shadow:0 0 0 1px rgba(0,0,0,.55);
-      pointer-events:none;
-    }
-    .focus-caption{
-      margin:12px 2px 0;
-      color:var(--muted);
-      line-height:1.65;
     }
     .fullscreen-overlay{
       position:fixed;
@@ -438,7 +381,7 @@
       place-items:center;
       padding:12px;
       background:#01040a;
-      cursor:zoom-out;
+      cursor:pointer;
     }
     .fullscreen-overlay img{
       display:block;
@@ -448,19 +391,30 @@
       user-select:none;
       pointer-events:none;
     }
-    .fullscreen-hint{
-      position:absolute;
-      left:50%;
-      bottom:18px;
-      transform:translateX(-50%);
-      margin:0;
-      padding:8px 12px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:10px;
-      background:rgba(8,17,29,.9);
-      color:var(--muted);
+    .cursor-tooltip{
+      position:fixed;
+      z-index:130;
+      left:0;
+      top:0;
+      padding:7px 10px;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:9px;
+      background:rgba(8,17,29,.94);
+      color:var(--text);
+      box-shadow:0 12px 32px rgba(0,0,0,.38);
       font-size:12px;
+      font-weight:700;
+      letter-spacing:.02em;
+      opacity:0;
       pointer-events:none;
+      transform:translate3d(0,0,0);
+      transition:opacity .12s ease;
+    }
+    .cursor-tooltip.is-visible{
+      opacity:1;
+    }
+    .cursor-tooltip[hidden]{
+      display:none;
     }
     .app-window figcaption{
       padding:12px 16px 14px;
@@ -921,7 +875,7 @@
         min-height:0;
       }
       .hero-shell{
-        width:min(100vw - 10px, 100%);
+        width:100%;
       }
       .hero-grid,
       .bento,
@@ -953,7 +907,7 @@
         width:min(100vw - 22px, 100%);
       }
       .hero-shell{
-        width:min(100vw - 6px, 100%);
+        width:100%;
       }
       .topbar-inner,
       .section-head,
@@ -1002,27 +956,15 @@
         line-height:1.45;
         letter-spacing:.12em;
       }
-      .shot-overlay{
-        padding:5px;
-      }
-      .focus-panel{
-        width:100%;
-        max-height:98vh;
-        border-radius:12px;
-      }
-      .focus-header{
-        align-items:flex-start;
-      }
-      .focus-viewport{
-        height:68vh;
-      }
-      .icon-button{
-        padding:0 10px;
-      }
     }
   </style>
 </head>
 <body>
+  <button class="fullscreen-toggle" type="button" aria-label="Enter full screen" title="Enter full screen">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M21 16v5h-5"></path>
+    </svg>
+  </button>
   <header class="topbar">
     <div class="shell topbar-inner">
       <div class="brand">
@@ -1034,6 +976,7 @@
         <a href="#what-it-is">Inside the App</a>
         <a href="#ways-to-work">Ways to Work</a>
         <a href="#workflow">Stages</a>
+        <a href="#freeform">Freeform</a>
         <a href="#controls">Control</a>
       </nav>
     </div>
@@ -1076,9 +1019,8 @@
 
             <div class="hero-visual">
               <figure class="app-window">
-                <div class="shot-focus" style="--x:0;--y:90;--w:100;--h:10" data-region="0,90,100,10" data-title="I-009 implementation item added" role="button" tabindex="0" aria-label="Enlarge the I-009 implementation item screenshot">
+                <div class="shot-focus" data-title="I-009 implementation item added" role="button" tabindex="0" aria-label="Open the I-009 implementation item screenshot full screen">
                   <img src="assets/images/conflabcode-implementation-i009.png" alt="ConflabCode showing Claude Code and Codex around an implementation plan with I-009 added" width="3840" height="2160">
-                  <span class="region-highlight" aria-hidden="true"></span>
                 </div>
                 <figcaption>The real ConflabCode workspace: two agent panels around an active implementation plan, with the Director still steering the shared task.</figcaption>
               </figure>
@@ -1133,9 +1075,8 @@
           </article>
 
           <figure class="app-window">
-            <div class="shot-focus" style="--x:0;--y:0;--w:42;--h:9" data-region="0,0,42,9" data-title="Two agents in one live task" role="button" tabindex="0" aria-label="Enlarge the live ConflabCode task screenshot">
+            <div class="shot-focus" data-title="Two agents in one live task" role="button" tabindex="0" aria-label="Open the live ConflabCode task screenshot full screen">
               <img src="assets/images/conflabcode-workspace.png" alt="A live ConflabCode task showing Claude Code, Codex, shared history, and consensus controls" width="3840" height="2160">
-              <span class="region-highlight" aria-hidden="true"></span>
             </div>
             <figcaption>A long-running task with both agents present, shared history in the center, and response-sharing and consensus controls always within reach.</figcaption>
           </figure>
@@ -1229,12 +1170,56 @@
           </article>
         </div>
         <figure class="app-window stage-visual">
-          <div class="shot-focus" style="--x:33;--y:13;--w:34;--h:45" data-region="33,13,34,45" data-title="Structured Design stage" role="button" tabindex="0" aria-label="Enlarge the ConflabCode Design stage screenshot">
+          <div class="shot-focus" data-title="Structured Design stage" role="button" tabindex="0" aria-label="Open the ConflabCode Design stage screenshot full screen">
             <img src="assets/images/conflabcode-design-stage.png" alt="ConflabCode Design stage with seven imported design items between Claude Code and Codex" width="3840" height="2160">
-            <span class="region-highlight" aria-hidden="true"></span>
           </div>
           <figcaption>Ten brainstorm notes have become seven visible Design items. The center document is the shared record; Lead and Reviewer remain independent on either side.</figcaption>
         </figure>
+      </div>
+    </section>
+
+    <section id="freeform">
+      <div class="shell">
+        <div class="section-head">
+          <h2>Freeform when the work does not need a ceremony</h2>
+          <p>
+            Some changes start as a sentence, not a full plan. ConflabCode lets those quick fixes become durable objectives when they need to survive the conversation.
+          </p>
+        </div>
+        <div class="showcase">
+          <article class="showcase-row reverse">
+            <figure class="app-window">
+              <div class="shot-focus" data-title="Freeform objectives" role="button" tabindex="0" aria-label="Open the ConflabCode Freeform objectives screenshot full screen">
+                <img src="assets/images/conflabcode-freeform-objectives.png" alt="ConflabCode showing two Freeform objectives in the shared objective tree between Claude Code and Codex" width="3840" height="2160">
+              </div>
+              <figcaption>Two Freeform objectives in the shared center tree. The conversation can keep moving while the durable work list stays visible.</figcaption>
+            </figure>
+            <div class="showcase-copy">
+              <span class="kicker">Freeform and quick fixes</span>
+              <h3>Move fast without throwing the thread away.</h3>
+              <p>
+                Ask for a small correction and let the Lead handle it immediately, or turn a looser request into a Freeform objective when it needs tracking. The work stays selectable, reviewable, and tied to the conversation that produced it, without forcing every change through the full staged workflow.
+              </p>
+            </div>
+          </article>
+        </div>
+        <div class="compare-grid">
+          <article class="compare-card">
+            <strong>Quick fixes</strong>
+            <h3>Use the lightest path that fits.</h3>
+            <p>A typo, layout tweak, or small behavior change can be handled directly, with review still available when it matters.</p>
+          </article>
+          <article class="compare-card">
+            <strong>Freeform objectives</strong>
+            <h3>Capture loose work before it disappears.</h3>
+            <p>When a request grows beyond a one-off edit, save it as an objective with its own status, history, and source conversation.</p>
+          </article>
+          <article class="compare-card">
+            <strong>Structured only when needed</strong>
+            <h3>Escalate without starting over.</h3>
+            <p>Use the full Brainstorm, Design, Implementation, and Verification flow when the task needs explicit staged evidence.</p>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -1243,15 +1228,14 @@
         <div class="section-head">
           <h2>The structure stays under your control</h2>
           <p>
-            Continuity, provenance, and agent behavior are visible parts of the product—not hidden assumptions. The highlighted regions below are taken directly from the application.
+            Continuity, provenance, and agent behavior are visible parts of the product—not hidden assumptions. The screenshots below are taken directly from the application.
           </p>
         </div>
         <div class="showcase">
           <article class="showcase-row">
             <figure class="app-window">
-              <div class="shot-focus" style="--x:0;--y:3;--w:25;--h:90" data-region="0,3,25,90" data-title="Context and workspace settings" role="button" tabindex="0" aria-label="Enlarge the ConflabCode settings screenshot">
+              <div class="shot-focus" data-title="Context and workspace settings" role="button" tabindex="0" aria-label="Open the ConflabCode settings screenshot full screen">
                 <img src="assets/images/conflabcode-settings.png" alt="ConflabCode settings showing provider configuration, context thresholds, filesystem access, and display controls" width="3840" height="2160">
-                <span class="region-highlight" aria-hidden="true"></span>
               </div>
               <figcaption>Model-aware baton thresholds and context settings live alongside the workspace's provider and access controls.</figcaption>
             </figure>
@@ -1266,9 +1250,8 @@
 
           <article class="showcase-row reverse">
             <figure class="app-window">
-              <div class="shot-focus" style="--x:20;--y:12;--w:60;--h:72" data-region="20,12,60,72" data-title="Implementation provenance" role="button" tabindex="0" aria-label="Enlarge the ConflabCode provenance screenshot">
+              <div class="shot-focus" data-title="Implementation provenance" role="button" tabindex="0" aria-label="Open the ConflabCode provenance screenshot full screen">
                 <img src="assets/images/conflabcode-provenance.png" alt="A ConflabCode implementation item expanded to show its complete provenance trail" width="3840" height="2160">
-                <span class="region-highlight" aria-hidden="true"></span>
               </div>
               <figcaption>An Implementation item expanded to its event trail, source Design item, approvals, later touches, and round history.</figcaption>
             </figure>
@@ -1283,9 +1266,8 @@
 
           <article class="showcase-row">
             <figure class="app-window">
-              <div class="shot-focus" style="--x:27;--y:22;--w:46;--h:58" data-region="27,22,46,58" data-title="Behavior Policy editor" role="button" tabindex="0" aria-label="Enlarge the ConflabCode Behavior Policy screenshot">
+              <div class="shot-focus" data-title="Behavior Policy editor" role="button" tabindex="0" aria-label="Open the ConflabCode Behavior Policy screenshot full screen">
                 <img src="assets/images/conflabcode-policy.png" alt="The ConflabCode Behavior Policy editor with editable operating rules" width="3840" height="2160">
-                <span class="region-highlight" aria-hidden="true"></span>
               </div>
               <figcaption>The Behavior Policy editor. Defaults are supplied, but the working definition of each role remains yours.</figcaption>
             </figure>
@@ -1324,166 +1306,114 @@
     </div>
   </footer>
 
-  <div class="shot-overlay" id="focus-dialog" role="dialog" aria-modal="true" aria-labelledby="focus-title" aria-describedby="focus-caption" tabindex="-1" hidden>
-    <div class="focus-panel">
-      <div class="focus-header">
-        <h2 id="focus-title">Focused screenshot view</h2>
-        <div class="focus-actions">
-          <button class="icon-button" id="focus-fullscreen" type="button">Full screen</button>
-          <button class="icon-button" id="focus-close" type="button" aria-label="Close focused screenshot">Close</button>
-        </div>
-      </div>
-      <div class="focus-viewport" id="focus-viewport" role="button" tabindex="0" aria-label="Open the complete screenshot full screen">
-        <img id="focus-image" alt="">
-        <span class="focus-marker" id="focus-marker" aria-hidden="true"></span>
-      </div>
-      <p class="focus-caption" id="focus-caption"></p>
-    </div>
-  </div>
-
-  <div class="fullscreen-overlay" id="fullscreen-overlay" role="dialog" aria-modal="true" aria-label="Complete screenshot view. Click anywhere or press Escape to return to the focused view." tabindex="-1" hidden>
+  <div class="fullscreen-overlay" id="fullscreen-overlay" role="dialog" aria-modal="true" aria-label="Complete screenshot view. Click anywhere or press Escape to close." tabindex="-1" hidden>
     <img id="fullscreen-image" alt="">
-    <p class="fullscreen-hint">Click anywhere or press Escape to return to the focused view</p>
   </div>
+  <div class="cursor-tooltip" id="cursor-tooltip" role="tooltip" hidden></div>
 
   <script>
     (() => {
+      const fullscreenButton = document.querySelector('.fullscreen-toggle');
       const triggers = [...document.querySelectorAll('.shot-focus')];
-      const focusDialog = document.getElementById('focus-dialog');
-      const focusViewport = document.getElementById('focus-viewport');
-      const focusImage = document.getElementById('focus-image');
-      const focusMarker = document.getElementById('focus-marker');
-      const focusTitle = document.getElementById('focus-title');
-      const focusCaption = document.getElementById('focus-caption');
-      const focusClose = document.getElementById('focus-close');
-      const focusFullscreen = document.getElementById('focus-fullscreen');
       const fullscreenOverlay = document.getElementById('fullscreen-overlay');
       const fullscreenImage = document.getElementById('fullscreen-image');
-      const referenceWidth = 3840;
-      const referenceHeight = 2160;
-      const referenceRegionWidth = referenceWidth * .432;
-      const referenceRegionHeight = referenceHeight * .128;
-      const focusMargin = 28;
+      const cursorTooltip = document.getElementById('cursor-tooltip');
       let activeTrigger = null;
 
-      const parseRegion = trigger => trigger.dataset.region.split(',').map(Number);
-
-      function baselineScale(viewportWidth, viewportHeight) {
-        const fit = Math.min(viewportWidth / referenceWidth, viewportHeight / referenceHeight);
-        const focus = Math.min(
-          viewportWidth / (referenceRegionWidth * 1.45),
-          viewportHeight / (referenceRegionHeight * 1.7),
-          1.15
-        );
-        return Math.max(fit, focus) * 1.15;
+      function setupFullscreenToggle() {
+        if (!fullscreenButton) return;
+        if (!document.fullscreenEnabled || !document.documentElement.requestFullscreen) {
+          fullscreenButton.hidden = true;
+          return;
+        }
+        const enterLabel = 'Enter full screen';
+        const exitLabel = 'Exit full screen';
+        function sync() {
+          const active = Boolean(document.fullscreenElement);
+          const label = active ? exitLabel : enterLabel;
+          fullscreenButton.classList.toggle('is-active', active);
+          fullscreenButton.setAttribute('aria-label', label);
+          fullscreenButton.title = label;
+        }
+        fullscreenButton.addEventListener('click', async () => {
+          try {
+            if (document.fullscreenElement) await document.exitFullscreen();
+            else await document.documentElement.requestFullscreen();
+          } catch (error) {
+            fullscreenButton.hidden = true;
+          }
+        });
+        document.addEventListener('fullscreenchange', sync);
+        sync();
       }
 
-      function layoutFocusedImage() {
-        if (!activeTrigger || !focusImage.naturalWidth) return;
-        const [x, y, width, height] = parseRegion(activeTrigger);
-        const viewportWidth = focusViewport.clientWidth;
-        const viewportHeight = focusViewport.clientHeight;
-        const naturalWidth = focusImage.naturalWidth;
-        const naturalHeight = focusImage.naturalHeight;
-        const regionWidth = naturalWidth * width / 100;
-        const regionHeight = naturalHeight * height / 100;
-        const regionFit = Math.max(.05, Math.min(
-          (viewportWidth - focusMargin * 2) / regionWidth,
-          (viewportHeight - focusMargin * 2) / regionHeight
-        ));
-        const scale = Math.min(baselineScale(viewportWidth, viewportHeight), regionFit);
-        const renderedWidth = naturalWidth * scale;
-        const renderedHeight = naturalHeight * scale;
-        const centerX = naturalWidth * (x + width / 2) / 100;
-        const centerY = naturalHeight * (y + height / 2) / 100;
-        const desiredLeft = viewportWidth / 2 - centerX * scale;
-        const desiredTop = viewportHeight / 2 - centerY * scale;
-        const left = renderedWidth >= viewportWidth
-          ? Math.min(0, Math.max(viewportWidth - renderedWidth, desiredLeft))
-          : desiredLeft;
-        const top = renderedHeight >= viewportHeight
-          ? Math.min(0, Math.max(viewportHeight - renderedHeight, desiredTop))
-          : desiredTop;
-
-        Object.assign(focusImage.style, {
-          width: `${renderedWidth}px`,
-          height: `${renderedHeight}px`,
-          left: `${left}px`,
-          top: `${top}px`
-        });
-        Object.assign(focusMarker.style, {
-          left: `${left + naturalWidth * x / 100 * scale}px`,
-          top: `${top + naturalHeight * y / 100 * scale}px`,
-          width: `${regionWidth * scale}px`,
-          height: `${regionHeight * scale}px`
-        });
+      function moveTooltip(event) {
+        if (!cursorTooltip || cursorTooltip.hidden) return;
+        const offset = 16;
+        const margin = 10;
+        const width = cursorTooltip.offsetWidth;
+        const height = cursorTooltip.offsetHeight;
+        const left = Math.min(window.innerWidth - width - margin, event.clientX + offset);
+        const top = Math.min(window.innerHeight - height - margin, event.clientY + offset);
+        cursorTooltip.style.left = `${Math.max(margin, left)}px`;
+        cursorTooltip.style.top = `${Math.max(margin, top)}px`;
       }
 
-      function openFocused(trigger) {
+      function showTooltip(label, event) {
+        if (!cursorTooltip) return;
+        cursorTooltip.textContent = label;
+        cursorTooltip.hidden = false;
+        cursorTooltip.classList.add('is-visible');
+        moveTooltip(event);
+      }
+
+      function hideTooltip() {
+        if (!cursorTooltip) return;
+        cursorTooltip.classList.remove('is-visible');
+        cursorTooltip.hidden = true;
+      }
+
+      function bindCursorTooltip(element, label) {
+        element.addEventListener('pointerenter', event => showTooltip(label, event));
+        element.addEventListener('pointermove', moveTooltip);
+        element.addEventListener('pointerleave', hideTooltip);
+      }
+
+      function openScreenshot(trigger) {
         activeTrigger = trigger;
         const sourceImage = trigger.querySelector('img');
-        const caption = trigger.closest('figure')?.querySelector('figcaption')?.textContent?.trim() || '';
-        focusTitle.textContent = trigger.dataset.title || 'ConflabCode screenshot';
-        focusCaption.textContent = `${caption} Click the image for the complete full-screen view.`;
-        focusImage.alt = sourceImage.alt;
-        focusImage.src = sourceImage.currentSrc || sourceImage.src;
-        focusDialog.hidden = false;
-        document.body.classList.add('modal-open');
-        if (focusImage.complete) requestAnimationFrame(layoutFocusedImage);
-        focusClose.focus();
+        fullscreenImage.src = sourceImage.currentSrc || sourceImage.src;
+        fullscreenImage.alt = sourceImage.alt;
+        fullscreenOverlay.hidden = false;
+        fullscreenOverlay.focus();
       }
 
-      function closeFocused() {
-        if (focusDialog.hidden) return;
-        focusDialog.hidden = true;
-        document.body.classList.remove('modal-open');
+      function closeScreenshot() {
+        if (fullscreenOverlay.hidden) return;
+        fullscreenOverlay.hidden = true;
         const returnTarget = activeTrigger;
         activeTrigger = null;
         returnTarget?.focus();
       }
 
-      function openFullscreen() {
-        if (!activeTrigger) return;
-        fullscreenImage.src = focusImage.src;
-        fullscreenImage.alt = focusImage.alt;
-        fullscreenOverlay.hidden = false;
-        fullscreenOverlay.focus();
-      }
-
-      function returnToFocused() {
-        if (fullscreenOverlay.hidden) return;
-        fullscreenOverlay.hidden = true;
-        focusFullscreen.focus();
-      }
-
       triggers.forEach(trigger => {
-        trigger.addEventListener('click', () => openFocused(trigger));
+        bindCursorTooltip(trigger, 'Full Screen');
+        trigger.addEventListener('click', () => openScreenshot(trigger));
         trigger.addEventListener('keydown', event => {
           if (event.key !== 'Enter' && event.key !== ' ') return;
           event.preventDefault();
-          openFocused(trigger);
+          openScreenshot(trigger);
         });
       });
 
-      focusImage.addEventListener('load', layoutFocusedImage);
-      focusClose.addEventListener('click', closeFocused);
-      focusFullscreen.addEventListener('click', openFullscreen);
-      focusViewport.addEventListener('click', openFullscreen);
-      focusViewport.addEventListener('keydown', event => {
-        if (event.key !== 'Enter' && event.key !== ' ') return;
-        event.preventDefault();
-        openFullscreen();
-      });
-      focusDialog.addEventListener('click', event => {
-        if (event.target === focusDialog) closeFocused();
-      });
-      fullscreenOverlay.addEventListener('click', returnToFocused);
-      window.addEventListener('resize', layoutFocusedImage);
+      bindCursorTooltip(fullscreenOverlay, 'Return');
+      fullscreenOverlay.addEventListener('click', closeScreenshot);
       document.addEventListener('keydown', event => {
         if (event.key !== 'Escape') return;
-        if (!fullscreenOverlay.hidden) returnToFocused();
-        else if (!focusDialog.hidden) closeFocused();
+        closeScreenshot();
       });
+
+      setupFullscreenToggle();
     })();
   </script>
 </body>

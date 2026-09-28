@@ -48,11 +48,52 @@
     a{color:inherit;text-decoration:none}
     img{display:block;max-width:100%}
     img.zoomable{
-      cursor:zoom-in;
+      cursor:pointer;
     }
     .shell{
-      width:min(1200px, calc(100vw - 36px));
+      width:min(1680px, calc(100vw - 28px));
       margin:0 auto;
+    }
+    .fullscreen-toggle{
+      position:fixed;
+      top:16px;
+      right:16px;
+      z-index:70;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:44px;
+      height:44px;
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:14px;
+      color:rgba(255,255,255,.9);
+      background:rgba(7,19,28,.52);
+      box-shadow:0 18px 46px rgba(0,0,0,.34);
+      backdrop-filter:blur(14px);
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .fullscreen-toggle:hover,
+    .fullscreen-toggle:focus-visible,
+    .fullscreen-toggle.is-active{
+      color:#fff;
+      border-color:rgba(255,255,255,.42);
+      background:rgba(255,255,255,.1);
+      outline:none;
+    }
+    .fullscreen-toggle[hidden]{
+      display:none;
+    }
+    .fullscreen-toggle svg{
+      width:22px;
+      height:22px;
+    }
+    .fullscreen-toggle path{
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
     }
     .topbar{
       position:sticky;
@@ -68,6 +109,7 @@
       align-items:center;
       gap:20px;
       min-height:84px;
+      padding-right:64px;
     }
     .brand{
       display:flex;
@@ -113,11 +155,14 @@
     .hero{
       position:relative;
       overflow:hidden;
-      padding:40px 0 28px;
+      padding:24px 0 30px;
+      background:
+        radial-gradient(circle at 12% 20%, rgba(111,226,212,.13), transparent 26%),
+        radial-gradient(circle at 82% 16%, rgba(255,133,92,.13), transparent 24%);
     }
     .hero-grid{
       display:grid;
-      grid-template-columns:1.15fr .95fr;
+      grid-template-columns:minmax(430px, .86fr) minmax(0, 1.34fr);
       gap:26px;
       align-items:start;
     }
@@ -130,7 +175,8 @@
       box-shadow:var(--shadow);
     }
     .hero-copy{
-      padding:34px 34px 30px;
+      align-self:start;
+      padding:clamp(28px, 2.5vw, 46px);
       background:
         radial-gradient(circle at 90% 0%, rgba(255,133,92,.16), transparent 34%),
         linear-gradient(145deg, rgba(17,35,49,.95), rgba(8,22,32,.92));
@@ -238,6 +284,9 @@
       border:1px solid rgba(255,255,255,.07);
       background:rgba(255,255,255,.035);
     }
+    .hero-point.wide{
+      grid-column:1 / -1;
+    }
     .hero-point strong{
       display:block;
       margin-bottom:4px;
@@ -251,12 +300,13 @@
     .hero-visual{
       height:auto;
       min-height:0;
-      align-self:stretch;
+      align-self:start;
       position:relative;
       padding:0;
       background:
         linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.46)),
         linear-gradient(145deg, rgba(10,32,46,.86), rgba(14,22,36,.88));
+      contain:layout paint;
     }
     .hero-marquee{
       position:relative;
@@ -264,8 +314,8 @@
       height:100%;
       display:grid;
       grid-template-columns:repeat(2, minmax(0, 1fr));
-      gap:14px;
-      padding:18px;
+      gap:18px;
+      padding:22px;
       overflow:hidden;
     }
     .hero-marquee::before,
@@ -320,8 +370,8 @@
     .marquee-card.tilt-left{transform:rotate(-2.3deg)}
     .marquee-card.tilt-right{transform:rotate(2.2deg)}
     .marquee-card.short{height:190px}
-    .marquee-card.medium{height:250px}
-    .marquee-card.tall{height:320px}
+    .marquee-card.medium{height:280px}
+    .marquee-card.tall{height:380px}
     .marquee-card img{
       width:100%;
       height:100%;
@@ -388,8 +438,8 @@
     }
     .bento{
       display:grid;
-      grid-template-columns:1.12fr .88fr;
-      gap:18px;
+      grid-template-columns:minmax(420px, .82fr) minmax(0, 1.18fr);
+      gap:22px;
       margin-top:18px;
     }
     .panel{
@@ -430,8 +480,8 @@
     }
     .shot-stack{
       display:grid;
-      gap:12px;
-      padding:12px;
+      gap:16px;
+      padding:16px;
     }
     .shot{
       overflow:hidden;
@@ -442,6 +492,21 @@
     .shot img{
       width:100%;
       height:auto;
+    }
+    .screenshot-frame{
+      display:block;
+      width:100%;
+      aspect-ratio:16 / 9;
+      overflow:hidden;
+      background:#06121b;
+    }
+    .screenshot-frame img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+    .bento .shot-stack{
+      align-content:start;
     }
     .shot-note{
       display:flex;
@@ -455,7 +520,7 @@
     .showcase-grid{
       display:grid;
       grid-template-columns:repeat(2, minmax(0, 1fr));
-      gap:18px;
+      gap:22px;
       margin-top:18px;
     }
     .case-card{
@@ -469,9 +534,9 @@
     .case-media{
       display:grid;
       grid-template-columns:1fr .74fr;
-      gap:10px;
-      padding:12px 12px 0;
-      min-height:300px;
+      gap:14px;
+      padding:16px 16px 0;
+      min-height:390px;
     }
     .case-media img{
       width:100%;
@@ -620,6 +685,7 @@
       padding:28px;
       background:rgba(3,9,14,.86);
       backdrop-filter:blur(12px);
+      cursor:pointer;
     }
     .lightbox.is-open{
       display:flex;
@@ -629,16 +695,17 @@
       inset:0;
       border:0;
       background:transparent;
-      cursor:zoom-out;
+      cursor:pointer;
     }
     .lightbox-dialog{
       position:relative;
       z-index:1;
-      width:min(1400px, 100%);
+      width:min(96vw, 1800px);
       max-height:100%;
       display:grid;
       gap:12px;
       justify-items:center;
+      cursor:pointer;
     }
     .lightbox-close{
       position:absolute;
@@ -656,12 +723,64 @@
       cursor:pointer;
     }
     .lightbox img{
-      max-width:min(1400px, 100%);
-      max-height:calc(100vh - 120px);
+      max-width:min(96vw, 1800px);
+      max-height:calc(100vh - 96px);
       width:auto;
       height:auto;
       border-radius:22px;
       box-shadow:0 24px 90px rgba(0,0,0,.45);
+      cursor:pointer;
+    }
+    .lightbox.is-screenshot{
+      padding:0;
+      background:#01040a;
+      backdrop-filter:none;
+    }
+    .lightbox.is-screenshot .lightbox-dialog{
+      width:100vw;
+      height:100vh;
+      max-height:100vh;
+      gap:0;
+    }
+    .lightbox.is-screenshot img{
+      width:100vw;
+      height:100vh;
+      max-width:100vw;
+      max-height:100vh;
+      object-fit:contain;
+      border-radius:0;
+      box-shadow:none;
+    }
+    .lightbox.is-screenshot figcaption{
+      display:none;
+    }
+    .lightbox.is-screenshot .lightbox-close{
+      display:none;
+    }
+    .cursor-tooltip{
+      position:fixed;
+      z-index:130;
+      left:0;
+      top:0;
+      padding:7px 10px;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:9px;
+      background:rgba(8,17,29,.94);
+      color:var(--text);
+      box-shadow:0 12px 32px rgba(0,0,0,.38);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.02em;
+      opacity:0;
+      pointer-events:none;
+      transform:translate3d(0,0,0);
+      transition:opacity .12s ease;
+    }
+    .cursor-tooltip.is-visible{
+      opacity:1;
+    }
+    .cursor-tooltip[hidden]{
+      display:none;
     }
     .lightbox figcaption{
       max-width:min(900px, 100%);
@@ -746,6 +865,11 @@
   </style>
 </head>
 <body>
+  <button class="fullscreen-toggle" type="button" aria-label="Enter full screen" title="Enter full screen">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M21 16v5h-5"></path>
+    </svg>
+  </button>
   <header class="topbar">
     <div class="shell topbar-inner">
       <div class="brand">
@@ -793,6 +917,10 @@
             <div class="hero-point">
               <strong>Keep what matters</strong>
               <span>Summaries, logs, and images live as persistent artifacts you can reopen later, embed elsewhere, or turn into something real instead of losing them in scrollback.</span>
+            </div>
+            <div class="hero-point wide">
+              <strong>Free + source included</strong>
+              <span>Conflab is a totally free tool, with the source code included for people who want to inspect it, keep it, or build on it.</span>
             </div>
           </div>
         </div>
@@ -908,10 +1036,6 @@
           <strong>Visual Follow-Through</strong>
           <span>Summary-driven image generation turns the strongest parts of a conversation into a usable visual family rather than random decoration.</span>
         </div>
-        <div class="stat">
-          <strong>Free + Source Included</strong>
-          <span>Conflab is positioned as a totally free tool, with the source code included for people who want to inspect it, keep it, or build on it.</span>
-        </div>
       </div>
     </section>
 
@@ -945,14 +1069,18 @@
 
           <div class="panel shot-stack">
             <figure class="shot">
-              <img class="zoomable" src="assets/images/workspace.png" alt="Conflab active conversation workspace">
+              <div class="screenshot-frame">
+                <img class="zoomable" src="assets/images/workspace.png" alt="Conflab active conversation workspace">
+              </div>
               <div class="shot-note">
                 <span>Live workspace with Director controls and multi-agent panel view.</span>
                 <span>Main conversation surface</span>
               </div>
             </figure>
             <figure class="shot">
-              <img class="zoomable" src="assets/images/results-drawer.png" alt="Conflab results drawer showing saved artifacts">
+              <div class="screenshot-frame">
+                <img class="zoomable" src="assets/images/results-drawer.png" alt="Conflab results drawer showing saved artifacts">
+              </div>
               <div class="shot-note">
                 <span>Results drawer turns conversation outputs into persistent, browsable artifacts.</span>
                 <span>Summaries, logs, images</span>
@@ -973,14 +1101,18 @@
         </div>
         <div class="showcase-grid">
           <figure class="panel shot">
-            <img class="zoomable" src="assets/images/image-dialog.png" alt="Conflab image generation dialog from summary mode">
+            <div class="screenshot-frame">
+              <img class="zoomable" src="assets/images/image-dialog.png" alt="Conflab image generation dialog from summary mode">
+            </div>
             <div class="shot-note">
               <span>Summary-driven image prompts let a conversation produce visual material that still belongs to the same thread of work.</span>
               <span>Image workflow</span>
             </div>
           </figure>
           <figure class="panel shot">
-            <img class="zoomable" src="assets/images/summary-viewer.png" alt="Conflab summary viewer modal">
+            <div class="screenshot-frame">
+              <img class="zoomable" src="assets/images/summary-viewer.png" alt="Conflab summary viewer modal">
+            </div>
             <div class="shot-note">
               <span>Saved deliverables open in their own viewer, ready to export, print, or share.</span>
               <span>Artifact viewer</span>
@@ -1122,21 +1254,86 @@
       <figcaption id="lightbox-caption"></figcaption>
     </figure>
   </div>
+  <div class="cursor-tooltip" id="cursor-tooltip" role="tooltip" hidden></div>
 
   <script>
     (function(){
+      const fullscreenButton=document.querySelector('.fullscreen-toggle');
       const zoomables=Array.from(document.querySelectorAll('img.zoomable'));
       const lightbox=document.getElementById('image-lightbox');
       const lightboxImage=document.getElementById('lightbox-image');
       const lightboxCaption=document.getElementById('lightbox-caption');
       const backdrop=document.getElementById('lightbox-backdrop');
       const closeButton=document.getElementById('lightbox-close');
+      const cursorTooltip=document.getElementById('cursor-tooltip');
       const heroCopy=document.getElementById('hero-copy');
       const heroVisual=document.getElementById('hero-visual');
       const heroMarquee=document.getElementById('hero-marquee');
       const comingSoonButtons=Array.from(document.querySelectorAll('[data-coming-soon]'));
       const comingSoonToast=document.getElementById('coming-soon-toast');
       let comingSoonTimer=null;
+
+      function setupFullscreenToggle(){
+        if(!fullscreenButton) return;
+        if(!document.fullscreenEnabled||!document.documentElement.requestFullscreen){
+          fullscreenButton.hidden=true;
+          return;
+        }
+        const enterLabel='Enter full screen';
+        const exitLabel='Exit full screen';
+        function sync(){
+          const active=Boolean(document.fullscreenElement);
+          const label=active?exitLabel:enterLabel;
+          fullscreenButton.classList.toggle('is-active',active);
+          fullscreenButton.setAttribute('aria-label',label);
+          fullscreenButton.title=label;
+        }
+        fullscreenButton.addEventListener('click',async()=>{
+          try{
+            if(document.fullscreenElement) await document.exitFullscreen();
+            else await document.documentElement.requestFullscreen();
+          }catch(error){
+            fullscreenButton.hidden=true;
+          }
+        });
+        document.addEventListener('fullscreenchange',sync);
+        sync();
+      }
+
+      setupFullscreenToggle();
+
+      function moveTooltip(event){
+        if(!cursorTooltip||cursorTooltip.hidden) return;
+        const offset=16;
+        const margin=10;
+        const width=cursorTooltip.offsetWidth;
+        const height=cursorTooltip.offsetHeight;
+        const left=Math.min(window.innerWidth-width-margin,event.clientX+offset);
+        const top=Math.min(window.innerHeight-height-margin,event.clientY+offset);
+        cursorTooltip.style.left=`${Math.max(margin,left)}px`;
+        cursorTooltip.style.top=`${Math.max(margin,top)}px`;
+      }
+
+      function showTooltip(label,event){
+        if(!cursorTooltip) return;
+        cursorTooltip.textContent=label;
+        cursorTooltip.hidden=false;
+        cursorTooltip.classList.add('is-visible');
+        moveTooltip(event);
+      }
+
+      function hideTooltip(){
+        if(!cursorTooltip) return;
+        cursorTooltip.classList.remove('is-visible');
+        cursorTooltip.hidden=true;
+      }
+
+      function bindCursorTooltip(element,label){
+        if(!element) return;
+        element.addEventListener('pointerenter',(event)=>showTooltip(label,event));
+        element.addEventListener('pointermove',moveTooltip);
+        element.addEventListener('pointerleave',hideTooltip);
+      }
 
       function showComingSoon(message){
         if(!comingSoonToast) return;
@@ -1155,7 +1352,9 @@
           heroMarquee.style.height='';
           return;
         }
-        const copyHeight=heroCopy.offsetHeight;
+        heroVisual.style.height='';
+        heroMarquee.style.height='';
+        const copyHeight=Math.ceil(heroCopy.getBoundingClientRect().height);
         if(copyHeight>0){
           heroVisual.style.height=`${copyHeight}px`;
           heroMarquee.style.height=`${copyHeight}px`;
@@ -1168,6 +1367,10 @@
         const ro=new ResizeObserver(syncHeroHeight);
         ro.observe(heroCopy);
       }
+      window.addEventListener('load',syncHeroHeight);
+      if(document.fonts&&document.fonts.ready){
+        document.fonts.ready.then(syncHeroHeight).catch(()=>{});
+      }
 
       comingSoonButtons.forEach((button)=>{
         button.addEventListener('click',(event)=>{
@@ -1178,30 +1381,37 @@
 
       if(!zoomables.length||!lightbox||!lightboxImage||!lightboxCaption||!backdrop||!closeButton) return;
 
-      function openLightbox(img){
+      function openLightbox(img,event){
         lightboxImage.src=img.currentSrc||img.src;
         lightboxImage.alt=img.alt||'Expanded image';
         lightboxCaption.textContent=img.alt||'';
+        lightbox.classList.toggle('is-screenshot',Boolean(img.closest('.screenshot-frame')));
         lightbox.classList.add('is-open');
         lightbox.setAttribute('aria-hidden','false');
         document.body.classList.add('lightbox-open');
+        if(event) showTooltip('Return',event);
       }
 
       function closeLightbox(){
         lightbox.classList.remove('is-open');
+        lightbox.classList.remove('is-screenshot');
         lightbox.setAttribute('aria-hidden','true');
         lightboxImage.src='';
         lightboxImage.alt='';
         lightboxCaption.textContent='';
         document.body.classList.remove('lightbox-open');
+        hideTooltip();
       }
 
       zoomables.forEach((img)=>{
-        img.addEventListener('click',()=>openLightbox(img));
+        bindCursorTooltip(img,'Full Screen');
+        img.addEventListener('click',(event)=>openLightbox(img,event));
       });
 
+      bindCursorTooltip(lightbox,'Return');
       backdrop.addEventListener('click',closeLightbox);
       closeButton.addEventListener('click',closeLightbox);
+      lightbox.addEventListener('click',closeLightbox);
 
       document.addEventListener('keydown',(event)=>{
         if(event.key==='Escape'&&lightbox.classList.contains('is-open')){

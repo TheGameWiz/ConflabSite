@@ -44,6 +44,47 @@
     .product-switcher::after{
       display:none;
     }
+    .fullscreen-toggle{
+      position:fixed;
+      top:16px;
+      right:16px;
+      z-index:30;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:44px;
+      height:44px;
+      border:1px solid rgba(255,255,255,.24);
+      border-radius:14px;
+      color:rgba(255,255,255,.9);
+      background:rgba(2,3,5,.46);
+      box-shadow:0 18px 46px rgba(0,0,0,.36);
+      backdrop-filter:blur(14px);
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .fullscreen-toggle:hover,
+    .fullscreen-toggle:focus-visible,
+    .fullscreen-toggle.is-active{
+      color:#fff;
+      border-color:rgba(255,255,255,.46);
+      background:rgba(255,255,255,.12);
+      outline:none;
+    }
+    .fullscreen-toggle[hidden]{
+      display:none;
+    }
+    .fullscreen-toggle svg{
+      width:22px;
+      height:22px;
+    }
+    .fullscreen-toggle path{
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
     .product-panel{
       position:absolute;
       top:0;
@@ -482,6 +523,11 @@
   </style>
 </head>
 <body class="is-settled" data-active="code">
+  <button class="fullscreen-toggle" type="button" aria-label="Enter full screen" title="Enter full screen">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M21 16v5h-5"></path>
+    </svg>
+  </button>
   <main class="product-switcher" aria-label="Conflab product chooser">
     <article class="product-panel" data-product="code" tabindex="0" aria-label="Show ConflabCode">
       <div class="panel-content">
@@ -489,7 +535,7 @@
           <span class="eyebrow">ConflabCode</span>
           <h1>Two Brains Are Better Than One!</h1>
           <p class="lede">
-            ConflabCode is a structured multi-provider software development tool, with Tasks, Stages, Lead and Reviewer roles, Checkpointed documents, and Context continuity for long runs.
+            ConflabCode is a structured multi-provider software development tool. Work with multiple agents at the same time, letting each one test the other’s reasoning and strengthen the result. Create tasks with stages, Lead and Reviewer roles, checkpointed documents, and context continuity for long runs.
           </p>
           <div class="panel-actions">
             <a class="button primary code" href="conflab-code.html">Enter ConflabCode</a>
@@ -536,10 +582,38 @@
 
   <script>
     (function(){
+      const fullscreenButton=document.querySelector('.fullscreen-toggle');
       const panels=Array.from(document.querySelectorAll('.product-panel'));
       let timer=null;
       let revealTimer=null;
       let settleFrame=null;
+
+      function setupFullscreenToggle(){
+        if(!fullscreenButton) return;
+        if(!document.fullscreenEnabled||!document.documentElement.requestFullscreen){
+          fullscreenButton.hidden=true;
+          return;
+        }
+        const enterLabel='Enter full screen';
+        const exitLabel='Exit full screen';
+        function sync(){
+          const active=Boolean(document.fullscreenElement);
+          const label=active?exitLabel:enterLabel;
+          fullscreenButton.classList.toggle('is-active',active);
+          fullscreenButton.setAttribute('aria-label',label);
+          fullscreenButton.title=label;
+        }
+        fullscreenButton.addEventListener('click',async()=>{
+          try{
+            if(document.fullscreenElement) await document.exitFullscreen();
+            else await document.documentElement.requestFullscreen();
+          }catch(error){
+            fullscreenButton.hidden=true;
+          }
+        });
+        document.addEventListener('fullscreenchange',sync);
+        sync();
+      }
 
       function activate(product){
         if(document.body.dataset.active===product) return;
@@ -589,6 +663,8 @@
           activate(panel.dataset.product);
         });
       });
+
+      setupFullscreenToggle();
     })();
   </script>
 </body>
