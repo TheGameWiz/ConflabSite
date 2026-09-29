@@ -172,7 +172,7 @@
       box-shadow:none;
       background:
         linear-gradient(180deg, rgba(2,5,11,.16), rgba(2,5,11,.62)),
-        url("assets/images/conflabcode-title.jpg") center top / cover no-repeat;
+        url("conflab-code-assets/images/conflabcode-title.jpg") center top / cover no-repeat;
     }
     .hero-stage::before{
       content:"";
@@ -296,8 +296,21 @@
       border-color:rgba(255,255,255,.12);
       color:var(--text);
     }
+    .button.ghost{
+      background:rgba(255,255,255,.025);
+      border-color:rgba(255,255,255,.1);
+      color:var(--muted);
+    }
+    .button.is-disabled{
+      opacity:.48;
+      cursor:not-allowed;
+      transform:none;
+    }
     .button:hover{
       transform:translateY(-1px);
+    }
+    .button.is-disabled:hover{
+      transform:none;
     }
     .hero-points{
       display:grid;
@@ -968,7 +981,7 @@
   <header class="topbar">
     <div class="shell topbar-inner">
       <div class="brand">
-        <img src="assets/images/conflabcode-logo.png" alt="ConflabCode logo">
+        <img src="conflab-code-assets/images/conflabcode-logo.png" alt="ConflabCode logo">
         <span class="brand-mark">Multi-Provider Agent Workflow</span>
       </div>
       <nav class="nav" aria-label="Sections">
@@ -993,10 +1006,6 @@
               <p>
                 ConflabCode puts Claude Code and Codex in the same conversation. You direct the work while two differently trained agents challenge decisions, write code, review each other, and keep the original intent visible.
               </p>
-              <div class="hero-actions">
-                <a class="button primary" href="#what-it-is">See inside the app</a>
-                <a class="button secondary" href="#workflow">Explore the stages</a>
-              </div>
               <div class="hero-points">
                 <div class="hero-point">
                   <strong>Same conversation</strong>
@@ -1015,12 +1024,18 @@
                   <span>Pool what both agents see into one consolidated opinion.</span>
                 </div>
               </div>
+              <div class="hero-actions">
+                <a class="button ghost" href="index.html">Back to Product Chooser</a>
+                <span class="button primary is-disabled" role="button" aria-disabled="true" title="Windows download link coming soon">Download for Windows</span>
+                <span class="button secondary is-disabled" role="button" aria-disabled="true" title="MacOS download link coming soon">Download for MacOS</span>
+                <a class="button secondary" href="conflab-code-assets/Users-Guide.html" target="_blank" rel="noopener">User's Guide</a>
+              </div>
             </div>
 
             <div class="hero-visual">
               <figure class="app-window">
                 <div class="shot-focus" data-title="I-009 implementation item added" role="button" tabindex="0" aria-label="Open the I-009 implementation item screenshot full screen">
-                  <img src="assets/images/conflabcode-implementation-i009.png" alt="ConflabCode showing Claude Code and Codex around an implementation plan with I-009 added" width="3840" height="2160">
+                  <img src="conflab-code-assets/images/conflabcode-implementation-i009.png" alt="ConflabCode showing Claude Code and Codex around an implementation plan with I-009 added" width="3840" height="2160">
                 </div>
                 <figcaption>The real ConflabCode workspace: two agent panels around an active implementation plan, with the Director still steering the shared task.</figcaption>
               </figure>
@@ -1076,7 +1091,7 @@
 
           <figure class="app-window">
             <div class="shot-focus" data-title="Two agents in one live task" role="button" tabindex="0" aria-label="Open the live ConflabCode task screenshot full screen">
-              <img src="assets/images/conflabcode-workspace.png" alt="A live ConflabCode task showing Claude Code, Codex, shared history, and consensus controls" width="3840" height="2160">
+              <img src="conflab-code-assets/images/conflabcode-workspace.png" alt="A live ConflabCode task showing Claude Code, Codex, shared history, and consensus controls" width="3840" height="2160">
             </div>
             <figcaption>A long-running task with both agents present, shared history in the center, and response-sharing and consensus controls always within reach.</figcaption>
           </figure>
@@ -1171,7 +1186,7 @@
         </div>
         <figure class="app-window stage-visual">
           <div class="shot-focus" data-title="Structured Design stage" role="button" tabindex="0" aria-label="Open the ConflabCode Design stage screenshot full screen">
-            <img src="assets/images/conflabcode-design-stage.png" alt="ConflabCode Design stage with seven imported design items between Claude Code and Codex" width="3840" height="2160">
+            <img src="conflab-code-assets/images/conflabcode-design-stage.png" alt="ConflabCode Design stage with seven imported design items between Claude Code and Codex" width="3840" height="2160">
           </div>
           <figcaption>Ten brainstorm notes have become seven visible Design items. The center document is the shared record; Lead and Reviewer remain independent on either side.</figcaption>
         </figure>
@@ -1190,7 +1205,7 @@
           <article class="showcase-row reverse">
             <figure class="app-window">
               <div class="shot-focus" data-title="Freeform objectives" role="button" tabindex="0" aria-label="Open the ConflabCode Freeform objectives screenshot full screen">
-                <img src="assets/images/conflabcode-freeform-objectives.png" alt="ConflabCode showing two Freeform objectives in the shared objective tree between Claude Code and Codex" width="3840" height="2160">
+                <img src="conflab-code-assets/images/conflabcode-freeform-objectives.png" alt="ConflabCode showing two Freeform objectives in the shared objective tree between Claude Code and Codex" width="3840" height="2160">
               </div>
               <figcaption>Two Freeform objectives in the shared center tree. The conversation can keep moving while the durable work list stays visible.</figcaption>
             </figure>
@@ -1235,7 +1250,7 @@
           <article class="showcase-row">
             <figure class="app-window">
               <div class="shot-focus" data-title="Context and workspace settings" role="button" tabindex="0" aria-label="Open the ConflabCode settings screenshot full screen">
-                <img src="assets/images/conflabcode-settings.png" alt="ConflabCode settings showing provider configuration, context thresholds, filesystem access, and display controls" width="3840" height="2160">
+                <img src="conflab-code-assets/images/conflabcode-settings.png" alt="ConflabCode settings showing provider configuration, context thresholds, filesystem access, and display controls" width="3840" height="2160">
               </div>
               <figcaption>Model-aware baton thresholds and context settings live alongside the workspace's provider and access controls.</figcaption>
             </figure>
@@ -1251,7 +1266,7 @@
           <article class="showcase-row reverse">
             <figure class="app-window">
               <div class="shot-focus" data-title="Implementation provenance" role="button" tabindex="0" aria-label="Open the ConflabCode provenance screenshot full screen">
-                <img src="assets/images/conflabcode-provenance.png" alt="A ConflabCode implementation item expanded to show its complete provenance trail" width="3840" height="2160">
+                <img src="conflab-code-assets/images/conflabcode-provenance.png" alt="A ConflabCode implementation item expanded to show its complete provenance trail" width="3840" height="2160">
               </div>
               <figcaption>An Implementation item expanded to its event trail, source Design item, approvals, later touches, and round history.</figcaption>
             </figure>
@@ -1267,7 +1282,7 @@
           <article class="showcase-row">
             <figure class="app-window">
               <div class="shot-focus" data-title="Behavior Policy editor" role="button" tabindex="0" aria-label="Open the ConflabCode Behavior Policy screenshot full screen">
-                <img src="assets/images/conflabcode-policy.png" alt="The ConflabCode Behavior Policy editor with editable operating rules" width="3840" height="2160">
+                <img src="conflab-code-assets/images/conflabcode-policy.png" alt="The ConflabCode Behavior Policy editor with editable operating rules" width="3840" height="2160">
               </div>
               <figcaption>The Behavior Policy editor. Defaults are supplied, but the working definition of each role remains yours.</figcaption>
             </figure>
@@ -1291,8 +1306,10 @@
             ConflabCode is a standalone desktop application for macOS and Windows, built for software work that benefits from independent reasoning, visible review, and continuity across long-running projects.
           </p>
           <div class="cta-actions">
-            <a class="button primary" href="#what-it-is">Explore ConflabCode</a>
-            <a class="button secondary" href="index.html">Return to Product Chooser</a>
+            <a class="button ghost" href="index.html">Back to Product Chooser</a>
+            <span class="button primary is-disabled" role="button" aria-disabled="true" title="Windows download link coming soon">Download for Windows</span>
+            <span class="button secondary is-disabled" role="button" aria-disabled="true" title="MacOS download link coming soon">Download for MacOS</span>
+            <a class="button secondary" href="conflab-code-assets/Users-Guide.html" target="_blank" rel="noopener">User's Guide</a>
           </div>
         </div>
       </div>

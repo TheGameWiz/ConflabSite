@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A practical guide to directing Claude Code and Codex together in ConflabCode.">
+  <title>ConflabCode User’s Guide</title>
+  <style>
+    :root{--ink:#1d2a33;--muted:#536675;--paper:#fbfbf8;--panel:#f2f6f7;--line:#d4dee1;--navy:#071018;--navy-2:#0b1823;--cyan:#16b7bd;--cyan-dark:#0a7378;--red:#cf202b;--gold:#b17814;--shadow:0 24px 70px rgba(0,0,0,.28)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:auto;scroll-padding-top:24px}
+    body{margin:0;background:linear-gradient(180deg,#03070b 0,#071018 42rem,#0a141c 100%);color:var(--ink);font:17px/1.72 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:var(--cyan-dark);text-underline-offset:.16em}
+    a:hover{color:var(--red)}
+    .skip-link{position:fixed;left:12px;top:12px;z-index:200;transform:translateY(-160%);padding:9px 13px;background:#fff;color:#000;border-radius:6px}
+    .skip-link:focus{transform:none}
+    .shell{width:min(1380px,calc(100% - 32px));margin:0 auto}
+    .hero{position:relative;overflow:hidden;padding:70px 48px 62px;text-align:center;color:#eef8fa;background:radial-gradient(circle at 50% -20%,rgba(22,183,189,.24),transparent 48%),linear-gradient(145deg,#09131c,#061019 60%,#111318);border:1px solid rgba(255,255,255,.11);border-radius:0 0 28px 28px;box-shadow:var(--shadow)}
+    .hero:after{content:"";position:absolute;inset:auto 12% 0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--red),transparent)}
+    .hero-logo{display:block;width:min(780px,92vw);height:auto;margin:0 auto 28px;filter:drop-shadow(0 12px 30px rgba(0,0,0,.4))}
+    .eyebrow{margin:0 0 10px;color:#78d6da;font-size:.78rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+    h1{max-width:900px;margin:0 auto;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.65rem,6.5vw,5.6rem);line-height:.98;letter-spacing:-.045em;text-wrap:balance}
+    .subtitle{max-width:760px;margin:24px auto 0;color:#bdd0d7;font-size:clamp(1rem,2vw,1.28rem);line-height:1.55;text-wrap:balance}
+    .toc-panel{margin:34px auto;padding:42px clamp(22px,5vw,64px);background:var(--paper);border-radius:18px;box-shadow:var(--shadow)}
+    .toc-panel h2{margin:0 0 8px;font:700 clamp(1.8rem,4vw,2.65rem)/1.15 Georgia,"Times New Roman",serif;color:#14242f}
+    .toc-intro{margin:0 0 24px;color:var(--muted)}
+    .toc-list,.toc-list ol{margin:0;padding:0;list-style:none}
+    .toc-list>li{border-top:1px solid var(--line)}
+    .toc-list a{display:grid;grid-template-columns:3.5rem minmax(0,1fr);gap:.7rem;padding:.36rem 0;color:#20323d;text-decoration:none;font-size:1.12rem;line-height:1.22}
+    .toc-list>li>a{display:block;padding:.52rem 0 .3rem;font-size:1.68rem;font-weight:700;line-height:1.08;letter-spacing:-.02em}
+    .toc-list>li>a .toc-number{display:none}
+    .toc-list a:hover span:last-child{text-decoration:underline;text-decoration-color:var(--cyan);text-decoration-thickness:2px}
+    .toc-list ol{padding:0 0 .2rem}
+    .toc-list ol a{grid-template-columns:3.5rem minmax(0,1fr);padding:.14rem 0;color:#52636e;font-size:1.33rem;line-height:1.2}
+    .toc-number{color:var(--cyan-dark);font:800 1.1rem/1.45 ui-monospace,"SFMono-Regular",Consolas,monospace;letter-spacing:.04em}
+    .page{margin:0 auto 70px;padding:clamp(32px,6vw,78px) clamp(22px,7vw,92px);background:var(--paper);border-radius:20px;box-shadow:var(--shadow)}
+    .part{padding-top:1rem}
+    .part+.part{margin-top:3.7rem;padding-top:3.7rem;border-top:1px solid var(--line)}
+    .part h2{position:relative;margin:0 0 1.35rem;color:#122631;font:700 clamp(2rem,4.3vw,3.25rem)/1.13 Georgia,"Times New Roman",serif;letter-spacing:-.025em;text-wrap:balance}
+    .part h2:before{content:"";display:block;width:68px;height:4px;margin:0 0 18px;border-radius:3px;background:linear-gradient(90deg,var(--cyan),var(--red))}
+    .subsection{margin-top:2.65rem}
+    .subsection h3{margin:0 0 1rem;color:#173746;font-size:clamp(1.35rem,2.4vw,1.75rem);line-height:1.24;letter-spacing:-.015em;text-wrap:balance}
+    h2[id],h3[id]{scroll-margin-top:22px}
+    p{margin:.9rem 0}
+    strong{color:#172b36}
+    ul,ol{padding-left:1.45rem}
+    li+li{margin-top:.4rem}
+    hr{border:0;border-top:1px solid var(--line);margin:2.6rem 0}
+    code{padding:.12em .34em;border:1px solid #d7e1e3;border-radius:4px;background:#eef3f4;font:88% ui-monospace,"SFMono-Regular",Consolas,monospace}
+    .practical-note{margin:1.35rem 0 1.7rem;padding:.05rem 0 .05rem 1.1rem;border-left:4px solid var(--cyan)}
+    .practical-note p{margin:.2rem 0;color:#374c59}
+    .open-note{margin:1.35rem 0 1.8rem;padding:1rem 1.2rem;background:#fff7e8;border-left:4px solid var(--gold);color:#54452e}
+    .site-link{display:inline-block;margin-top:22px;color:#9edee1;font-size:.82rem;font-weight:750;letter-spacing:.06em;text-transform:uppercase;text-decoration:none}
+    .site-link:hover{color:#fff;text-decoration:underline}
+
+    .round-accordion{width:min(100%,900px);margin:1.35rem auto 2rem;border:1px solid #c8d7da;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 14px 34px rgba(20,45,57,.09)}
+    .round-disclosure+.round-disclosure{border-top:1px solid #d7e1e3}
+    .round-disclosure summary{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1rem;padding:1rem 1.1rem;cursor:pointer;list-style:none;color:#193440;background:#f4f8f8;font-size:.94rem;line-height:1.45;transition:background-color .15s ease,color .15s ease}
+    .round-disclosure summary::-webkit-details-marker{display:none}
+    .round-disclosure summary:hover{background:#eaf4f4;color:#0a5f64}
+    .round-disclosure summary:focus-visible{position:relative;z-index:1;outline:3px solid var(--cyan);outline-offset:-3px;background:#e7f5f5}
+    .round-disclosure[open] summary{color:#fff;background:#102b36}
+    .round-summary-text{min-width:0;overflow-wrap:anywhere}
+    .round-number{color:var(--cyan-dark);font-weight:850}
+    .round-disclosure[open] .round-number{color:#79d7da}
+    .round-title{font-weight:750}
+    .round-state{position:relative;width:1.35rem;height:1.35rem;flex:0 0 auto;border:1px solid currentColor;border-radius:50%}
+    .round-state:before,.round-state:after{content:"";position:absolute;left:50%;top:50%;width:.62rem;height:2px;background:currentColor;transform:translate(-50%,-50%)}
+    .round-state:after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .15s ease}
+    .round-disclosure[open] .round-state:after{transform:translate(-50%,-50%) rotate(0)}
+    .round-transcript{display:grid;gap:1rem;padding:1.15rem;background:#f9fbfb}
+    .transcript-speaker{min-width:0;padding:1rem 1.05rem;border:1px solid #d7e1e3;border-left:4px solid var(--cyan-dark);border-radius:8px;background:#fff;overflow-wrap:anywhere}
+    .transcript-speaker--claude{border-left-color:#337fc2}
+    .transcript-speaker--codex{border-left-color:#7957b8}
+    .transcript-speaker-heading{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.2rem 1rem;margin:0 0 .65rem;padding-bottom:.55rem;border-bottom:1px solid #e1e8ea}
+    .transcript-speaker-heading h4{margin:0;color:#173746;font-size:1rem}
+    .transcript-speaker-heading span{color:#61737e;font:700 .76rem/1.4 ui-monospace,"SFMono-Regular",Consolas,monospace}
+    .transcript-message{color:#334a56;font-size:.91rem;line-height:1.62}
+    .transcript-message>p:first-child{margin-top:0}
+    .transcript-message>p:last-child{margin-bottom:0}
+    .transcript-message code{white-space:normal;overflow-wrap:anywhere}
+    .process-timeline{position:relative;display:grid;gap:1rem;margin:1.8rem 0 2.2rem;padding-left:1.25rem;border-left:2px solid #b9dadd}
+    .process-step{position:relative;padding:1rem 1.15rem;background:#f0f6f6;border:1px solid #d3e3e5;border-radius:10px}
+    .process-step:before{content:"";position:absolute;left:-1.72rem;top:1.32rem;width:.82rem;height:.82rem;border:3px solid var(--paper);border-radius:50%;background:var(--cyan)}
+    .process-step h4{margin:0 0 .35rem;color:#183845;font-size:1.04rem}
+    .process-step p{margin:.35rem 0;color:#405662}
+    .process-number{display:inline-block;margin-right:.55rem;color:var(--cyan-dark);font:800 .78rem/1 ui-monospace,"SFMono-Regular",Consolas,monospace}
+    .director-instruction{margin:.8rem 0 0;padding:.8rem 1rem;border-left:3px solid var(--cyan-dark);background:#fff;color:#263d48;font-weight:650}
+    .example-note{margin:1.4rem 0 2rem;padding:1rem 1.15rem;border-left:4px solid var(--gold);background:#fff7e8;color:#54452e}
+    .guide-figure{margin:2rem calc(clamp(0px,3vw,30px) * -1) 2.5rem;border:1px solid #263947;border-radius:12px;overflow:hidden;background:#071018;box-shadow:0 18px 45px rgba(12,26,34,.2)}
+    .screenshot-trigger{position:relative;display:grid;place-items:center;aspect-ratio:16/9;cursor:pointer;outline:none;background:#020508}
+    .screenshot-trigger:focus-visible{box-shadow:inset 0 0 0 4px var(--cyan)}
+    .screenshot-trigger img{display:block;width:100%;height:auto;max-height:100%;object-fit:contain}
+    .guide-figure figcaption{padding:13px 17px 15px;color:#c9d6db;background:#0c1922;font-size:.92rem;line-height:1.5}
+    .figure-hint{color:#72cdd1}
+    .table-wrap{overflow-x:auto;margin:1.45rem 0;border:1px solid var(--line);border-radius:9px}
+    table{width:100%;border-collapse:collapse;min-width:640px;font-size:.94rem;line-height:1.5}
+    th,td{padding:.78rem .9rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+    thead th{background:#10222d;color:#f2f8f9}
+    tbody th{width:27%;color:#173442;background:#edf3f4}
+    tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+    .back-to-contents{display:inline-block;margin-top:1.5rem;color:#637580;font-size:.84rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+    .fullscreen-overlay[hidden],.cursor-tooltip[hidden]{display:none}
+    .fullscreen-overlay{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:12px;background:#01040a;cursor:pointer}
+    .fullscreen-overlay img{display:block;width:auto;height:auto;max-width:calc(100vw - 24px);max-height:calc(100vh - 24px);object-fit:contain;user-select:none;pointer-events:none}
+    .cursor-tooltip{position:fixed;z-index:150;left:0;top:0;padding:7px 10px;border:1px solid rgba(255,255,255,.24);border-radius:6px;background:rgba(4,13,20,.94);color:#f6fbfc;font:700 12px/1.2 ui-sans-serif,system-ui,sans-serif;letter-spacing:.03em;box-shadow:0 8px 22px rgba(0,0,0,.35);pointer-events:none;opacity:0;transition:opacity .12s ease}
+    .cursor-tooltip.is-visible{opacity:1}
+    footer{padding:0 0 44px;text-align:center;color:#81929c;font-size:.85rem}
+    @media (max-width:720px){body{font-size:16px}.shell{width:calc(100% - 18px)}.hero{padding:48px 20px 44px;border-radius:0 0 18px 18px}.hero-logo{margin-bottom:26px}.toc-panel{margin-top:18px;padding:30px 20px}.toc-list a{grid-template-columns:2.8rem minmax(0,1fr)}.toc-list>li>a{font-size:1.55rem}.toc-list ol{padding-left:0}.toc-list ol a{grid-template-columns:3rem minmax(0,1fr)}.page{padding:34px 20px;border-radius:14px}.round-disclosure summary{grid-template-columns:minmax(0,1fr) auto;gap:.7rem;padding:.9rem}.round-transcript{padding:.8rem}.transcript-speaker{padding:.85rem}.transcript-speaker-heading{display:block}.transcript-speaker-heading span{display:block;margin-top:.2rem}.part+.part{margin-top:2.8rem;padding-top:2.8rem}.guide-figure{margin:1.7rem 0 2rem}.figure-hint{display:block;margin-top:.35rem}}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cursor-tooltip{transition:none}}
+    @media print{body{background:#fff;font-size:11pt}.shell{width:100%}.hero{box-shadow:none;border-radius:0;padding:28px;color:#111;background:#fff;border:0;border-bottom:2px solid #111}.hero-logo{filter:none;max-width:340px}.eyebrow,.subtitle{color:#333}.toc-panel,.page{box-shadow:none;border-radius:0;margin:0;padding:28px}.guide-figure{break-inside:avoid;box-shadow:none}.back-to-contents,.figure-hint,.fullscreen-overlay,.cursor-tooltip{display:none!important}a{color:inherit;text-decoration:none}}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to guide</a>
+  <div class="shell">
+    <header class="hero">
+      <img class="hero-logo" src="Users-Guide-Assets/conflabcode-logo.png" alt="ConflabCode User’s Guide" width="1055" height="192">
+      <p class="eyebrow">Two agents, one shared project; you direct.</p>
+      <p class="subtitle">A practical guide to directing Claude Code and Codex together in one shared, traceable workspace.</p>
+      <a class="site-link" href="https://conflab.ai">Back to conflab.ai</a>
+    </header>
+    <nav class="toc-panel" id="contents" aria-labelledby="contents-heading">
+      <h2 id="contents-heading">Contents</h2>
+      <p class="toc-intro">Every part and subsection is linked below. Screenshot figures open to the complete original image and return you to the same reading position.</p>
+      <ol class="toc-list"><li><a href="#part-1-overview"><span class="toc-number">1</span><span>Part 1 - Overview</span></a><ol><li><a href="#what-conflabcode-is"><span class="toc-number">1.1</span><span>What ConflabCode is</span></a></li><li><a href="#the-mental-model"><span class="toc-number">1.2</span><span>The mental model</span></a></li><li><a href="#what-to-expect-from-agents"><span class="toc-number">1.3</span><span>What to expect from agents</span></a></li><li><a href="#platforms-and-agents"><span class="toc-number">1.4</span><span>Platforms and agents</span></a></li></ol></li><li><a href="#part-2-getting-set-up"><span class="toc-number">2</span><span>Part 2 - Getting set up</span></a><ol><li><a href="#launching-conflabcode-and-picking-a-workspace"><span class="toc-number">2.1</span><span>Launching ConflabCode and picking a workspace</span></a></li><li><a href="#provider-credentials-and-the-essentials"><span class="toc-number">2.2</span><span>Provider credentials and the essentials</span></a></li><li><a href="#creating-your-first-task"><span class="toc-number">2.3</span><span>Creating your first task</span></a></li></ol></li><li><a href="#part-3-two-agents-in-the-same-conversation-not-two-sessions-passing-notes"><span class="toc-number">3</span><span>Part 3 - Two agents in the same conversation, not two sessions passing notes</span></a><ol><li><a href="#the-director-panel-and-composer"><span class="toc-number">3.1</span><span>The Director panel and composer</span></a></li><li><a href="#targeting-an-agent"><span class="toc-number">3.2</span><span>Targeting an agent</span></a></li><li><a href="#what-each-agent-sees-of-the-other"><span class="toc-number">3.3</span><span>What each agent sees of the other</span></a></li><li><a href="#steer-and-interrupt"><span class="toc-number">3.4</span><span>Steer and Interrupt</span></a></li><li><a href="#when-an-agent-stalls"><span class="toc-number">3.5</span><span>When an agent stalls</span></a></li></ol></li><li><a href="#part-4-tasks"><span class="toc-number">4</span><span>Part 4 - Tasks</span></a><ol><li><a href="#organizing-tasks"><span class="toc-number">4.1</span><span>Organizing tasks</span></a></li><li><a href="#the-task-lifecycle"><span class="toc-number">4.2</span><span>The task lifecycle</span></a></li><li><a href="#finding-things-again"><span class="toc-number">4.3</span><span>Finding things again</span></a></li></ol></li><li><a href="#part-5-flexible-enough-to-match-how-you-actually-work"><span class="toc-number">5</span><span>Part 5 - Flexible enough to match how you actually work</span></a><ol><li><a href="#freeform-no-ceremony-required"><span class="toc-number">5.1</span><span>Freeform: no ceremony required</span></a></li><li><a href="#the-review-and-incorporate-loop"><span class="toc-number">5.2</span><span>The Review and Incorporate loop</span></a></li><li><a href="#freeform-objectives"><span class="toc-number">5.3</span><span>Freeform Objectives</span></a></li></ol></li><li><a href="#part-6-real-cross-review-enforced-by-the-stages-and-the-provenance-behind-it"><span class="toc-number">6</span><span>Part 6 - Real cross-review, enforced by the stages, and the provenance behind it</span></a><ol><li><a href="#the-four-structured-stages"><span class="toc-number">6.1</span><span>The four structured stages</span></a></li><li><a href="#provenance-across-stages"><span class="toc-number">6.2</span><span>Provenance across stages</span></a></li></ol></li><li><a href="#part-7-one-click-to-reach-consensus"><span class="toc-number">7</span><span>Part 7 - One click to reach consensus</span></a><ol><li><a href="#reach-consensus"><span class="toc-number">7.1</span><span>Reach Consensus</span></a></li><li><a href="#share-responses"><span class="toc-number">7.2</span><span>Share Responses</span></a></li></ol></li><li><a href="#part-8-context-that-manages-itself"><span class="toc-number">8</span><span>Part 8 - Context that manages itself</span></a><ol><li><a href="#the-baton-in-plain-terms"><span class="toc-number">8.1</span><span>The baton, in plain terms</span></a></li><li><a href="#tuning-the-thresholds"><span class="toc-number">8.2</span><span>Tuning the thresholds</span></a></li></ol></li><li><a href="#part-9-built-to-run-more-than-one-pair-of-agents-at-once"><span class="toc-number">9</span><span>Part 9 - Built to run more than one pair of agents at once</span></a><ol><li><a href="#multiple-workspaces-multiple-windows"><span class="toc-number">9.1</span><span>Multiple workspaces, multiple windows</span></a></li><li><a href="#tools-that-fix-their-own-mistakes"><span class="toc-number">9.2</span><span>Tools that fix their own mistakes</span></a></li></ol></li><li><a href="#part-10-behavior-policy-and-rules-you-control"><span class="toc-number">10</span><span>Part 10 - Behavior Policy and Rules you control</span></a><ol><li><a href="#behavior-policy"><span class="toc-number">10.1</span><span>Behavior Policy</span></a></li><li><a href="#rules"><span class="toc-number">10.2</span><span>Rules</span></a></li><li><a href="#the-rest-of-settings-briefly"><span class="toc-number">10.3</span><span>The rest of Settings, briefly</span></a></li></ol></li><li><a href="#part-11-everything-else-the-tool-keeps-for-you"><span class="toc-number">11</span><span>Part 11 - Everything else the tool keeps for you</span></a><ol><li><a href="#the-bottom-center-tabs"><span class="toc-number">11.1</span><span>The bottom center tabs</span></a></li><li><a href="#results-and-artifacts"><span class="toc-number">11.2</span><span>Results and artifacts</span></a></li></ol></li><li><a href="#part-12-putting-it-together"><span class="toc-number">12</span><span>Part 12 - Putting it together</span></a><ol><li><a href="#a-real-freeform-and-ai-director-run"><span class="toc-number">12.1</span><span>A real Freeform and AI Director run</span></a></li><li><a href="#a-three-round-reach-consensus-example"><span class="toc-number">12.2</span><span>A three-round Reach Consensus example</span></a></li><li><a href="#when-something-goes-wrong"><span class="toc-number">12.3</span><span>When something goes wrong</span></a></li></ol></li></ol>
+    </nav>
+    <main class="page" id="main-content">
+      <section class="part" aria-labelledby="part-1-overview">
+<h2 id="part-1-overview">Part 1 - Overview</h2>
+<section class="subsection" aria-labelledby="what-conflabcode-is">
+<h3 id="what-conflabcode-is">What ConflabCode is</h3>
+<p>ConflabCode puts two AI coding agents, Claude Code and Codex, on the same project at the same time, with you directing. Here is what that means in practice:</p>
+<p><strong>Two agents in the same conversation, not two sessions passing notes.</strong> Claude and Codex sit in the room together, trained differently, so they catch different mistakes the way a single agent working alone would not. Talk to both at once, or target one directly by clicking its window, naming it by name in your message, or locking a target with a right click. Whatever one agent says, the other sees on the next round, clearly marked as context to be aware of, not an instruction to follow.</p>
+<p><strong>Context that manages itself.</strong> Normally, you watch context usage and save it yourself before you hit the wall. On ConflabCode, nobody watches the gauge. Set a threshold per model, a lower percentage for a huge context window where context rot and higher cost creep in, a higher percentage for a smaller one, and when that threshold is hit, ConflabCode promotes a fresh agent instance and hands off the history invisibly. You stop thinking about context entirely.</p>
+<p><strong>Flexible enough to match how you actually work.</strong> Say &quot;move this button seven pixels right&quot; and the lead just does it, no ceremony required, with review always one click away. For a handful of loose objectives, free form mode runs them through design review, implementation, and verification automatically, with a single click.</p>
+<p><strong>Real cross-review, enforced by the stages themselves.</strong> For even more structure, brainstorm, design, implementation, verification, every stage lets you assign a lead and a reviewer, and you can swap roles at each stage, so Claude designs and Codex builds, then Claude reviews the code Codex just wrote. The stage itself makes sure of it.</p>
+<p><strong>Provenance that survives every handoff.</strong> Design items trace back to the brainstorm notes and rounds that produced them. Implementation traces back to design. Verification checks against all of it. At every stage, the reviewer isn't just checking whether the agent did what it said it would do, it's checking against your original intent, with an actual link back to where that intent came from. The more detail you give it, the sharper the result, thin notes still get you thin results, and the structure is there for you to take advantage of.</p>
+<p><strong>One click to reach consensus.</strong> It orients both agents on the same page, each catching what the other missed, and merges their input into a consolidated opinion you can act on. Neither agent holds the whole picture alone, so pooling what each one sees, even from the same context, catches more than either would catch working solo.</p>
+<p><strong>Built to run more than one pair of agents at once.</strong> Run up to ten ConflabCode instances at the same time, more than enough for any situation. Additionally, ConflabCode provides shiny new tools to replace the agents' original ones. Every mistake an agent makes normally costs a round trip to the provider, and that adds up fast. Each trip re-sends a full copy of context, costing time and money. ConflabCode's tools catch and retry the errors, self-correcting until it actually works. Things like quoting mistakes, wrong paths, and edits that need another pass all get fixed automatically.</p>
+<p><strong>Behavior Policy and Rules you control.</strong> Behavior Policy describes what it means to be the lead agent or the reviewer, and tells the agent what is expected in that role for each stage, and it comes with sensible presets already in place. A global set of Rules ships with the product, edit them or add your own, project Rules are entirely up to you to define, they shape how the agents work with you, your own preferences for how they respond and interact. Edit either carefully, your changes replace the defaults rather than layering on top, so a careless edit can change how a stage functions. A full reset always brings you back to the defaults.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you see:</strong> the opening Overview explains the shared workspace, the two-agent model, and the next required setup step. <strong>Why it matters:</strong> it gives you a safe orientation point before a task or provider session is running.</p></div>
+<figure class="guide-figure" id="figure-overview">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/overview.png" alt="ConflabCode Overview screen with workspace guidance, settings and tasks explanations, a disclaimer, and a Getting Started checklist" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>The Overview is the application’s starting map: configure the workspace first, then select or create a task. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="the-mental-model">
+<h3 id="the-mental-model">The mental model</h3>
+<p>A workspace is a folder on disk. Everything ConflabCode knows about a project, every task, every conversation, every stage, lives under that one folder.</p>
+<p>A workspace holds tasks, and a task is the unit of work. It remembers everything: the full conversation, the round by round history, which objectives are done, which stage it's in. Open a task, close it, come back later, and it picks up exactly where you left it.</p>
+<p>Inside a task, work happens one of two ways. Loosely, in Freeform, where you just talk and things get done. Or through four named stages in order: Brainstorm, Design, Implementation, Verification.</p>
+<p>Two agents work every task, always. Each one is either Claude Code or Codex, and depending on the stage, either one can be Lead or Reviewer. The roles swap. The agents don't.</p>
+<p>You are the Director. That's the human in the room, and in every task, that's you. You can talk to one agent, talk to both at once, or, where the current stage supports it, let an AI Director draft and send on its own.</p>
+<p>Whatever one agent does, the other sees it on its next turn. Not as an instruction to follow, just as context to be aware of. That's the mechanical heart of the whole tool: same conversation, not two sessions passing notes.</p>
+</section>
+<section class="subsection" aria-labelledby="what-to-expect-from-agents">
+<h3 id="what-to-expect-from-agents">What to expect from agents</h3>
+<p>Before you trust anything else in this guide, it's worth being honest about what ConflabCode changes and what it doesn't.</p>
+<p>Two agents catching each other's mistakes lowers the error rate. It doesn't zero it out. Review and Incorporate are real gates, but in Freeform they're gates you can decline to use, and even inside a structured stage, a Reviewer's approval is a judgment call, not a guarantee.</p>
+<p>You still have to read what an agent claims it did. The tool gives you evidence, the record, the tool log, the diff, instead of asking you to take an agent's word for it. Somebody still has to look at the evidence. That somebody is you.</p>
+<p>Structure adds dependability. It doesn't add control. If you tell an agent to do something destructive, the stage machinery doesn't stop it. The permission dialogs are what stand between you and that, and only for the operations they actually cover.</p>
+<p>One working rule worth stating plainly. Review and Incorporate are offers, not requirements. If the work already looks right, skip Review and move on. If a Reviewer flags something not worth acting on, don't Incorporate it. The buttons make your judgment easier to act on. They are not a substitute for it.</p>
+</section>
+<section class="subsection" aria-labelledby="platforms-and-agents">
+<h3 id="platforms-and-agents">Platforms and agents</h3>
+<p>ConflabCode is an Electron desktop app validated for routine use on Windows and macOS. Packaging artifacts may exist for other platforms, but this guide does not present Linux as a validated daily-use platform.</p>
+<p>Two agent providers are supported and tested today: Claude Code and Codex, each through its own native runtime integration. Put the same provider in both seats, and ConflabCode warns you rather than blocking you, in case that's actually what you want.</p>
+<p>A task needs two active provider seats to run at all. Unlike M-PACT, where a single agent is an optional, lighter weight way to work, ConflabCode isn't built around a one agent shape. Two agents is the whole idea.</p>
+<hr>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-2-getting-set-up">
+<h2 id="part-2-getting-set-up">Part 2 - Getting set up</h2>
+<p>Getting set up is three separate things: pick a workspace, tell ConflabCode which providers you're using, and create your first task. None of it takes long.</p><section class="subsection" aria-labelledby="launching-conflabcode-and-picking-a-workspace">
+<h3 id="launching-conflabcode-and-picking-a-workspace">Launching ConflabCode and picking a workspace</h3>
+<p>The first time you launch ConflabCode, you'll see a splash screen, then a folder picker, unless you launched with a specific path or a recent workspace already in hand, in which case ConflabCode drops you straight into it.</p>
+<p>The folder picker gives you breadcrumbs, root shortcuts, Go Up and Home buttons, a toggle for hidden files, and a Recent row along the bottom showing your last several workspaces.</p>
+<p>Each Recent entry shows, in parentheses, whether that workspace is already open somewhere else, and in which task, or &quot;None&quot; if it's open with no task picked yet. Click a Recent entry that's open in another window, and ConflabCode asks first: switch this window to it, open a brand new window, or cancel.</p>
+<p>Opening a brand new folder as a workspace initializes it right there. The first Save Settings creates the workspace's <code>.ConflabCode</code> folder. Save stays disabled until ConflabCode has found both the Claude Code and Codex CLIs and an AI Helper is selected; a red note under the button lists whatever is still missing.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> browse to a project folder, choose a recent workspace, or start a new one. <strong>What you see:</strong> open workspaces carry their live task state in the Recent row. <strong>Result:</strong> the chosen folder becomes the boundary for task history and workspace settings.</p></div>
+<figure class="guide-figure" id="figure-workspace-picker">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/workspace-picker.png" alt="ConflabCode workspace folder picker showing breadcrumbs, folders, recent workspaces, New Workspace, and Select Folder controls" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>The workspace picker combines normal folder navigation with live Recent entries, so you can see whether another window already has a workspace or task open. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="provider-credentials-and-the-essentials">
+<h3 id="provider-credentials-and-the-essentials">Provider credentials and the essentials</h3>
+<p>In Settings, Provider Credentials handles both agents. ConflabCode auto detects each agent's CLI path, with a manual override if it guesses wrong. Each provider gets its own subscription versus API key toggle, and a Launch Login button for the ones that need it.</p>
+<p>Separately, AI Helper has its own provider, model, effort, and speed settings. This isn't a third agent you talk to. It's what powers summaries, rule checks, and a handful of other background jobs behind the scenes.</p>
+<p>Most of the rest of Settings is routine enough that it doesn't need its own teaching space here. Part 10 covers it as a reference list.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> confirm the detected CLI for each provider, choose subscription login or API-key mode, and configure the AI Helper separately. <strong>What you see:</strong> provider choices and helper settings stay in one sidebar but serve different jobs. <strong>Result:</strong> both agent seats and the background helper are ready without treating the helper as a third conversational agent.</p></div>
+<figure class="guide-figure" id="figure-provider-credentials">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/provider-credentials.png" alt="ConflabCode Settings sidebar showing provider credentials, a detected Claude Code runtime menu, Codex credentials, AI Helper controls, and context settings" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>Provider Credentials selects each native agent runtime and authentication mode. The AI Helper settings below are independent background support settings. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="creating-your-first-task">
+<h3 id="creating-your-first-task">Creating your first task</h3>
+<p>Right click the Tasks root for two options: Add Category or Add Task. Categories are optional folders. Tasks can live at the root or inside one, and you can drag them in and out later.</p>
+<p>The Task Editor asks for a name and a description of the objective. Save commits the task without leaving the editor. Go launches the actual working view. A trash can deletes the task, and a lock icon closes it.</p>
+<p>A brand new task defaults to Human Director, Freeform stage, free form mode, and two agent windows on your workspace's default providers. You don't have to configure anything to get moving. Name it, describe it, hit Go.</p>
+<hr>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> give the task a durable name and objective, then choose Save to keep editing or Go to enter the working view. <strong>What you see:</strong> the task number and open/closed control stay with the editor. <strong>Result:</strong> the task becomes the persistent container for the conversation and stage records.</p></div>
+<figure class="guide-figure" id="figure-task-editor">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/task-editor.png" alt="ConflabCode Task Editor with a task name, objective, open lock state, and Cancel, Save, and Go controls" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>The Task Editor is intentionally small: name the work, state the objective, and choose Go when you are ready to start. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-3-two-agents-in-the-same-conversation-not-two-sessions-passing-notes">
+<h2 id="part-3-two-agents-in-the-same-conversation-not-two-sessions-passing-notes">Part 3 - Two agents in the same conversation, not two sessions passing notes</h2>
+<p>This is the core interaction model everything else in this guide sits on top of. It's worth understanding well before the rest of the guide starts assuming you know it.</p><section class="subsection" aria-labelledby="the-director-panel-and-composer">
+<h3 id="the-director-panel-and-composer">The Director panel and composer</h3>
+<p>Across the top of a task's working view sits the Director panel: your last message, an input field, a paperclip for attachments, a Human and AI Director toggle, and a counter showing how many objectives are selected versus remaining.</p>
+<p>Enter sends your message. Shift+Enter starts a new line without sending.</p>
+<p>Human Director means you're the one typing. AI Director means ConflabCode drafts and sends on its own. That toggle only becomes selectable when the current stage or objective is something an AI Director is actually equipped to drive. Otherwise it stays inactive, so you can't accidentally hand control to it somewhere it doesn't know what to do.</p>
+</section>
+<section class="subsection" aria-labelledby="targeting-an-agent">
+<h3 id="targeting-an-agent">Targeting an agent</h3>
+<p>Click one agent's pane to target just that agent. Double click to target both. Right click to lock the target, so it stays set across messages instead of resetting each round.</p>
+<p>A locked, targeted agent shows a green TARGETED label with a lock icon, so you can see at a glance who's listening.</p>
+<p>You can also override targeting without touching the mouse. Name an agent in your message, by its name, by provider, by slot number, or by role, Lead or Reviewer, and that one message routes to the named agent regardless of what's locked. This is how you run two different instructions through a locked both agents session without ever clicking anything.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> click one pane, double-click for both, or right-click to lock both. <strong>What you see:</strong> TARGETED labels and a short gesture tooltip confirm the routing state. <strong>Result:</strong> your next message goes only to the intended seat unless you override it by naming an agent or role.</p></div>
+<figure class="guide-figure" id="figure-agent-targeting">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/agent-targeting.png" alt="ConflabCode task view with both agent panes targeted, a targeting gesture tooltip, and a single closed-task padlock beside the task name" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>Targeting is visible at the top of each agent pane. Locking keeps that route in place across messages instead of resetting it after the round. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="what-each-agent-sees-of-the-other">
+<h3 id="what-each-agent-sees-of-the-other">What each agent sees of the other</h3>
+<p>Whatever one agent says or does, the other sees it on its next round. Not as an instruction to follow, but as context to be aware of, clearly marked as such.</p>
+<p>This is the mechanical difference between ConflabCode and two separate chat sessions pointed at the same code. Say something in one agent's window in a plain chat tool, and the other agent has no idea it happened unless you copy it over yourself. Here, it's automatic.</p>
+</section>
+<section class="subsection" aria-labelledby="steer-and-interrupt">
+<h3 id="steer-and-interrupt">Steer and Interrupt</h3>
+<p>Outside AI Director mode, Submit queues Director Input for the selected busy agents. When any selected agent is busy, Steer becomes available as the more immediate option.</p>
+<p>Clicking Steer opens a confirmation naming the affected agents and injects the new instruction into work already in progress. If both selected agents are busy, the dialog can steer both. If one has completed and the other is still busy, it can steer the busy agent and queue the completed one; queuing both remains available.</p>
+<p>The red Stop or Interrupt control is the blunter option: instead of steering or queuing the round, it stops active work outright.</p>
+</section>
+<section class="subsection" aria-labelledby="when-an-agent-stalls">
+<h3 id="when-an-agent-stalls">When an agent stalls</h3>
+<p>If an agent goes idle mid turn past a timeout, a stalled turn watchdog fires. It allows one automatic continue on its own, and if that doesn't resolve things, it asks you directly: continue, wait, or cancel. Part 12 has the fuller troubleshooting picture.</p>
+<hr>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-4-tasks">
+<h2 id="part-4-tasks">Part 4 - Tasks</h2>
+<p>Tasks are foundational the way they are in M-PACT. This Part covers the mechanics: organizing them, their lifecycle, and finding your way back to one.</p><section class="subsection" aria-labelledby="organizing-tasks">
+<h3 id="organizing-tasks">Organizing tasks</h3>
+<p>Categories are folders in the task tree. Add one by right clicking, and drag tasks in and out of them freely. Sort by number or by name.</p>
+<p>A locked padlock icon marks a closed task. It's a soft signal, a &quot;you probably don't need to reopen this&quot; note to yourself, not an enforced block. Nothing stops you from reopening a locked task if you need to.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you see:</strong> categories can nest, tasks can stay at the root, and closed tasks are dimmed with a padlock. <strong>Why it matters:</strong> the icon and dimming communicate lifecycle state without preventing you from reopening the work.</p></div>
+<figure class="guide-figure" id="figure-task-tree">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/task-tree.png" alt="ConflabCode Tasks sidebar with nested categories, root-level tasks, and closed tasks marked with padlocks" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>The task tree can mix nested categories and loose tasks. A padlock marks a closed task; the speech-bubble icon is shared by tasks generally. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="the-task-lifecycle">
+<h3 id="the-task-lifecycle">The task lifecycle</h3>
+<p>A single click opens the Task Editor. Go resumes exactly where the task left off: the full conversation, the round count, and which objectives are done, all intact.</p>
+<p>Close Task is available from the lock control beside the focused task name and from the top-level Close Task control. Locked means closed. Clicking the locked control later reopens the task.</p>
+<p>Closing runs a verification checkpoint, packages loose or unzipped task assets into an archive, and releases the native agent sessions behind the task.</p>
+<p>Reopening surfaces whatever was still open when it closed, but it doesn't put any of it back into play automatically. The first thing you say after reopening should identify what's active again. Reopened tasks remain flexible: you can return to Brainstorm or another stage and add Freeform objectives, design items, implementation items, or other new work as the project evolves.</p>
+<p>A task already open in another window shows a red, read only marker, and ConflabCode won't let you open it a second time. A different task in the same workspace, opened from another window, is fine.</p>
+</section>
+<section class="subsection" aria-labelledby="finding-things-again">
+<h3 id="finding-things-again">Finding things again</h3>
+<p>Project Search covers the whole workspace: a cross task keyword search, a scope tree to narrow where it looks, filters by stage and by record type, whole word mode, and results grouped so you're not scrolling through a flat list.</p>
+<hr>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-5-flexible-enough-to-match-how-you-actually-work">
+<h2 id="part-5-flexible-enough-to-match-how-you-actually-work">Part 5 - Flexible enough to match how you actually work</h2>
+<section class="subsection" aria-labelledby="freeform-no-ceremony-required">
+<h3 id="freeform-no-ceremony-required">Freeform: no ceremony required</h3>
+<p>Say &quot;move this button seven pixels right,&quot; and the Lead just does it. No stage to pick first, no objective to write down. Review is always one click away when you want it, and never required when you don't.</p>
+</section>
+<section class="subsection" aria-labelledby="the-review-and-incorporate-loop">
+<h3 id="the-review-and-incorporate-loop">The Review and Incorporate loop</h3>
+<p>When the Lead finishes a piece of work, a Review badge appears on its pane. Click it, and the Reviewer looks the work over.</p>
+<p>If the Reviewer flags something, an Incorporate button appears on the Lead's pane. Click it, and the finding gets handed back for a fix.</p>
+<p>After the fix, a new Review badge appears, and the cycle repeats until the Reviewer has nothing left to flag, or until you decide not to chase it any further.</p>
+<p>Both buttons are optional, and that's deliberate. Skip Review if the work already looks right to you. Decline to Incorporate a flagged concern that isn't worth acting on. This is different from a structured stage, covered next, where review isn't something you can just skip.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> wait for the Lead to finish, select Review, then use Incorporate only when you want the Lead to act on the finding. <strong>What you see:</strong> the yellow Review badge appears on completed work. <strong>Result:</strong> review stays available without turning every small Freeform change into mandatory ceremony.</p></div>
+<figure class="guide-figure" id="figure-freeform-review">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/freeform-review.png" alt="ConflabCode Freeform task after one completed round with the Lead response and a yellow Review badge" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>A completed Freeform round exposes Review on the Lead pane while preserving the full implementation record and the other agent’s context. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="freeform-objectives">
+<h3 id="freeform-objectives">Freeform Objectives</h3>
+<p>For a handful of loose objectives, the Freeform Objectives tree runs them through design, implementation, and verification automatically, with a single click.</p>
+<p>It works the same way the task list does: categories, drag and drop, search hit badges. Each objective expands in place to show its full round by round history.</p>
+<p>Archived objectives are read only, kept for reference rather than further work.</p>
+<hr>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> select an objective or an entire category. <strong>What you see:</strong> parent selection cascades into nested objectives and the Director counter updates. <strong>Result:</strong> a small batch can move through design, implementation, and verification together while each objective keeps its own history.</p></div>
+<figure class="guide-figure" id="figure-freeform-objectives">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/freeform-objectives.png" alt="ConflabCode Freeform Objectives tree with a selected parent category, a nested category, and two selected objectives" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>Selecting the Freeform folder selects everything beneath it, including objectives inside nested categories. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-6-real-cross-review-enforced-by-the-stages-and-the-provenance-behind-it">
+<h2 id="part-6-real-cross-review-enforced-by-the-stages-and-the-provenance-behind-it">Part 6 - Real cross-review, enforced by the stages, and the provenance behind it</h2>
+<section class="subsection" aria-labelledby="the-four-structured-stages">
+<h3 id="the-four-structured-stages">The four structured stages</h3>
+<p>Structured work moves through four stages, in order: Brainstorm, Design, Implementation, Verification.</p>
+<p>Every stage lets you assign a Lead and a Reviewer, and you can swap those roles at each stage. Claude designing while Codex builds is one shape. Claude then reviewing the code Codex just wrote is the same two agents, one stage later, different seats.</p>
+<p>Design cannot advance to Implementation until every design item is approved by both agents. Selecting Implementation activates Import Design; importing turns the accepted design into a sliced Implementation Plan and begins the implementation pass.</p>
+<p>Verification remains unavailable until implementation completes. Selecting it activates Import Implementation, which creates the Verification Plan and starts the same automatic pass. Control returns to Human before AI work resumes, keeping the stage transition visible and interruptible.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> move through Brainstorm, Design, Implementation, and Verification, assigning the Lead at each stage. <strong>What you see:</strong> imported source material becomes named, reviewable items in the center plan. <strong>Result:</strong> the work is divided into explicit records that the opposite seat can approve, question, or block.</p></div>
+<figure class="guide-figure" id="figure-structured-design">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/structured-design.png" alt="ConflabCode Design stage showing seven unresolved design items imported from ten brainstorm source items, with Lead and Reviewer badges on the agent panes" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>After Brainstorm is imported, the Design Specification holds discrete items in the center while Lead and Reviewer remain visibly assigned on either side. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="provenance-across-stages">
+<h3 id="provenance-across-stages">Provenance across stages</h3>
+<p>Design items trace back to the brainstorm notes and rounds that produced them. Implementation traces back to design. Verification checks against all of it.</p>
+<p>At every stage, the Reviewer isn't just checking whether the agent did what it said it would do. It's checking against your original intent, with an actual link back to where that intent came from.</p>
+<p>The more detail you give a stage going in, the sharper the result coming out. Thin notes get thin results. The structure is there to use, not a substitute for using it.</p>
+<hr>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you see:</strong> expanding an item reveals its source design reference, approval events, later touches, responsible agent, and round. <strong>Why it matters:</strong> a Reviewer can trace the current implementation back to the intent that created it instead of reviewing only the latest summary.</p></div>
+<figure class="guide-figure" id="figure-provenance">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/provenance-record.png" alt="ConflabCode Implementation Plan with an item expanded into a read-only provenance trail linked to its source design item and later events" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>An expanded Implementation item reads like a provenance ledger: source, approvals, later changes, agents, and rounds remain connected. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-7-one-click-to-reach-consensus">
+<h2 id="part-7-one-click-to-reach-consensus">Part 7 - One click to reach consensus</h2>
+<section class="subsection" aria-labelledby="reach-consensus">
+<h3 id="reach-consensus">Reach Consensus</h3>
+<p>Reach Consensus launches a small automated AI Director process that has both agents compare and reconcile their positions into one agreed result you can act on.</p>
+<p>It runs for up to ten rounds, with a Stop Consensus control if you want out before it finishes on its own. The agreed result can then become a Brainstorm note, Freeform objective, design items, or another durable work artifact.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> start Reach Consensus when two useful positions need reconciliation. <strong>What you see:</strong> each iteration is recorded in History alongside ordinary rounds and one-pass Share Responses. <strong>Result:</strong> the merged conclusion remains part of the task record instead of disappearing into a separate chat.</p></div>
+<figure class="guide-figure" id="figure-consensus-history">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/consensus-history.png" alt="ConflabCode task history showing Share Responses and multiple Reach Consensus rounds between the two agent panes" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>History distinguishes a one-pass Share Responses exchange from the iterative Reach Consensus loop. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="share-responses">
+<h3 id="share-responses">Share Responses</h3>
+<p>Share Responses is the simpler sibling. It is one comparison pass: each agent considers the other agent's immediately preceding response, with no iterative merge. Add Director Input first when you want to frame what they should compare; leave it blank when the previous responses speak for themselves.</p>
+<hr>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-8-context-that-manages-itself">
+<h2 id="part-8-context-that-manages-itself">Part 8 - Context that manages itself</h2>
+<section class="subsection" aria-labelledby="the-baton-in-plain-terms">
+<h3 id="the-baton-in-plain-terms">The baton, in plain terms</h3>
+<p>Normally, you watch context usage yourself and save your own work before you hit the wall. ConflabCode is designed to make that management largely invisible.</p>
+<p>Each model has a context threshold expressed as a percentage. Near that threshold, the current agent prepares a curated context baton and ConflabCode pre-warms a successor. Handoff waits for a suitable pause so active work is not interrupted, then the successor continues from the baton.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you see:</strong> a baton transition appears in the task status line while the visible objective and history stay in place. <strong>Result:</strong> the provider session changes underneath the task without turning the handoff into a new task or a manual copy-and-paste step.</p></div>
+<figure class="guide-figure" id="figure-baton-handoff">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/baton-handoff.png" alt="ConflabCode Freeform task with an expanded objective and a footer status reporting an agent baton transition from one session to the next" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>The baton handoff is reported in the footer while the task, objective, and conversation remain continuous. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="tuning-the-thresholds">
+<h3 id="tuning-the-thresholds">Tuning the thresholds</h3>
+<p>Baton Context percent and Baton Trigger thresholds live in Settings, one per model context window.</p>
+<p>A lower percentage suits a huge context window, where context rot and rising cost creep in well before the window is full. A higher percentage suits a smaller one, where you'd rather use more of what you have. Setting the threshold too high risks the provider's hard context limit and automatic compaction; the baton still supports continuity, but the recovery usually costs more tokens. The defaults are intended to keep this machinery out of your way.</p>
+<hr>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> set the overall Baton Context percentage and the trigger for each model-window range. <strong>What you see:</strong> those controls sit beside provider, helper, access, and display settings. <strong>Result:</strong> the replacement point can reflect the model’s usable context rather than waiting for a hard limit.</p></div>
+<figure class="guide-figure" id="figure-baton-settings">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/baton-settings.png" alt="ConflabCode Settings sidebar showing Baton Context, model-specific Baton Triggers, provider credentials, AI Helper, filesystem access, timezone, and panel color" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>Baton Context and model-specific trigger values are workspace settings, visible alongside the provider and access controls they support. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-9-built-to-run-more-than-one-pair-of-agents-at-once">
+<h2 id="part-9-built-to-run-more-than-one-pair-of-agents-at-once">Part 9 - Built to run more than one pair of agents at once</h2>
+<section class="subsection" aria-labelledby="multiple-workspaces-multiple-windows">
+<h3 id="multiple-workspaces-multiple-windows">Multiple workspaces, multiple windows</h3>
+<p>Run up to ten ConflabCode instances at once. New Window spawns a window on a workspace of your choosing, and the Recent row always shows what's open where, so you know which window points at which workspace and which task.</p>
+<p>A per task lease stops two windows from opening the same task at the same time. A different task in the same workspace, from another window, is fine.</p>
+<p>Opening the same workspace twice needs an explicit risk acknowledgment. Two windows editing the same task tree at once is a real conflict, not just an inconvenience, and ConflabCode wants you to know that before you do it.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you see:</strong> the <a href="#figure-workspace-picker">workspace picker shown earlier</a> carries the open-window and current-task signal in its Recent row. <strong>Result:</strong> you can distinguish a safe new window or different task from a conflicting second editor before opening it.</p></div>
+</section>
+<section class="subsection" aria-labelledby="tools-that-fix-their-own-mistakes">
+<h3 id="tools-that-fix-their-own-mistakes">Tools that fix their own mistakes</h3>
+<p>ConflabCode replaces the agents' own built in tools with its own. Normally, every mistake an agent makes costs a round trip to the provider, resending a full copy of context each time, which costs both time and money.</p>
+<p>ConflabCode's tools catch and retry errors instead. Quoting mistakes, wrong paths, edits that need another pass, all get fixed automatically, before they ever become a round trip.</p>
+<hr>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-10-behavior-policy-and-rules-you-control">
+<h2 id="part-10-behavior-policy-and-rules-you-control">Part 10 - Behavior Policy and Rules you control</h2>
+<section class="subsection" aria-labelledby="behavior-policy">
+<h3 id="behavior-policy">Behavior Policy</h3>
+<p>Behavior Policy describes what it means to be the Lead agent or the Reviewer, and what's expected in that role, for each stage. It ships with sensible presets already in place.</p>
+<p>Edit carefully. Changes replace the defaults rather than layering on top of them, so a careless edit can change how a stage functions. A full reset always brings you back to the defaults.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> edit global behavior or the role-and-stage-specific expectations, then save the replacement policy. <strong>What you see:</strong> Reset, Cancel, and Save remain visible around the editable rule set. <strong>Result:</strong> the operating definition is explicit and recoverable, but it should be changed as a complete policy rather than as an assumed overlay.</p></div>
+<figure class="guide-figure" id="figure-behavior-policy">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/behavior-policy.png" alt="ConflabCode Edit Behavior Policy dialog showing global numbered rules and controls to reset, cancel, or save" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>Behavior Policy is editable at the workspace level, with global behavior followed by role- and stage-specific sections. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="rules">
+<h3 id="rules">Rules</h3>
+<p>A global set of Rules ships with the product. Project Rules are entirely yours to define, and they shape how the agents work with you specifically, your own preferences for how they respond and interact.</p>
+<p>The same caution applies as with Behavior Policy. Edits replace, they don't layer, and the same reset is available if you need it.</p>
+</section>
+<section class="subsection" aria-labelledby="the-rest-of-settings-briefly">
+<h3 id="the-rest-of-settings-briefly">The rest of Settings, briefly</h3>
+<div class="table-wrap"><table><thead><tr>
+<th scope="col">Setting</th>
+<th scope="col">What it does</th>
+</tr></thead><tbody>
+<tr>
+<th scope="row">Custom Commands</th>
+<td>Up to 20 slots, each with a name, a body, and a Claude and Codex visibility checkbox. A command starting with a semicolon runs as a shell command stream. Stored per install, not per workspace.</td>
+</tr>
+<tr>
+<th scope="row">Sub-Agents and Web Access</th>
+<td>On by default. Simple toggles to turn either off.</td>
+</tr>
+<tr>
+<th scope="row">Interrogate Intensity</th>
+<td>Controls the frequency and depth of clarification questions during Brainstorm, Freeform, and design work. Medium is the practical default; higher settings ask for more detail without following an exact deterministic formula. Requesters offer selectable answers plus an optional Director-written response.</td>
+</tr>
+<tr>
+<th scope="row">Filesystem Access, Display Timezone, Director panel color</th>
+<td>Cosmetic, or narrow enough not to need separate explanation.</td>
+</tr>
+</tbody></table></div>
+<hr>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-11-everything-else-the-tool-keeps-for-you">
+<h2 id="part-11-everything-else-the-tool-keeps-for-you">Part 11 - Everything else the tool keeps for you</h2>
+<section class="subsection" aria-labelledby="the-bottom-center-tabs">
+<h3 id="the-bottom-center-tabs">The bottom center tabs</h3>
+<p>History lists every round, numbered and timestamped, with agent dots, a one line summary, and navigation back into the Director thread or a specific agent pane.</p>
+<p>Summaries and Logs give you four scopes: Full, Selected, Up To Here, Down From Here. Summaries are AI Helper's condensed version. Logs are verbatim exports.</p>
+<p>Journals are global, above the project and task hierarchy. Entries are not tied to one project or task, even when their content discusses either. Create as many as you need for project notes, task observations, interesting material, daily records, or anything else worth preserving; saved entries can be searched and exported.</p>
+<p>Documents holds task result files, with Markdown and HTML export, and printing.</p>
+<div class="practical-note"><p><strong>In practice.</strong> <strong>What you do:</strong> switch among History, Summaries, Logs, Journals, and Documents without leaving the task. <strong>What you see:</strong> a saved document expands in place and can be exported. <strong>Result:</strong> durable outputs stay discoverable after their original transcript links have scrolled out of view.</p></div>
+<figure class="guide-figure" id="figure-documents">
+    <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open this complete ConflabCode screenshot full screen">
+      <img src="Users-Guide-Assets/documents-tab.png" alt="ConflabCode Documents tab with a saved Markdown document expanded and rendered in the center pane, plus an Export control" width="3840" height="2160" loading="lazy">
+    </div>
+    <figcaption>Documents keeps task-authored outputs together and renders a selected document in place for inspection or export. <span class="figure-hint">Select the image to inspect the complete interface.</span></figcaption>
+  </figure>
+</section>
+<section class="subsection" aria-labelledby="results-and-artifacts">
+<h3 id="results-and-artifacts">Results and artifacts</h3>
+<p>A result is detected automatically. An explicit artifact pointer, a flagged native write, a markdown write, or a mentioned document path all count.</p>
+<p>Supported types are md, markdown, txt, csv, json, and html.</p>
+<p>The Results tree mirrors the task tree, though in practice you'll reach it through Documents and the per agent artifact cards more often than through a dedicated navigation tab.</p>
+<hr>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+<section class="part" aria-labelledby="part-12-putting-it-together">
+<h2 id="part-12-putting-it-together">Part 12 - Putting it together</h2>
+<section class="subsection" aria-labelledby="a-real-freeform-and-ai-director-run">
+<h3 id="a-real-freeform-and-ai-director-run">A real Freeform and AI Director run</h3>
+<p>This real task begins as a human-led product discussion, turns that discussion into two durable Freeform objectives, and then hands the selected work to the AI Director for design, implementation, and verification. Expand a round to read the original exchange; opening another round closes the one you were reading.</p>
+<div class="director-instruction"><strong>Before the automated run:</strong> Select the Freeform folder to select all available Freeform objectives. When the AI Director button begins pulsing, click it to start the automated design, implementation, and verification run.</div>
+<div class="round-accordion" aria-label="Rounds 1 through 12 from the New Project Feature task">
+  <details class="round-disclosure" data-round="1">
+    <summary><span class="round-summary-text"><span class="round-number">Round 1</span><span aria-hidden="true"> · </span><time datetime="2026-09-23T20:31:54">09/23/26 20:31:54</time><span aria-hidden="true"> · </span><span class="round-title">Define the New Workspace flow</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director transcript block">
+        <header class="transcript-speaker-heading"><h4>Director</h4><span>09/23/26 20:31:54</span></header>
+        <div class="transcript-message"><p>All right so I just uploaded screenshot for the workspace selector or picker and I want to my goal here is to add a button to that for creating a new umm workspace that we don't already have so I'm not so in the case where I'm not going to actually pick an existing workspace that I've got code or whatever in which is really a workspace is basically a folder with the .ConflabCode umm folder inside of it. So I want to discuss this with both of you Umm to provide a little more context.</p>
+<p>Attachments: Screenshot 2026-09-23 202217.png</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 20:32:15</span></header>
+        <div class="transcript-message">My take: add a distinct <strong>New Workspace</strong> action to this picker, but keep it separate from <strong>Select Folder</strong> so “open existing folder” and “create/init a workspace” do not blur together.<br><br>I’d put it in the bottom action row, near <strong>Select Folder</strong>, probably as a secondary accent button: <strong>New Workspace</strong>. Clicking it should open a small create flow:<br><br>- choose parent folder, likely defaulting to the folder currently being browsed<br>- enter workspace folder name<br>- preview the final path<br>- confirm with <strong>Create Workspace</strong><br>- app creates the folder, creates <code>.ConflabCode/</code> inside it, adds it to Recents, then selects/switches to it<br><br>I would not make “New Workspace” simply initialize whatever folder is currently highlighted unless we explicitly want an “adopt this existing folder” flow too. That feels like a different command, maybe <strong>Initialize Here</strong>, because it has different safety risks.<br><br>The main product decision I’d want from you is this: should the new button create a brand-new empty folder only, or should it also support turning an existing folder into a ConflabCode workspace by adding <code>.ConflabCode</code>?</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/23/26 20:33:47</span></header>
+        <div class="transcript-message">I have enough grounding on the backend. Let me check that <code>/api/fs/list</code> handler quickly to confirm it isn't workspace-gated, since a "create folder" action would likely reuse this same unrestricted browse path.Looked at the screenshot and traced the backend. Useful finding: <code>selectWorkspacePayload</code> in <code>src\electron\main.ts:5163</code> already auto-initializes any existing folder as a workspace — it calls <code>ensureConflabCodeWorkspaceStructure</code> (main.ts:5134), which just does <code>mkdir .ConflabCode/Tasks</code> recursively. So the app doesn't require a folder to already have <code>.ConflabCode</code>; it silently creates it on select. The only hard requirement is <code>isExistingDirectory(requested)</code> (main.ts:5166) — the folder itself must already exist.<br><br>That means "New Workspace" isn't really a new backend capability — it's a <strong>new-folder affordance inside the picker</strong> (<code>webview-src\app\00-bootstrap\02-file-picker.js</code>), which currently has no create-folder UI at all (I found no <code>mkdir</code>/<code>new folder</code> references there). There's already a generic <code>/api/fs/ensure-dir</code> bridge endpoint (main.ts:4668) that could back a "create folder here" action, gated through <code>requireFsBridgePath</code> — Lead should confirm that path-gating permits write access to arbitrary filesystem locations during the pre-workspace picker state, since normally fs-bridge access is scoped to a granted workspace root.<br><br>Open questions I'd want settled before this becomes an implementation objective:<br><br>1. <strong>Button placement/flow</strong>: a "New Workspace" button next to Cancel/Select Folder that prompts for a folder name and creates it under the currently browsed directory (standard "New Folder" dialog pattern), vs. a separate name+parent-path form? Recommended default: inline "New Folder" button in the file list toolbar (next to breadcrumbs), matching native OS picker conventions the Director already sees daily.<br>2. <strong>Collision handling</strong>: if the typed name already exists as a folder, do we just <code>cd</code> into it and let normal select-folder validation run (which would proceed to workspace-ify it even if non-empty), or block until a non-existing name is chosen? This matters because <code>ensureConflabCodeWorkspaceStructure</code> doesn't check for pre-existing unrelated files.<br>3. Should the new folder auto-select and immediately confirm (folder created → workspace opened in one action), or just navigate into it and require a second explicit "Select Folder" click?<br><br>needs-director: yes — these are UX/workflow decisions, not code defects; recommended defaults are stated above for each.<br><br>No blockers on feasibility — this is a small, well-contained addition once those three answers are picked.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="2">
+    <summary><span class="round-summary-text"><span class="round-number">Round 2</span><span aria-hidden="true"> · </span><time datetime="2026-09-23T20:38:36">09/23/26 20:38:36</time><span aria-hidden="true"> · </span><span class="round-title">Set creation and initialization behavior</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director transcript block">
+        <header class="transcript-speaker-heading"><h4>Director</h4><span>09/23/26 20:38:36</span></header>
+        <div class="transcript-message"><p>All right So what I'm thinking is that the user will go to the folder where he wants to create the new umm workspace and then click on the Create Workspace button and that we would he we would present him with a requester that basically says here's the file path to where we're going to add this new workspace Have an input field where he can type in that workspace which is really just a folder name and then a continue button when he actually types in a folder name at that point we should present him with another confirmation message saying the workspace will be created here and umm I and then we would produced you know put that folder there the lead should put that folder there let me think about that for a second Ah no the system should just put that folder there and then I wanted to talk to you about what we should do so this is a new project so really we kind of want to enter setup so I'm inclined to say that we shouldn't really do anything but bring open the sidebar with settings selected and at this point it should show I think uninitialized up in the where the workspaces named and so before you can do anything you pretty much have to initialize the workspace but I think you can well we'll try it and we'll see eventually but I think you can umm do other settings and you still ha but maybe not you may have to initialize it first you can you can look and see.</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/23/26 20:39:25</span></header>
+        <div class="transcript-message">That flow makes sense — browse to parent, click Create Workspace, see the target path, type a folder name, Continue, then a confirmation before the system actually creates it. That matches what Codex sketched.<br><br>One technical catch on the "uninitialized" idea, though: I checked <code>main.ts</code> and workspace settings writes already lazily create the <code>.ConflabCode</code> folder as a side effect — <code>fs.mkdirSync(path.dirname(settingsPath), { recursive: true })</code> at <code>main.ts:5822</code>, where <code>settingsPath</code> is <code>.ConflabCode/ConflabCode.json</code>. So if a user opens Settings on a freshly-created, not-yet-initialized workspace and changes anything, the app will silently create <code>.ConflabCode</code> as a byproduct — before any explicit "Initialize" action ran. That means "uninitialized" can't just mean "<code>.ConflabCode</code> doesn't exist yet," or it'll flip to initialized the moment Settings is touched, even if the user never clicked Initialize.<br><br>needs-director: yes — what should actually distinguish "uninitialized" from "initialized"? My recommended default: an explicit marker (e.g. <code>initialized: true</code> in <code>ConflabCode.json</code>, or purely the presence of <code>.ConflabCode/Tasks</code> specifically, since that's what <code>ensureConflabCodeWorkspaceStructure</code> creates and nothing else currently touches) rather than "does <code>.ConflabCode</code> exist at all." That way Settings can freely create the settings file pre-init without accidentally satisfying the initialized check, and "Initialize" becomes a distinct, explicit action (create <code>Tasks/</code>, flip the marker) that the Settings panel gates on.<br><br>Second thing worth confirming rather than assuming: today, selecting <em>any</em> existing folder through the current picker (<code>main.ts:5163</code> <code>selectWorkspacePayload</code>) already auto-runs <code>ensureConflabCodeWorkspaceStructure</code> immediately, with no uninitialized/settings-first detour. I'm assuming this new gated "uninitialized → settings → Initialize" onboarding only applies to folders created through the new Create Workspace button, and picking an existing already-populated folder keeps behaving exactly as it does now (instant init, no detour). If that's not your intent, it's a bigger behavior change than the button itself.<br><br>No blockers on the create-flow UI itself — that part is straightforward and matches the earlier discussion. The initialization-gating piece is the part I'd want nailed down before Lead scopes implementation, since it's workspace-lifecycle state, not just a dialog.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 20:39:56</span></header>
+        <div class="transcript-message">I’m going to check the existing workspace/setup flow before answering the “what should open after create” part, because that’s exactly where a small UX choice could accidentally fight the app’s current state model.<br><br>I found the likely existing “uninitialized workspace” click path and the settings-side initialization code. I’m checking those two spots now so my recommendation lines up with what the app already knows how to do.<br><br>The current flow supports your instinct: after a workspace switch, if <code>S.workspaceReady</code> is false, it already forces the drawer to Settings. The topbar also already renders the selected folder as “Uninitialized,” and task creation is blocked until Settings initializes it.<br><br>One backend caveat showed up: the generic create-directory API exists, but it runs through the fs bridge write gate. For this feature I’d treat that as a thing to verify/possibly extend, not assume arbitrary parent-folder creation will already be allowed from the picker.<br><br>I agree with that shape. The clean model is:<br><br>1. User browses to the parent folder.<br>2. Clicks <strong>Create Workspace</strong>.<br>3. Requester shows parent path, folder-name input, and disabled Continue until the name is valid.<br>4. Confirmation says the workspace folder will be created at the final path.<br>5. System creates that folder, selects it as the workspace, then opens Settings with the workspace shown as <strong>Uninitialized</strong>.<br><br>I checked the current flow: this fits the app. <code>switchConflabCodeWorkspace()</code> already opens the Settings drawer when <code>S.workspaceReady</code> is false, and the UI already labels the workspace pill as <code>· Uninitialized</code>. Task creation is also blocked until initialization/settings are saved.<br><br>My recommended behavior: <strong>Create Workspace should only create a brand-new folder.</strong> If the typed folder already exists, block with “A folder with that name already exists. Select it instead.” That keeps “create a new project shell” separate from “adopt/initialize an existing code folder,” which is already handled by Select Folder.<br><br>One implementation caveat: the generic <code>fsEnsureDir</code> path exists, but it goes through the fs bridge write gate. So the feature may need a picker-specific create-workspace backend path or grant-aware handling for creating under the currently browsed parent.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="3">
+    <summary><span class="round-summary-text"><span class="round-number">Round 3</span><span aria-hidden="true"> · </span><time datetime="2026-09-23T20:44:46">09/23/26 20:44:46</time><span aria-hidden="true"> · </span><span class="round-title">Confirm workspace readiness requirements</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director transcript block">
+        <header class="transcript-speaker-heading"><h4>Director</h4><span>09/23/26 20:44:46</span></header>
+        <div class="transcript-message"><p>Yeah I think and I could be wrong here that there's requirement to pick and said well first of all you have to set up an AI helper and I think that's part of initialize And so until you do that I don't really think you're technically initialized and it will treat it as uninitialized That could that may just be my bad memory I don't know for sure The other thing is I think you have need to set up their providers or at least a single provider but I'd like you to investigate that a little bit because I don't remember I mean we will see you know later because I am going to create a new workspace once this button is working</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 20:45:35</span></header>
+        <div class="transcript-message">I’ll verify the current gates rather than leaning on memory here: specifically what flips <code>workspaceReady</code>, what “AI helper configured” means, and what task creation/provider setup require.<br><br>The quick read so far says your memory is mostly right on the user-facing gate: a fresh workspace is not ready until Settings is saved, and task creation also requires the helper setup flag. I’m checking whether provider windows are part of that same initialization or a later send-time gate.<br><br>I’ve got the main answer: there are two separate gates today, not one. Settings initialization/helper setup gets you to a usable workspace/task list; active agent providers are checked later when sending a round.<br><br>Your memory is basically right.<br><br>What I found:<br><br>- A freshly selected folder is <strong>uninitialized</strong> when workspace settings are not loaded/saved yet. <code>S.workspaceReady</code> is false.<br>- The Settings save button becomes <strong>Initialize Workspace</strong> when there is a folder but <code>S.workspaceReady</code> is false.<br>- Saving Settings is the current initialization act: it ensures the <code>.ConflabCode</code> structure, writes <code>ConflabCode.json</code>, and sets <code>helperAiConfigured=true</code>.<br>- Task creation is blocked unless both are true:<br>- <code>S.workspaceReady</code><br>- <code>isHelperAiConfigured()</code><br><br>Provider setup is slightly separate:<br><br>- The <strong>AI Helper</strong> provider is part of initialization. Saving settings validates/selects a helper provider and marks helper AI configured.<br>- The <strong>two active agent providers</strong> gate is later: before sending a round, both primary agent windows need active providers. That is not part of workspaceReady itself.<br><br>So for the new Create Workspace flow, I’d keep your instinct: create the folder, switch to it, open Settings, show it as <strong>Uninitialized</strong>, and let the existing <strong>Initialize Workspace</strong> path handle helper setup. After that, the user can create tasks; then agent provider readiness is enforced when they try to send.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/23/26 20:45:45</span></header>
+        <div class="transcript-message">I'll check what actually gates <code>workspaceReady</code>/initialization to confirm whether AI helper or provider setup is required.Confirmed on the helper part, not on providers. Looked at <code>webview-src/app/22-settings/00-settings-state.js:300-303</code> and <code>04-runtime-permission-scroll-color.js:1-74</code>:<br><br>- <code>S.workspaceReady</code> is computed as <code>savedToWorkspace &amp;&amp; hasWorkspaceApiConfiguration(APP_SETTINGS)</code> (<code>04-runtime-permission-scroll-color.js:74</code>), and <code>hasWorkspaceApiConfiguration</code> only checks <code>settings.helperModel</code> — i.e., whether an <strong>AI Helper</strong> provider is configured (<code>00-settings-state.js:300-303</code>).<br>- <code>saveSettings()</code> actively blocks the save (and thus blocks becoming "ready") if no helper provider is selected or its runtime is unavailable (<code>04-runtime-permission-scroll-color.js:2-13</code>: <code>resolveProviderRuntime(selectedProvider,'AI helper provider save')</code>).<br><br>So your memory is right about the AI Helper: initialization is gated on configuring and successfully saving a helper provider. That part isn't up for debate — it's already enforced in code.<br><br>Your second point — needing to set up an actual agent provider (Claude/Codex, the ones that run in the panels) — I don't see that gating <code>workspaceReady</code> anywhere. <code>hasWorkspaceApiConfiguration</code> and the create-task button check (<code>03-file-system.js:386-399</code>) both key off the helper only; there's no panel-provider check in that readiness path. So as it stands in the code, you could initialize a workspace (helper configured) with zero Claude/Codex agent providers set up — whether a task would actually <em>run</em> successfully afterward is a separate, later concern, not something that blocks "Initialized" today.<br><br>One thing worth flagging for the eventual Create-Workspace design: since <code>Save Settings</code>/<code>Initialize</code> already requires a live helper runtime check, the very first thing a user sees after creating a brand-new workspace will be a Settings screen that can't be saved until they pick a working helper provider (e.g. an API key). That's consistent with your "must initialize before you can do much" instinct — just noting it's specifically the helper, not the panel agents, that's the hard gate.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="4">
+    <summary><span class="round-summary-text"><span class="round-number">Round 4</span><span aria-hidden="true"> · </span><time datetime="2026-09-23T20:51:29">09/23/26 20:51:29</time><span aria-hidden="true"> · </span><span class="round-title">Create the first Freeform objective</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director transcript block">
+        <header class="transcript-speaker-heading"><h4>Director</h4><span>09/23/26 20:51:29</span></header>
+        <div class="transcript-message"><p>All right so I'd like you to create a free form objective to Implement this work.</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/23/26 20:51:42</span></header>
+        <div class="transcript-message">Objective creation defaults to the Lead — that's Codex's job here unless you name me specifically. I'll hold off and review it once Codex creates it, rather than duplicating the add.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 20:52:59</span></header>
+        <div class="transcript-message">Added Freeform objective <code>F-001</code>: <strong>Create new workspace from folder picker</strong>.<br><br>No change needed from peer context; Agent 1 deferred creation to Lead and is positioned to review it.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 20:52:35</span></header>
+        <div class="transcript-message">REQUESTER_RESULT CAPTURE ACTION: Allow for Freeform Objectives.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="5">
+    <summary><span class="round-summary-text"><span class="round-number">Round 5</span><span aria-hidden="true"> · </span><time datetime="2026-09-23T21:04:33">09/23/26 21:04:33</time><span aria-hidden="true"> · </span><span class="round-title">Identify the current-workspace selection issue</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director transcript block">
+        <header class="transcript-speaker-heading"><h4>Director</h4><span>09/23/26 21:04:33</span></header>
+        <div class="transcript-message"><p>All right the other thing I wanted to talk about is that when I have umm The free form excuse me when I have the workspace selector up if I pick the same workspace and tasks that I'm already working on It kind of offers me a choice to switch the window that doesn't make any sense because I'm already on that window and so I don't think that should be offered at all so let me just double check that and I'll verify it first. But when the workspace selector comes up it is asking me so if I pick the same workspace if I pick the left most button which is the one I'm in right now Umm it asks me do I want to change to that or open a new window now if I click on that one I can I can go into the workspace again I just can't pick that same task again so I don't think I should be offered a choice of do I wanna change to that workspace i'm already in that workspace What I do want is the option to do a new window which is the other choice there besides cancel That still makes sense because I can open that workspace and pick another task in that workspace but it doesn't really make sense to offer the change window in my in my opinion</p>
+<p>Attachments: Screenshot 2026-09-23 210234.png | Screenshot 2026-09-23 210245.png</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 21:04:48</span></header>
+        <div class="transcript-message">I agree. If the selected workspace path is the current window’s workspace, <strong>Change Workspace</strong> is a nonsense action and should be suppressed.<br><br>Recommended behavior:<br><br>- Same workspace, current window: show only <strong>New Window</strong> and <strong>Cancel</strong>.<br>- Different workspace: keep <strong>Change Workspace</strong>, <strong>New Window</strong>, <strong>Cancel</strong>.<br>- Existing “already open elsewhere” case: keep the current safety/risk wording, because that is a different situation.<br><br>I’d treat both routes the same: clicking the current workspace recent button or selecting the current workspace folder manually should detect <code>picked.path === getProjectWorkspacePath()</code> and remove the change/switch option. The New Window option still makes sense for opening the same workspace with a different task.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/23/26 21:05:20</span></header>
+        <div class="transcript-message">Confirmed — I found the exact spot. The bug is a missing same-workspace check in the full folder-picker flow.<br><br><code>webview-src/app/03-file-system.js:293-330</code> (<code>pickConflabCodeFolder</code>): once you already have a workspace open in this window (<code>currentHasWorkspace</code> true) and you pick a folder, it unconditionally shows the <code>WORKSPACE CONFIRMATION</code> dialog with <strong>Cancel / New Window / Change Workspace</strong> (lines 326-330) — regardless of whether the picked path is the workspace you're already sitting in.<br><br>Compare that to <code>renderRecentWorkspaces()</code> at line 282: <code>if(key===currentPath){ void openWorkspaceWindowWithRiskChoice(path,{assumeAlreadyOpen:true}); return; }</code> — clicking your <em>own current</em> workspace from the Recents list correctly skips the "switch" dialog and routes straight to <code>chooseAlreadyOpenWorkspaceAction</code> (the <code>WORKSPACE ALREADY OPEN</code> dialog, line 197-202), which only offers <strong>Cancel / Open Another Window</strong> — no nonsensical "switch to where you already are" option.<br><br>So the app already has the right dialog and the right same-path detection pattern — <code>pickConflabCodeFolder</code> (the folder-browser path, which is what your screenshots show) just never applies that check before falling into the generic switch-confirmation flow. That's the mismatch you're seeing, and it lines up exactly with what you described: picking the folder you're already in shouldn't offer "Change Workspace," only "New Window" (and Cancel).<br><br>needs-director: no — this is a clear, verifiable inconsistency with an existing correct pattern already in the same file to reuse; once you're ready to have this implemented, this is a small, well-scoped fix for whoever owns Freeform implementation.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="6">
+    <summary><span class="round-summary-text"><span class="round-number">Round 6</span><span aria-hidden="true"> · </span><time datetime="2026-09-23T21:05:35">09/23/26 21:05:35</time><span aria-hidden="true"> · </span><span class="round-title">Create the second Freeform objective</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director transcript block">
+        <header class="transcript-speaker-heading"><h4>Director</h4><span>09/23/26 21:05:35</span></header>
+        <div class="transcript-message"><p>Create a free form objective to modify this behavior.</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/23/26 21:05:38</span></header>
+        <div class="transcript-message">Objective creation is Lead's job by default — Codex should add this one too. I'll review it once created.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 21:06:04</span></header>
+        <div class="transcript-message">Added Freeform objective <code>F-002</code>: <strong>Suppress current-workspace change option</strong>.<br><br>No change needed from peer context; Agent 1 deferred objective creation to Lead and is positioned to review it.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 21:05:58</span></header>
+        <div class="transcript-message">REQUESTER_RESULT CAPTURE ACTION: Allow for Freeform Objectives.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="7">
+    <summary><span class="round-summary-text"><span class="round-number">Round 7</span><span aria-hidden="true"> · </span><time datetime="2026-09-23T21:10:35">09/23/26 21:10:35</time><span aria-hidden="true"> · </span><span class="round-title">Refine button placement and emphasis</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director transcript block">
+        <header class="transcript-speaker-heading"><h4>Director</h4><span>09/23/26 21:10:35</span></header>
+        <div class="transcript-message"><p>So Codex I'd like you to modify free form objective one Just to add that I'd like the New Project button to be to the left of the Select folder button and it should be highlighted basically when you come in just like the select folder is because it should be an option from the very beginning just to create a "New Workspace".</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 21:12:10</span></header>
+        <div class="transcript-message">I caught that the revision helper stored the short rationale as the objective body while preserving the acceptance bullets. I’m correcting that now so F-001 keeps the full implementation intent, not just a note about the revision.<br><br>Updated <code>F-001</code> with the New Workspace button placement and highlighting requirement: it should be visible from the beginning, highlighted like Select Folder, and immediately to the left of Select Folder.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 21:11:07</span></header>
+        <div class="transcript-message">REQUESTER_RESULT REVISE ITEM: Allow for Freeform Objectives.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/23/26 21:12:05</span></header>
+        <div class="transcript-message">REQUESTER_RESULT REVISE ITEM: Allow for Freeform Objectives.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="8">
+    <summary><span class="round-summary-text"><span class="round-number">Round 8</span><span aria-hidden="true"> · </span><time datetime="2026-09-24T09:19:38">09/24/26 09:19:38</time><span aria-hidden="true"> · </span><span class="round-title">Start the AI Director run</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director (AI) transcript block">
+        <header class="transcript-speaker-heading"><h4>Director (AI)</h4><span>09/24/26 09:19:38</span></header>
+        <div class="transcript-message"><p>Director mode changed: Human -&gt; AI</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/24/26 09:19:38</span></header>
+        <div class="transcript-message">Did not participate.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/24/26 09:19:38</span></header>
+        <div class="transcript-message">Did not participate.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="9">
+    <summary><span class="round-summary-text"><span class="round-number">Round 9</span><span aria-hidden="true"> · </span><time datetime="2026-09-24T09:19:39">09/24/26 09:19:39</time><span aria-hidden="true"> · </span><span class="round-title">Approve the objective designs</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director (AI) transcript block">
+        <header class="transcript-speaker-heading"><h4>Director (AI)</h4><span>09/24/26 09:19:39</span></header>
+        <div class="transcript-message"><p>Continue selected Freeform run. Selected remaining objectives: 2 Phase: design. Objectives: F-001 DNA, F-002 DNA. Direction: fast design gate; approve, ask one blocking question, or request one concrete revision. Use objective records and item logs for details; selected scope is locked for this run. Required sub-agent fanout evaluation: ConflabCode detected freeform-design-objectives for 1, 2 (selected Freeform target role). Before durable handoff or closure, call cc_spawn_agent to spawn bounded independent work or record skipped/reportOnly telemetry with a concrete skipReason.</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/24/26 09:19:39</span></header>
+        <div class="transcript-message">Not targeted</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/24/26 09:20:35</span></header>
+        <div class="transcript-message">Fanout skip recorded. Now recording design-gate decisions for both objectives.Both objectives approved at the design gate.<br><br><strong>F-001 (Create/New Workspace from folder picker)</strong> — APPROVE. Provenance: R1-R4, R7, plus code evidence I gathered inline this session (<code>main.ts</code> <code>selectWorkspacePayload</code>/<code>ensureConflabCodeWorkspaceStructure</code>, and <code>hasWorkspaceApiConfiguration</code> in <code>22-settings/00-settings-state.js:300-303</code>). The design holds together: <code>workspaceReady</code> is gated on helper-provider configuration, not on <code>.ConflabCode</code> folder existence, so switching into the freshly-created empty folder will correctly display "Uninitialized" even though the normal switch path auto-creates <code>.ConflabCode/Tasks</code> as a side effect — no conflict with the "don't initialize during creation" criterion, since that criterion is about the mkdir step, not the subsequent switch. No blocking gaps.<br><br><strong>F-002 (Suppress current-workspace change option)</strong> — APPROVE. Provenance: R5-R6, plus the exact code path I traced (<code>webview-src/app/03-file-system.js</code> <code>pickConflabCodeFolder</code> ~293-330 missing the same-path check that <code>renderRecentWorkspaces</code> already applies at line 282 via <code>fsComparePathValue</code>). Acceptance criteria correctly call for reusing that existing pattern rather than inventing a new one. No blocking gaps.<br><br>Peer-delta review: round 9 peer harvest from Codex was "Not targeted" — no substantive content to incorporate, so disposition on both is <strong>no_change</strong>.<br><br>Both objectives are ready to move to implementation whenever Codex picks them up.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="10">
+    <summary><span class="round-summary-text"><span class="round-number">Round 10</span><span aria-hidden="true"> · </span><time datetime="2026-09-24T09:20:36">09/24/26 09:20:36</time><span aria-hidden="true"> · </span><span class="round-title">Implement both objectives</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director (AI) transcript block">
+        <header class="transcript-speaker-heading"><h4>Director (AI)</h4><span>09/24/26 09:20:36</span></header>
+        <div class="transcript-message"><p>Continue selected Freeform run. Selected remaining objectives: 2 Phase: implementation. Objectives: F-001 INN, F-002 INN. Direction: Lead implements unresolved objectives; Reviewer reviews Lead-ready work against the handoff. Use objective records and item logs for details; selected scope is locked for this run. Required sub-agent fanout evaluation: ConflabCode detected freeform-selected-objectives for 1, 2 (selected Freeform target role). Before durable handoff or closure, call cc_spawn_agent to spawn bounded independent work or record skipped/reportOnly telemetry with a concrete skipReason.</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/24/26 09:20:36</span></header>
+        <div class="transcript-message">Not targeted</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/24/26 09:29:04</span></header>
+        <div class="transcript-message">I’ll start by grounding this in the objective source rounds and the project rules that clearly apply, then I’ll inspect the picker/workspace code and keep the implementation bounded to the two selected objectives.<br><br>The source rounds confirm the two implementation targets: add a first-class New Workspace creation path in the picker, and reuse the existing same-path comparison pattern so the current workspace only offers New Window/Cancel. I’m going to pull the exact rule bodies and then inspect the relevant UI/backend files before editing.<br><br>I’ve got enough source intent now. The important constraint is not just “make a folder”: the new button must be a peer action beside Select Folder, create only a brand-new folder after name plus confirmation, then hand off to the existing uninitialized Settings path.<br><br>One useful code finding: the existing picker already centralizes folder selection in <code>openFsPicker</code>/<code>confirmFsPicker</code>, while <code>pickConflabCodeFolder</code> owns the workspace-specific switch/new-window decisions. I’m keeping the new “create workspace folder” signal inside the picker and letting the workspace file handle it, which should avoid bending the generic picker into workspace lifecycle logic.<br><br>There’s an existing app prompt/confirm/choice modal with an input field, so I can use that instead of introducing a new modal. I’m checking the dialog helper details now so the folder-name step can disable/block cleanly and match the existing interaction style.<br><br>The low-risk implementation path is clear now: add a <code>New Workspace</code> action to the generic folder picker with a prompt/confirm/create result, then teach <code>pickConflabCodeFolder</code> to handle that created result and the same-current-workspace case. I’m going to patch those narrow spots plus the picker markup/styles.<br><br>I’m making three scoped edits: <code>body.html</code> for the new button, <code>02-file-picker.js</code> for the create-folder prompt/validation/confirmation flow, and <code>03-file-system.js</code> for switching created folders and suppressing the same-workspace “Change Workspace” option.<br><br>Syntax checks are green on the two JavaScript files I touched. One acceptance detail is worth tightening before handoff: the current prompt blocks invalid names after pressing Continue, but the objective asks for disabled/blocking behavior, so I’m going to make the existing prompt helper support a small input validator and use it here.<br><br>I’m adding the validator as a small generic option on the existing dialog rather than making a one-off modal. That keeps the workspace flow polished without creating another UI surface to maintain.<br><br>I found one cleanup to make that validator robust across reused dialogs: reset the prompt validator and input handler when dialogs close/open. Then I’ll wire the New Workspace prompt to the folder-name validator.<br><br>That patch missed because the dialog file shifted under the previous edit. I’m rereading the exact spans and applying the cleanup against the current content.<br><br>I’ve got the current spans. I’m applying the small cleanup now.<br><br>The current state object has the peer timer before peer status, so the previous hunk was matching the wrong order. Applying the corrected patch now.<br><br>The prompt now disables Continue until the folder name passes the same validation used on submit. I’m running syntax checks again, then I’ll run the focused webview verification for the whole selected batch.<br><br>All syntax checks passed. The diff matches the intended surface: one dialog helper enhancement, the folder picker create flow, one workspace-selection branch, and the new button markup. I’m running the focused webview verification now.<br><br>Focused verification passed: TypeScript compile, 294 webview/electron tests, and the webview build all completed successfully. I’m doing the final diff/status pass now and then I’ll record the Freeform implementation handoff for reviewer review.<br><br>One note from the status pass: <code>ConflabCode.html</code> changed because <code>npm run verify:webview-focused</code> runs <code>build:webview</code>, so the bundled webview was regenerated from the source changes. The only unrelated existing files are the two untracked docs, which I left alone.<br><br>Because this touches the shared dialog helper as well as the picker, I’m treating that as enough shared UI surface to run the package test suite too, not just the focused webview command.<br><br>I’ve got the implementation and verification in place from the selected slice. I’m recording the required Conflab coordination now, then I’ll hand it over cleanly for review.<br><br><strong>Scope</strong><br>Implemented both selected Freeform objectives, F-001 and F-002.<br><br><strong>Changed Files</strong><br>- <code>webview-src/body.html</code><br>- <code>webview-src/app/00-bootstrap/01-overview-dialogs-viewer.js</code><br>- <code>webview-src/app/00-bootstrap/02-file-picker.js</code><br>- <code>webview-src/app/03-file-system.js</code><br>- <code>ConflabCode.html</code> generated by <code>npm run verify:webview-focused</code><br><br>Unrelated untracked docs remain untouched: <code>Docs/CONFLABCODE_USER_GUIDE.md</code>, <code>Docs/CONFLABCODE_USER_GUIDE_OUTLINE.md</code>.<br><br><strong>Implemented Behavior</strong><br>F-001: the folder picker now shows a highlighted <strong>New Workspace</strong> button from the start, immediately left of <strong>Select Folder</strong>. It prompts for a folder name, validates before Continue, previews the final path, blocks collisions, confirms creation, creates only the new folder, then switches to it so the existing Settings/Uninitialized initialization path takes over.<br><br>F-002: selecting the workspace already open in the current window no longer offers <strong>Change Workspace</strong>. It still offers the existing new-window path and cancel behavior. Different-workspace behavior remains unchanged.<br><br><strong>Source Provenance Checked</strong><br>Read and applied R1-R4, R5-R7, and R9. Coverage maps to the Director’s create-new-folder-not-adopt-existing-folder intent, R7 button placement/highlight revision, and the current-workspace suppression behavior from R5/R6.<br><br><strong>Verification</strong><br>Passed:<br>- <code>node --check webview-src/app/00-bootstrap/01-overview-dialogs-viewer.js</code><br>- <code>node --check webview-src/app/00-bootstrap/02-file-picker.js</code><br>- <code>node --check webview-src/app/03-file-system.js</code><br>- <code>npm run verify:webview-focused</code><br>- <code>npm test</code> with 257 total, 252 passed, 5 skipped, 0 failed<br><br><strong>Regression Decision</strong><br>Broad regression was triggered because the change touches shared picker/dialog/workspace-switching code and the generated webview bundle. I ran focused verification plus the full npm test suite.<br><br><strong>Residual Risk</strong><br>No manual Electron click-through was run. Filesystem permission failures rely on the existing bridge behavior, but the new flow surfaces those failures and leaves the picker recoverable.<br><br><strong>Reviewer Focus</strong><br>Please review the shared dialog validator behavior, the path/name validation rules, the collision/confirmation flow, and the same-workspace comparison branch.<br><br>Tests not to rerun unless disputed: <code>npm test</code> and <code>npm run verify:webview-focused</code>.<br><br>Ready for Reviewer review of this work.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="11">
+    <summary><span class="round-summary-text"><span class="round-number">Round 11</span><span aria-hidden="true"> · </span><time datetime="2026-09-24T09:29:05">09/24/26 09:29:05</time><span aria-hidden="true"> · </span><span class="round-title">Review and approve the implementation</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director (AI) transcript block">
+        <header class="transcript-speaker-heading"><h4>Director (AI)</h4><span>09/24/26 09:29:05</span></header>
+        <div class="transcript-message"><p>Continue selected Freeform run. Selected remaining objectives: 2 Phase: implementation. Objectives: F-001 INA, F-002 INA. Direction: Lead implements unresolved objectives; Reviewer reviews Lead-ready work against the handoff. Use objective records and item logs for details; selected scope is locked for this run. Required sub-agent fanout evaluation: ConflabCode detected freeform-selected-objectives for 1, 2 (selected Freeform target role). Before durable handoff or closure, call cc_spawn_agent to spawn bounded independent work or record skipped/reportOnly telemetry with a concrete skipReason.</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/24/26 09:29:05</span></header>
+        <div class="transcript-message">Not targeted</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/24/26 09:31:12</span></header>
+        <div class="transcript-message">Both objectives pass implementation review.<br><br><strong>F-001 (New Workspace flow)</strong> — APPROVE. Verified against <code>git diff HEAD</code> across <code>body.html</code>, <code>03-file-system.js</code>, <code>02-file-picker.js</code>, and <code>01-overview-dialogs-viewer.js</code>: New Workspace shares the <code>bp</code> class with Select Folder (same highlight, no override CSS) and sits immediately left of it; <code>fsPickerCreateWorkspace()</code> shows the parent path, live-validates the name (disables Continue, tooltips the error), blocks collisions with a "select the existing folder instead" message, confirms the final path, and creates only the target folder via <code>fsEnsureDir</code> — no <code>.ConflabCode</code>/settings writes at creation time. After creation it switches straight into the new folder, consistent with the accepted design where "Uninitialized" reflects missing helper config, not folder existence. The peer digest flagged an earlier <code>cc_patch</code> failure against the dialogs file — I confirmed via diff that the <code>promptValidator</code> plumbing (state field, submit-guard, live <code>oninput</code> check, disabled-button/tooltip) is fully present, so that was a resolved retry, not a residual gap.<br><br><strong>F-002 (Suppress current-workspace change option)</strong> — APPROVE. Verified in the same diff: <code>pickConflabCodeFolder</code> now compares <code>fsComparePathValue</code> on the current and picked paths before showing any dialog, and on a match routes straight to <code>openWorkspaceWindowWithRiskChoice(...,{assumeAlreadyOpen:true})</code>, reusing the exact existing "already open" pattern rather than new logic. Different-workspace and already-open-elsewhere paths are untouched. Matches all five acceptance criteria.<br><br>Peer harvest on both was "Not targeted" — no delta to incorporate, disposition is no_change. Both objectives are ready for archive.</div>
+      </section>
+    </div>
+  </details>
+  <details class="round-disclosure" data-round="12">
+    <summary><span class="round-summary-text"><span class="round-number">Round 12</span><span aria-hidden="true"> · </span><time datetime="2026-09-24T09:31:12">09/24/26 09:31:12</time><span aria-hidden="true"> · </span><span class="round-title">Return control with the run complete</span></span><span class="round-state" aria-hidden="true"></span></summary>
+    <div class="round-transcript">
+      <section class="transcript-speaker transcript-speaker--director" aria-label="Director (AI) transcript block">
+        <header class="transcript-speaker-heading"><h4>Director (AI)</h4><span>09/24/26 09:31:12</span></header>
+        <div class="transcript-message"><p>Director mode changed: AI -&gt; Human: Selected Freeform objectives are complete.</p></div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--claude" aria-label="Claude Code transcript block">
+        <header class="transcript-speaker-heading"><h4>Claude Code</h4><span>Agent 1 · 09/24/26 09:31:12</span></header>
+        <div class="transcript-message">Did not participate.</div>
+      </section>
+      <section class="transcript-speaker transcript-speaker--codex" aria-label="Codex transcript block">
+        <header class="transcript-speaker-heading"><h4>Codex</h4><span>Agent 2 · 09/24/26 09:31:12</span></header>
+        <div class="transcript-message">Did not participate.</div>
+      </section>
+    </div>
+  </details>
+</div>
+<p>The progression is the useful part: rounds 1–7 turn a real conversation into reviewable objectives, round 8 hands control to the AI Director, rounds 9–11 gate and execute the work, and round 12 returns control with both objectives complete.</p>
+</section>
+<section class="subsection" aria-labelledby="a-three-round-reach-consensus-example">
+<h3 id="a-three-round-reach-consensus-example">A three-round Reach Consensus example</h3>
+<p>This real three-round sequence starts with a diagnosis-only request, uses Reach Consensus to reconcile the findings, and then authorizes the smallest fix.</p>
+<figure class="guide-figure" id="figure-consensus-diagnosis">
+  <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open the complete independent diagnosis screenshot full screen">
+    <img src="Users-Guide-Assets/consensus-diagnosis.png" alt="Independent diagnosis with both agents tracing a read-only Lead or Reviewer badge to a stale interface refresh" width="3840" height="2160" loading="lazy">
+  </div>
+  <figcaption><strong>Independent diagnosis</strong> — Both agents trace the read-only Lead/Reviewer badge and identify a stale interface refresh. <span class="figure-hint">Select the image to inspect the complete interaction.</span></figcaption>
+</figure>
+<figure class="guide-figure" id="figure-consensus-agreement">
+  <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open the complete Reach Consensus screenshot full screen">
+    <img src="Users-Guide-Assets/consensus-agreement.png" alt="Reach Consensus with both agents reconciling their findings into an agreed cause and recommended fix" width="3840" height="2160" loading="lazy">
+  </div>
+  <figcaption><strong>Reach Consensus</strong> — The agents reconcile their findings into one agreed cause and recommended fix. <span class="figure-hint">Select the image to inspect the complete interaction.</span></figcaption>
+</figure>
+<figure class="guide-figure" id="figure-consensus-implementation">
+  <div class="screenshot-trigger" role="button" tabindex="0" aria-label="Open the complete implementation and verification screenshot full screen">
+    <img src="Users-Guide-Assets/consensus-implementation.png" alt="Implementation and verification with Codex applying the interface refresh fix and reporting focused and broader checks" width="3840" height="2160" loading="lazy">
+  </div>
+  <figcaption><strong>Implementation and verification</strong> — Codex applies the fix and runs focused and broader checks. <span class="figure-hint">Select the image to inspect the complete interaction.</span></figcaption>
+</figure>
+<aside class="example-note"><strong>Why no separate formal review?</strong> The change was small and directly observable, so the Director built and exercised the result personally instead of spending more time on a formal review. That is proportionate Director validation for this case, not a universal recommendation to skip review.</aside>
+</section>
+<section class="subsection" aria-labelledby="when-something-goes-wrong">
+<h3 id="when-something-goes-wrong">When something goes wrong</h3>
+<div class="table-wrap"><table><thead><tr>
+<th scope="col">Problem</th>
+<th scope="col">What to do</th>
+</tr></thead><tbody>
+<tr>
+<th scope="row">A same-provider warning appears.</th>
+<td>It's a warning, not a block. ConflabCode still lets you run both seats on the same provider if that's actually what you want.</td>
+</tr>
+<tr>
+<th scope="row">An agent stalls mid-turn.</th>
+<td>The stalled-turn watchdog allows one automatic continue. If that doesn't resolve it, you're asked directly: continue, wait, or cancel.</td>
+</tr>
+<tr>
+<th scope="row">A tool approval gets denied.</th>
+<td>Each scope, from a single turn up through the whole system, grants a different amount of trust. Choose the narrowest one that still lets the work proceed.</td>
+</tr>
+<tr>
+<th scope="row">A task is already open elsewhere.</th>
+<td>A red, read-only marker appears, and ConflabCode won't let you open it a second time. This is per task, not per workspace, so a different task in the same workspace opens fine from another window.</td>
+</tr>
+<tr>
+<th scope="row">A task's model has been deprecated or is otherwise unavailable.</th>
+<td>ConflabCode follows the standard recovery path across providers: it reopens or presents the model picker so you can choose a current model, then continue.</td>
+</tr>
+<tr>
+<th scope="row">Reach Consensus hits its iteration cap.</th>
+<td>It stops at ten rounds without forcing a resolution. Use Stop Consensus if you'd rather end it earlier, or restate the disagreement more specifically and try again.</td>
+</tr>
+<tr>
+<th scope="row">You close a task with things still open.</th>
+<td>Closing records what was still open at the time. Reopening surfaces that list, but doesn't reactivate any of it. Say what's active again before you continue.</td>
+</tr>
+</tbody></table></div>
+<hr>
+</section>
+<a class="back-to-contents" href="#contents">Back to contents</a>
+</section>
+</main>
+    <footer>ConflabCode User’s Guide</footer>
+  </div>
+  <div class="fullscreen-overlay" id="fullscreen-overlay" role="dialog" aria-modal="true" aria-label="Complete screenshot view. Click anywhere or press Escape to return to the guide." tabindex="-1" hidden>
+    <img id="fullscreen-image" alt="Complete ConflabCode application screenshot">
+  </div>
+  <div class="cursor-tooltip" id="cursor-tooltip" role="tooltip" hidden></div>
+  <script>
+    (() => {
+      const roundDisclosures = [...document.querySelectorAll('.round-disclosure')];
+      roundDisclosures.forEach(disclosure => {
+        disclosure.addEventListener('toggle', () => {
+          if (!disclosure.open) return;
+          roundDisclosures.forEach(other => {
+            if (other !== disclosure) other.open = false;
+          });
+        });
+      });
+
+      const hashLinks = [...document.querySelectorAll('a[href^="#"]')];
+
+      function scrollToHashTarget() {
+        if (!window.location.hash) return;
+        let targetId = window.location.hash.slice(1);
+        try {
+          targetId = decodeURIComponent(targetId);
+        } catch {
+          return;
+        }
+        const target = document.getElementById(targetId);
+        target?.scrollIntoView({ block: 'start' });
+      }
+
+      function settleHashNavigation() {
+        scrollToHashTarget();
+        window.requestAnimationFrame(scrollToHashTarget);
+        window.setTimeout(scrollToHashTarget, 120);
+        window.setTimeout(scrollToHashTarget, 600);
+      }
+
+      if (window.location.hash && 'scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual';
+      }
+      window.addEventListener('load', settleHashNavigation);
+      window.addEventListener('pageshow', settleHashNavigation);
+      window.addEventListener('hashchange', settleHashNavigation);
+      hashLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (link.hash === window.location.hash) settleHashNavigation();
+        });
+      });
+
+      const triggers = [...document.querySelectorAll('.screenshot-trigger')];
+      const overlay = document.getElementById('fullscreen-overlay');
+      const image = document.getElementById('fullscreen-image');
+      const tooltip = document.getElementById('cursor-tooltip');
+      let activeTrigger = null;
+      let savedPosition = { x: 0, y: 0 };
+
+      function moveTooltip(event) {
+        if (tooltip.hidden) return;
+        const margin = 10;
+        const offset = 16;
+        const width = tooltip.offsetWidth;
+        const height = tooltip.offsetHeight;
+        const left = Math.min(event.clientX + offset, window.innerWidth - width - margin);
+        const top = Math.min(event.clientY + offset, window.innerHeight - height - margin);
+        tooltip.style.left = Math.max(margin, left) + 'px';
+        tooltip.style.top = Math.max(margin, top) + 'px';
+      }
+
+      function showTooltip(label, event) {
+        tooltip.textContent = label;
+        tooltip.hidden = false;
+        tooltip.classList.add('is-visible');
+        if (event && Number.isFinite(event.clientX)) moveTooltip(event);
+      }
+
+      function hideTooltip() {
+        tooltip.classList.remove('is-visible');
+        tooltip.hidden = true;
+      }
+
+      function bindTooltip(target, label) {
+        target.addEventListener('pointerenter', event => showTooltip(label, event));
+        target.addEventListener('pointermove', moveTooltip);
+        target.addEventListener('pointerleave', hideTooltip);
+      }
+
+      function openScreenshot(trigger) {
+        activeTrigger = trigger;
+        savedPosition = { x: window.scrollX, y: window.scrollY };
+        const source = trigger.querySelector('img');
+        image.src = source.currentSrc || source.src;
+        image.alt = source.alt;
+        overlay.hidden = false;
+        hideTooltip();
+        overlay.focus({ preventScroll: true });
+      }
+
+      function closeScreenshot() {
+        if (overlay.hidden) return;
+        overlay.hidden = true;
+        hideTooltip();
+        window.scrollTo(savedPosition.x, savedPosition.y);
+        const returnTarget = activeTrigger;
+        activeTrigger = null;
+        returnTarget?.focus({ preventScroll: true });
+      }
+
+      triggers.forEach(trigger => {
+        bindTooltip(trigger, 'Full Screen');
+        trigger.addEventListener('click', () => openScreenshot(trigger));
+        trigger.addEventListener('keydown', event => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          openScreenshot(trigger);
+        });
+      });
+
+      bindTooltip(overlay, 'Return');
+      overlay.addEventListener('click', closeScreenshot);
+      overlay.addEventListener('wheel', event => event.preventDefault(), { passive: false });
+      overlay.addEventListener('touchmove', event => event.preventDefault(), { passive: false });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeScreenshot();
+      });
+    })();
+  </script>
+</body>
+</html>
