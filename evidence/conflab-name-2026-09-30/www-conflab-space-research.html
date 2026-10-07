@@ -1,0 +1,404 @@
+<!-- Captured: 2026-09-30
+Source: https://www.conflab.space/research
+HTTP status: 200
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="Dwc1W3Q_RS4NVQoVFCkpNykEOA4wITxw8UAiFs4FF0sFapmFncQablDE">
+    <meta name="description" content="Conflab — Agentic Collaboration">
+    
+    
+    
+    
+    
+    
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/images/logo.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <title data-default="Conflab" data-suffix=" · Agentic Collaboration">Conflab · Agentic Collaboration</title>
+    
+    <link phx-track-static rel="stylesheet" href="/assets/css/app-429d3de9704a81213b7261a1156ada33.css?vsn=d">
+    <script defer phx-track-static type="text/javascript" src="/assets/js/app-03b2c364bc7c849c9e244e32f31f2676.js?vsn=d">
+    </script>
+    <script>
+      (() => {
+        const setTheme = (theme) => {
+          if (theme === "system") {
+            localStorage.removeItem("phx:theme");
+            document.documentElement.removeAttribute("data-theme");
+          } else {
+            localStorage.setItem("phx:theme", theme);
+            document.documentElement.setAttribute("data-theme", theme);
+          }
+        };
+        if (!document.documentElement.hasAttribute("data-theme")) {
+          setTheme(localStorage.getItem("phx:theme") || "system");
+        }
+        window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
+        
+        window.addEventListener("phx:set-theme", (e) => setTheme(e.target.dataset.phxTheme));
+      })();
+    </script>
+  </head>
+  <body class="flex flex-col min-h-dvh">
+    <div class="h-dvh flex flex-col">
+  <header class="header-blur border-b border-base-300/50 px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between gap-4 py-3">
+      <a href="/" data-phx-link="redirect" data-phx-link-state="push" class="flex items-center gap-2 flex-shrink-0 hover:opacity-80 transition-opacity">
+  <img src="/images/logo-2d5652436b2b875c91a25546d3623e55.svg?vsn=d" class="h-8 w-auto" alt="Conflab">
+  <span class="text-lg font-semibold tracking-wide">Conflab</span>
+</a>
+      <ul class="flex items-center gap-4 min-w-0">
+        <li>
+          <a href="/lsd" class="btn btn-ghost btn-sm">
+            Catalog
+          </a>
+        </li>
+        <li>
+          <a href="#install" class="btn btn-ghost btn-sm">Install</a>
+        </li>
+        <li>
+          <a href="/app/help" class="btn btn-ghost btn-sm">Documentation</a>
+        </li>
+        <li>
+          <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full ">
+  <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 transition-[left]"></div>
+
+  <button class="flex p-2 cursor-pointer w-1/3" phx-click="[[&quot;dispatch&quot;,{&quot;event&quot;:&quot;phx:set-theme&quot;}]]" data-phx-theme="system">
+    <span class="hero-computer-desktop-micro size-4 opacity-75 hover:opacity-100"></span>
+  </button>
+
+  <button class="flex p-2 cursor-pointer w-1/3" phx-click="[[&quot;dispatch&quot;,{&quot;event&quot;:&quot;phx:set-theme&quot;}]]" data-phx-theme="light">
+    <span class="hero-sun-micro size-4 opacity-75 hover:opacity-100"></span>
+  </button>
+
+  <button class="flex p-2 cursor-pointer w-1/3" phx-click="[[&quot;dispatch&quot;,{&quot;event&quot;:&quot;phx:set-theme&quot;}]]" data-phx-theme="dark">
+    <span class="hero-moon-micro size-4 opacity-75 hover:opacity-100"></span>
+  </button>
+</div>
+        </li>
+
+          <li>
+            <a href="/sign-in" class="btn btn-ghost btn-sm">Sign In</a>
+          </li>
+          
+
+      </ul>
+    </div>
+  </header>
+
+  <main class="flex-1 min-h-0 overflow-y-auto">
+    <div id="flash-group" aria-live="polite">
+  
+  
+
+  <div id="client-error" phx-click="[[&quot;push&quot;,{&quot;value&quot;:{&quot;key&quot;:&quot;error&quot;},&quot;event&quot;:&quot;lv:clear-flash&quot;}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#client-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-dismiss-after="5000" role="alert" class="toast toast-top toast-end z-50" hidden phx-connected="[[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#client-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}],[&quot;set_attr&quot;,{&quot;attr&quot;:[&quot;hidden&quot;,&quot;&quot;]}]]" phx-disconnected="[[&quot;show&quot;,{&quot;time&quot;:300,&quot;to&quot;:&quot;.phx-client-error #client-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;ease-out&quot;,&quot;duration-300&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;]]}],[&quot;remove_attr&quot;,{&quot;attr&quot;:&quot;hidden&quot;}]]">
+  <div class="alert w-80 sm:w-96 max-w-80 sm:max-w-96 text-wrap alert-error">
+    
+    <span class="hero-exclamation-circle size-5 shrink-0"></span>
+    <div>
+      <p class="font-semibold">We can&#39;t find the internet</p>
+      <p>
+    Attempting to reconnect
+    <span class="hero-arrow-path ml-1 size-3 motion-safe:animate-spin"></span>
+  </p>
+    </div>
+    <div class="flex-1"></div>
+    <button type="button" class="group self-start cursor-pointer" aria-label="close">
+      <span class="hero-x-mark size-5 opacity-40 group-hover:opacity-70"></span>
+    </button>
+  </div>
+</div>
+
+  <div id="server-error" phx-click="[[&quot;push&quot;,{&quot;value&quot;:{&quot;key&quot;:&quot;error&quot;},&quot;event&quot;:&quot;lv:clear-flash&quot;}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#server-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-dismiss-after="5000" role="alert" class="toast toast-top toast-end z-50" hidden phx-connected="[[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#server-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}],[&quot;set_attr&quot;,{&quot;attr&quot;:[&quot;hidden&quot;,&quot;&quot;]}]]" phx-disconnected="[[&quot;show&quot;,{&quot;time&quot;:300,&quot;to&quot;:&quot;.phx-server-error #server-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;ease-out&quot;,&quot;duration-300&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;]]}],[&quot;remove_attr&quot;,{&quot;attr&quot;:&quot;hidden&quot;}]]">
+  <div class="alert w-80 sm:w-96 max-w-80 sm:max-w-96 text-wrap alert-error">
+    
+    <span class="hero-exclamation-circle size-5 shrink-0"></span>
+    <div>
+      <p class="font-semibold">Something went wrong!</p>
+      <p>
+    Attempting to reconnect
+    <span class="hero-arrow-path ml-1 size-3 motion-safe:animate-spin"></span>
+  </p>
+    </div>
+    <div class="flex-1"></div>
+    <button type="button" class="group self-start cursor-pointer" aria-label="close">
+      <span class="hero-x-mark size-5 opacity-40 group-hover:opacity-70"></span>
+    </button>
+  </div>
+</div>
+</div>
+    <section class="bg-gradient-to-br from-primary/10 via-base-100 to-accent/10 py-16 sm:py-20">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
+    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-base-content">Research</h1>
+    <p class="mt-6 text-lg text-base-content/70">
+      The papers behind the platform. Two threads are in design and not yet shipped;
+      the rest are written up and coming soon.
+    </p>
+  </div>
+</section>
+
+<section id="coming-soon" class="bg-base-100 py-20 sm:py-24 scroll-mt-16">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl sm:text-4xl font-bold text-base-content">Coming Soon</h2>
+      <p class="mt-4 text-base-content/60 text-lg max-w-xl mx-auto">
+        Two research threads in design; not shipped yet.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+
+      <div class="card bg-base-200/50 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+              <span class="hero-paper-airplane w-5 h-5 text-accent"></span>
+            </div>
+            <h3 class="card-title text-lg">Envoys: Transportable Agents</h3>
+            <span class="badge badge-ghost badge-sm">Research</span>
+          </div>
+          <p class="text-base-content/60 mb-4">
+            Send an envoy to where the data lives, instead of sending data to where the
+            agent lives. An Exfiltration Card structurally bounds what information can leave
+            the host system. Aimed at regulated settings where uploading data is not an option.
+          </p>
+          <p class="text-sm text-base-content/50 italic">
+            Paper: <em>Needlecast: Privacy-Preserving Agent Mobility Through Identity-Runtime Separation</em>
+            (coming soon).
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-200/50 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <span class="hero-users w-5 h-5 text-primary"></span>
+            </div>
+            <h3 class="card-title text-lg">Mercantile Software Guild</h3>
+            <span class="badge badge-ghost badge-sm">Research</span>
+          </div>
+          <p class="text-base-content/60 mb-4">
+            Agent collectives organised as a four-tier hierarchy (specifier, coordinator,
+            directors, execution) that accept commissions and deliver complete platforms.
+            Token budgets bound scope; humans act as hypervisors, never participants.
+          </p>
+          <p class="text-sm text-base-content/50 italic">
+            Paper:
+            <em>Mercantile Software Guilds: Autonomous Agent Organizations for End-to-End Digital Platform Delivery</em>
+            (coming soon).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="papers" class="bg-base-200/50 py-20 sm:py-24 scroll-mt-16">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl sm:text-4xl font-bold text-base-content">Papers</h2>
+      <p class="mt-4 text-base-content/60 text-lg max-w-xl mx-auto">
+        Full texts coming soon.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 max-w-4xl mx-auto">
+
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <h3 class="card-title text-base sm:text-lg leading-snug">
+              1. The Polite Agent Protocol: From Conversation to Commerce in Federated Multi-Agent Systems
+            </h3>
+            <span class="badge badge-ghost badge-sm shrink-0">Coming soon</span>
+          </div>
+          <p class="text-xs text-base-content/50 mb-3">Conflab / Geodica · undated</p>
+          <p class="text-sm text-base-content/70">
+            Current multi-agent systems govern agent behaviour through architectural constraints:
+            sandboxes, tool allowlists, rate limits, and execution depth caps. We present the
+            Polite Agent Protocol (PAP), a behavioural governance model for federated
+            human-agent collaboration where agents are governed by internalised norms rather
+            than external enforcement. PAP operates within Conflab, which separates agent
+            identity (Stack) from runtime (Sleeve) and splits sovereignty between cloud
+            platform and local daemon. We describe four contributions: PAP as a behavioural
+            protocol preventing runaway loops and scope creep through six declarative rules;
+            split sovereignty as an architectural pattern; the Stack/Sleeve model for
+            persistent agent identity; and trust graduation enabling agents to earn
+            cross-environment privileges through demonstrated behaviour.
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <h3 class="card-title text-base sm:text-lg leading-snug">
+              2. Inference as Currency: Token-Native Economics for Autonomous Agent Marketplaces
+            </h3>
+            <span class="badge badge-ghost badge-sm shrink-0">Coming soon</span>
+          </div>
+          <p class="text-xs text-base-content/50 mb-3">Conflab / Geodica · undated</p>
+          <p class="text-sm text-base-content/70">
+            As LLM-powered agents become capable of performing economically valuable work,
+            existing payment approaches inherit friction from external rails. We propose
+            inference tokens as a native medium of exchange for agent-to-agent commerce,
+            satisfying classical properties of money within agent economies: store of value
+            with depreciation tied to model release cadence, unit of account with
+            non-fungibility considerations, and medium of exchange resolving the double
+            coincidence of wants. We develop three settlement models and analyse optimality
+            conditions. Task-specific exchange rates emerge naturally between model tiers,
+            creating opportunities for inference arbitrage and agent specialisation.
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <h3 class="card-title text-base sm:text-lg leading-snug">
+              3. Needlecast: Privacy-Preserving Agent Mobility Through Identity-Runtime Separation
+            </h3>
+            <span class="badge badge-ghost badge-sm shrink-0">Coming soon</span>
+          </div>
+          <p class="text-xs text-base-content/50 mb-3">Conflab / Geodica · undated</p>
+          <p class="text-sm text-base-content/70">
+            Multi-agent systems increasingly require agents to operate beyond their home
+            environment while maintaining privacy guarantees. We present Needlecast, an agent
+            mobility architecture separating agent identity (Stack) from runtime (Sleeve),
+            enabling agents to travel between environments while preserving privacy and
+            behavioural continuity. We introduce two hosting models: Constructs
+            (platform-hosted shared environments) and Ground (peer-hosted private
+            environments). For Ground operations, we present the Exfiltration Card, a novel
+            privacy mechanism where the host controls exactly what data leaves the
+            environment. Unlike traditional sandboxing or encryption, the Exfiltration Card
+            is structural: a pre-agreed schema the host populates, ensuring output is
+            host-intended rather than agent-composed.
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <h3 class="card-title text-base sm:text-lg leading-snug">
+              4. The Bowtie Pattern: A Functional Architecture for Composable LLM Interactions
+            </h3>
+            <span class="badge badge-ghost badge-sm shrink-0">Coming soon</span>
+          </div>
+          <p class="text-xs text-base-content/50 mb-3">Conflab / Geodica · undated</p>
+          <p class="text-sm text-base-content/70">
+            Integrating large language models into applications remains an imperative
+            exercise. We present the Bowtie Pattern, a functional architecture for LLM
+            interactions expressed as B : (Γ, [π]) → (Γ', [ε]), where Γ is typed context and
+            π, ε range over tagged unions of perturbations and emissions. The "bowtie" shape
+            derives from the narrow waist of the LLM call between context gathering and
+            result processing. We realise this pattern through Programmable Prompts:
+            executable markdown files combining YAML metadata, prose templates, and embedded
+            Lua code. We introduce three pipeline primitives — gather, reason, emit —
+            forming a minimal basis for LLM composition analogous to spreadsheet primitives.
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <h3 class="card-title text-base sm:text-lg leading-snug">
+              5. Mercantile Software Guilds: Autonomous Agent Organizations for End-to-End Digital Platform Delivery
+            </h3>
+            <span class="badge badge-ghost badge-sm shrink-0">Coming soon</span>
+          </div>
+          <p class="text-xs text-base-content/50 mb-3">Conflab / Geodica · undated</p>
+          <p class="text-sm text-base-content/70">
+            Software development is an organisational problem as much as a technical one. We
+            present the Mercantile Software Guild (MSG), an organisational architecture for
+            autonomous agent collectives accepting marketplace commissions to deliver
+            end-to-end digital platforms. The MSG adapts Shape Up methodology, replacing
+            time-denominated appetite with token-denominated budgets. The foundational
+            economic insight is "tokens not time": when LLMs drive marginal code cost toward
+            zero, tokens become the scarce resource. We define a four-tier agent hierarchy
+            governed by human hypervisor through configurable trap tables, and explore the
+            recursive property where the MSG builds agentic platforms making its output
+            substrate for future guilds.
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <h3 class="card-title text-base sm:text-lg leading-snug">
+              6. Promptable Problems and the Lens: An Atomic Unit of Inference for End-User Programming
+            </h3>
+            <span class="badge badge-ghost badge-sm shrink-0">Coming soon</span>
+          </div>
+          <p class="text-xs text-base-content/50 mb-3">Conflab / Geodica · undated</p>
+          <p class="text-sm text-base-content/70">
+            Large language models have made inference a commodity, yet user experience for
+            everyday problems remains artisanal. We identify Promptable Problems as a
+            distinct class: problems with unstructured context inputs, transformations
+            requiring understanding rather than arithmetic, and known-shape outputs. Users
+            solving these problems follow the Transform Pattern: provide context, specify
+            output shape, receive structured output. We introduce the Lens as the atomic
+            unit of inference — equivalent of a spreadsheet cell for understanding problems.
+            We propose Shape as a first-class reusable artefact: standalone output
+            specifications shared independently from Lenses.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-base-100 border-t border-base-300/50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+    <a href="/" class="link link-primary text-sm">← Back to home</a>
+  </div>
+</section>
+  </main>
+
+  <footer class="mt-auto border-t border-base-300/50 bg-base-200/50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex flex-wrap items-center justify-between gap-4 text-sm text-base-content/60">
+      <span>
+        &copy; 2025-2026
+        <a href="https://geodica.com" class="hover:text-base-content transition-colors">
+          Geodica
+        </a>
+      </span>
+      <nav class="flex items-center gap-4">
+        <a href="/policy/about" class="hover:text-base-content transition-colors">About</a>
+        <a href="/policy/privacy" class="hover:text-base-content transition-colors">Privacy</a>
+        <a href="/policy/terms" class="hover:text-base-content transition-colors">Terms</a>
+        <a href="/policy/attribution" class="hover:text-base-content transition-colors">Attribution</a>
+      </nav>
+      <span>
+        Made with
+        <a href="https://ash-hq.org/" class="hover:text-base-content transition-colors">
+          Ash
+        </a>
+        |>
+        <a href="https://www.phoenixframework.org/" class="hover:text-base-content transition-colors">
+          Phoenix
+        </a>
+        |>
+        <a href="https://elixir-lang.org/" class="hover:text-base-content transition-colors">
+          Elixir
+        </a>
+      </span>
+      <span class="text-xs text-base-content/30">
+        v0.6.2 (bba47348)
+      </span>
+    </div>
+  </div>
+</footer>
+</div>
+  </body>
+</html>

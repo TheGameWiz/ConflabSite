@@ -78,9 +78,8 @@
       color:rgba(255,255,255,.9);
       background:rgba(4,8,18,.52);
       box-shadow:0 18px 46px rgba(0,0,0,.34);
-      backdrop-filter:blur(14px);
       cursor:pointer;
-      transition:.18s ease;
+      transition:color .12s ease, border-color .12s ease, background .12s ease;
     }
     .fullscreen-toggle:hover,
     .fullscreen-toggle:focus-visible,
@@ -91,6 +90,9 @@
       outline:none;
     }
     .fullscreen-toggle[hidden]{
+      display:none;
+    }
+    html.is-embedded .fullscreen-toggle{
       display:none;
     }
     .fullscreen-toggle svg{
@@ -108,7 +110,6 @@
       position:sticky;
       top:0;
       z-index:20;
-      backdrop-filter:blur(20px);
       background:linear-gradient(180deg, rgba(4,8,18,.9), rgba(4,8,18,.62));
       border-bottom:1px solid rgba(255,255,255,.06);
     }
@@ -150,7 +151,7 @@
       letter-spacing:.05em;
       padding:8px 0;
       border-bottom:1px solid transparent;
-      transition:.18s ease;
+      transition:color .12s ease, border-color .12s ease;
     }
     .nav a:hover{
       color:var(--text);
@@ -226,7 +227,6 @@
       background:
         linear-gradient(180deg, rgba(6,12,22,.8), rgba(5,11,19,.68)),
         radial-gradient(circle at 0% 0%, rgba(255,83,71,.08), transparent 24%);
-      backdrop-filter:blur(12px);
       box-shadow:0 26px 70px rgba(0,0,0,.35);
     }
     .hero-copy::before{
@@ -284,7 +284,7 @@
       font-size:14px;
       font-weight:700;
       letter-spacing:.02em;
-      transition:.18s ease;
+      transition:background .12s ease, border-color .12s ease, color .12s ease, opacity .12s ease;
     }
     .button.primary{
       background:linear-gradient(135deg, #f16053, #8e132a 72%);
@@ -304,10 +304,12 @@
     .button.is-disabled{
       opacity:.48;
       cursor:not-allowed;
+      pointer-events:none;
+      box-shadow:none;
       transform:none;
     }
     .button:hover{
-      transform:translateY(-1px);
+      border-color:rgba(255,255,255,.24);
     }
     .button.is-disabled:hover{
       transform:none;
@@ -322,7 +324,6 @@
       border-radius:18px;
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.04);
-      backdrop-filter:blur(6px);
     }
     .hero-point strong{
       display:block;
@@ -451,7 +452,6 @@
       border-radius:26px;
       border:1px solid rgba(255,255,255,.1);
       background:linear-gradient(180deg, rgba(6,11,20,.92), rgba(8,14,25,.84));
-      backdrop-filter:blur(10px);
       box-shadow:0 24px 80px rgba(0,0,0,.36);
     }
     .battle-card.large{
@@ -581,7 +581,6 @@
       border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(8,15,26,.84), rgba(6,11,20,.78));
       box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
     }
     .panel.copy{
       padding:30px;
@@ -1026,8 +1025,8 @@
               </div>
               <div class="hero-actions">
                 <a class="button ghost" href="index.html">Back to Product Chooser</a>
-                <span class="button primary is-disabled" role="button" aria-disabled="true" title="Windows download link coming soon">Download for Windows</span>
-                <span class="button secondary is-disabled" role="button" aria-disabled="true" title="MacOS download link coming soon">Download for MacOS</span>
+                <a class="button primary is-disabled" data-release-asset="ConflabCode-Windows.zip" aria-disabled="true" tabindex="-1" title="Checking download availability">Download for Windows</a>
+                <a class="button secondary is-disabled" data-release-asset="ConflabCode-macOS.zip" aria-disabled="true" tabindex="-1" title="Checking download availability">Download for macOS</a>
                 <a class="button secondary" href="conflab-code-assets/Users-Guide.html" target="_blank" rel="noopener">User's Guide</a>
               </div>
             </div>
@@ -1307,8 +1306,8 @@
           </p>
           <div class="cta-actions">
             <a class="button ghost" href="index.html">Back to Product Chooser</a>
-            <span class="button primary is-disabled" role="button" aria-disabled="true" title="Windows download link coming soon">Download for Windows</span>
-            <span class="button secondary is-disabled" role="button" aria-disabled="true" title="MacOS download link coming soon">Download for MacOS</span>
+            <a class="button primary is-disabled" data-release-asset="ConflabCode-Windows.zip" aria-disabled="true" tabindex="-1" title="Checking download availability">Download for Windows</a>
+            <a class="button secondary is-disabled" data-release-asset="ConflabCode-macOS.zip" aria-disabled="true" tabindex="-1" title="Checking download availability">Download for macOS</a>
             <a class="button secondary" href="conflab-code-assets/Users-Guide.html" target="_blank" rel="noopener">User's Guide</a>
           </div>
         </div>
@@ -1328,6 +1327,7 @@
   </div>
   <div class="cursor-tooltip" id="cursor-tooltip" role="tooltip" hidden></div>
 
+  <script src="release-downloads.js"></script>
   <script>
     (() => {
       const fullscreenButton = document.querySelector('.fullscreen-toggle');
@@ -1339,6 +1339,10 @@
 
       function setupFullscreenToggle() {
         if (!fullscreenButton) return;
+        if (document.documentElement.classList.contains('is-embedded')) {
+          fullscreenButton.hidden = true;
+          return;
+        }
         if (!document.fullscreenEnabled || !document.documentElement.requestFullscreen) {
           fullscreenButton.hidden = true;
           return;
@@ -1362,6 +1366,25 @@
         });
         document.addEventListener('fullscreenchange', sync);
         sync();
+      }
+
+      function setupEmbeddedShellLinks() {
+        const params = new URLSearchParams(window.location.search);
+        const embedded = window.self !== window.top && params.get('embed') === '1';
+        if (!embedded) return;
+        document.documentElement.classList.add('is-embedded');
+        document.querySelectorAll('a[href="index.html"]').forEach(link => {
+          link.addEventListener('click', event => {
+            event.preventDefault();
+            window.parent.postMessage({ type: 'conflab-shell-close' }, '*');
+          });
+        });
+        document.querySelectorAll('a[href$="Users-Guide.html"]').forEach(link => {
+          link.addEventListener('click', event => {
+            event.preventDefault();
+            window.parent.postMessage({ type: 'conflab-shell-open', url: link.href }, '*');
+          });
+        });
       }
 
       function moveTooltip(event) {
@@ -1430,6 +1453,7 @@
         closeScreenshot();
       });
 
+      setupEmbeddedShellLinks();
       setupFullscreenToggle();
     })();
   </script>

@@ -69,9 +69,8 @@
       color:rgba(255,255,255,.9);
       background:rgba(7,19,28,.52);
       box-shadow:0 18px 46px rgba(0,0,0,.34);
-      backdrop-filter:blur(14px);
       cursor:pointer;
-      transition:.18s ease;
+      transition:color .12s ease, border-color .12s ease, background .12s ease;
     }
     .fullscreen-toggle:hover,
     .fullscreen-toggle:focus-visible,
@@ -82,6 +81,9 @@
       outline:none;
     }
     .fullscreen-toggle[hidden]{
+      display:none;
+    }
+    html.is-embedded .fullscreen-toggle{
       display:none;
     }
     .fullscreen-toggle svg{
@@ -99,7 +101,6 @@
       position:sticky;
       top:0;
       z-index:10;
-      backdrop-filter:blur(16px);
       background:rgba(7,19,28,.62);
       border-bottom:1px solid rgba(255,255,255,.06);
     }
@@ -142,7 +143,7 @@
       padding:8px 0;
       letter-spacing:.04em;
       border-bottom:1px solid transparent;
-      transition:.18s ease;
+      transition:color .12s ease, border-color .12s ease;
     }
     .nav a:hover{
       color:var(--text);
@@ -227,7 +228,7 @@
       font-weight:700;
       font-size:14px;
       letter-spacing:.02em;
-      transition:.18s ease;
+      transition:background .12s ease, border-color .12s ease, color .12s ease, opacity .12s ease;
       cursor:pointer;
     }
     .button.primary{
@@ -245,8 +246,14 @@
       border-color:rgba(169,192,201,.14);
       background:transparent;
     }
+    .button.is-disabled{
+      opacity:.48;
+      cursor:not-allowed;
+      pointer-events:none;
+      box-shadow:none;
+    }
     .button[aria-disabled="true"]{
-      opacity:.92;
+      opacity:.48;
     }
     .button[data-coming-soon]{
       position:relative;
@@ -362,9 +369,10 @@
       border-radius:30px;
       border:1px solid rgba(255,255,255,.06);
       background:#0c1c29;
-      box-shadow:0 22px 50px rgba(0,0,0,.24);
+      box-shadow:0 12px 28px rgba(0,0,0,.18);
       width:92%;
-      transition:transform .2s ease;
+      transition:none;
+      contain:paint;
     }
     .marquee-card.align-start{align-self:flex-start}
     .marquee-card.align-center{align-self:center}
@@ -379,16 +387,16 @@
       width:100%;
       height:100%;
       object-fit:cover;
-      transform:scale(1.04);
-      filter:saturate(1.05) contrast(1.04) brightness(.96);
+      transform:none;
+      filter:none;
     }
     @keyframes hero-scroll-up{
-      from{transform:translateY(0)}
-      to{transform:translateY(calc(-50% - 7px))}
+      from{transform:translate3d(0,0,0)}
+      to{transform:translate3d(0,calc(-50% - 7px),0)}
     }
     @keyframes hero-scroll-down{
-      from{transform:translateY(calc(-50% - 7px))}
-      to{transform:translateY(0)}
+      from{transform:translate3d(0,calc(-50% - 7px),0)}
+      to{transform:translate3d(0,0,0)}
     }
     section{
       padding:34px 0 16px;
@@ -901,7 +909,7 @@
           </p>
           <div class="hero-actions">
             <a class="button ghost" href="index.html">Back to Product Chooser</a>
-            <a class="button primary" href="conflab-assets/Conflab.zip" download>Download for Windows</a>
+            <a class="button primary is-disabled" data-release-asset="Conflab.zip" aria-disabled="true" tabindex="-1" title="Checking download availability">Download for Windows</a>
             <a class="button secondary" href="conflab-assets/Conflab-Users-Guide.html" target="_blank" rel="noopener">User's Guide</a>
           </div>
           <div class="hero-points">
@@ -933,88 +941,88 @@
             <div class="marquee-column">
               <div class="marquee-track">
                 <figure class="marquee-card wide tall align-start tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/lightning-orb.jpg" alt="Lightning in a Bottle concept art showing a lightning-charged spherical structure in a storm">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/lightning-orb-thumb.jpg" data-full-src="conflab-assets/images/lightning-orb.jpg" alt="Lightning in a Bottle concept art showing a lightning-charged spherical structure in a storm">
                 </figure>
                 <figure class="marquee-card medium align-end tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/fire-defense.jpg" alt="My House is on FIRE concept art showing a wildfire-defense roof sprinkler system protecting a house">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fire-defense-thumb.jpg" data-full-src="conflab-assets/images/fire-defense.jpg" alt="My House is on FIRE concept art showing a wildfire-defense roof sprinkler system protecting a house">
                 </figure>
                 <figure class="marquee-card short align-start tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/fallen-balance.jpg" alt="I've Fallen and I Can't Get Up concept art showing an older adult doing balance movement practice in an autumn park">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fallen-balance-thumb.jpg" data-full-src="conflab-assets/images/fallen-balance.jpg" alt="I've Fallen and I Can't Get Up concept art showing an older adult doing balance movement practice in an autumn park">
                 </figure>
                 <figure class="marquee-card medium align-center tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/lightning-grid.jpg" alt="Lightning in a Bottle concept art showing aerial storm-energy craft over an island">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/lightning-grid-thumb.jpg" data-full-src="conflab-assets/images/lightning-grid.jpg" alt="Lightning in a Bottle concept art showing aerial storm-energy craft over an island">
                 </figure>
                 <figure class="marquee-card wide short align-end tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/fallen-bone.jpg" alt="I've Fallen and I Can't Get Up concept art comparing bone density and treatment imagery">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fallen-bone-thumb.jpg" data-full-src="conflab-assets/images/fallen-bone.jpg" alt="I've Fallen and I Can't Get Up concept art comparing bone density and treatment imagery">
                 </figure>
                 <figure class="marquee-card medium align-start tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/fire-roofline.jpg" alt="My House is on FIRE concept art showing roofline sprinklers misting across a house at golden hour">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fire-roofline-thumb.jpg" data-full-src="conflab-assets/images/fire-roofline.jpg" alt="My House is on FIRE concept art showing roofline sprinklers misting across a house at golden hour">
                 </figure>
 
                 <figure class="marquee-card wide tall align-start tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/lightning-orb.jpg" alt="Lightning in a Bottle concept art showing a lightning-charged spherical structure in a storm">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/lightning-orb-thumb.jpg" data-full-src="conflab-assets/images/lightning-orb.jpg" alt="Lightning in a Bottle concept art showing a lightning-charged spherical structure in a storm">
                 </figure>
                 <figure class="marquee-card medium align-end tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/fire-defense.jpg" alt="My House is on FIRE concept art showing a wildfire-defense roof sprinkler system protecting a house">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fire-defense-thumb.jpg" data-full-src="conflab-assets/images/fire-defense.jpg" alt="My House is on FIRE concept art showing a wildfire-defense roof sprinkler system protecting a house">
                 </figure>
                 <figure class="marquee-card short align-start tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/fallen-balance.jpg" alt="I've Fallen and I Can't Get Up concept art showing an older adult doing balance movement practice in an autumn park">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fallen-balance-thumb.jpg" data-full-src="conflab-assets/images/fallen-balance.jpg" alt="I've Fallen and I Can't Get Up concept art showing an older adult doing balance movement practice in an autumn park">
                 </figure>
                 <figure class="marquee-card medium align-center tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/lightning-grid.jpg" alt="Lightning in a Bottle concept art showing aerial storm-energy craft over an island">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/lightning-grid-thumb.jpg" data-full-src="conflab-assets/images/lightning-grid.jpg" alt="Lightning in a Bottle concept art showing aerial storm-energy craft over an island">
                 </figure>
                 <figure class="marquee-card wide short align-end tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/fallen-bone.jpg" alt="I've Fallen and I Can't Get Up concept art comparing bone density and treatment imagery">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fallen-bone-thumb.jpg" data-full-src="conflab-assets/images/fallen-bone.jpg" alt="I've Fallen and I Can't Get Up concept art comparing bone density and treatment imagery">
                 </figure>
                 <figure class="marquee-card medium align-start tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/fire-roofline.jpg" alt="My House is on FIRE concept art showing roofline sprinklers misting across a house at golden hour">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fire-roofline-thumb.jpg" data-full-src="conflab-assets/images/fire-roofline.jpg" alt="My House is on FIRE concept art showing roofline sprinklers misting across a house at golden hour">
                 </figure>
               </div>
             </div>
             <div class="marquee-column alt">
               <div class="marquee-track">
                 <figure class="marquee-card short align-end tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/fire-pool.jpg" alt="My House is on FIRE atmosphere image showing a house and pool with wildfire glow in the background">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fire-pool-thumb.jpg" data-full-src="conflab-assets/images/fire-pool.jpg" alt="My House is on FIRE atmosphere image showing a house and pool with wildfire glow in the background">
                 </figure>
                 <figure class="marquee-card wide medium align-center tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/fallen-spine.jpg" alt="I've Fallen and I Can't Get Up concept art showing spine damage contrasted with recovery and treatment">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fallen-spine-thumb.jpg" data-full-src="conflab-assets/images/fallen-spine.jpg" alt="I've Fallen and I Can't Get Up concept art showing spine damage contrasted with recovery and treatment">
                 </figure>
                 <figure class="marquee-card tall align-start tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/lightning-pyramids.jpg" alt="Lightning in a Bottle concept art showing floating metallic pyramids suspended in a charged storm">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/lightning-pyramids-thumb.jpg" data-full-src="conflab-assets/images/lightning-pyramids.jpg" alt="Lightning in a Bottle concept art showing floating metallic pyramids suspended in a charged storm">
                 </figure>
                 <figure class="marquee-card short align-end tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/fire-aerial.jpg" alt="My House is on FIRE concept art showing an aerial view of a sprinkler-protected house facing an approaching wildfire">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fire-aerial-thumb.jpg" data-full-src="conflab-assets/images/fire-aerial.jpg" alt="My House is on FIRE concept art showing an aerial view of a sprinkler-protected house facing an approaching wildfire">
                 </figure>
                 <figure class="marquee-card medium wide align-center tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/fallen-jaw.jpg" alt="I've Fallen and I Can't Get Up medical illustration showing jawbone deterioration under close examination">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fallen-jaw-thumb.jpg" data-full-src="conflab-assets/images/fallen-jaw.jpg" alt="I've Fallen and I Can't Get Up medical illustration showing jawbone deterioration under close examination">
                 </figure>
                 <figure class="marquee-card medium align-start tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/lightning-saucer.jpg" alt="Lightning in a Bottle concept art showing a storm-lit saucer-shaped energy collector under lightning">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/lightning-saucer-thumb.jpg" data-full-src="conflab-assets/images/lightning-saucer.jpg" alt="Lightning in a Bottle concept art showing a storm-lit saucer-shaped energy collector under lightning">
                 </figure>
                 <figure class="marquee-card short align-end tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/lightning-closeup.jpg" alt="Lightning in a Bottle concept art showing a close-up energy discharge arcing through a circular chamber">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/lightning-closeup-thumb.jpg" data-full-src="conflab-assets/images/lightning-closeup.jpg" alt="Lightning in a Bottle concept art showing a close-up energy discharge arcing through a circular chamber">
                 </figure>
 
                 <figure class="marquee-card short align-end tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/fire-pool.jpg" alt="My House is on FIRE atmosphere image showing a house and pool with wildfire glow in the background">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fire-pool-thumb.jpg" data-full-src="conflab-assets/images/fire-pool.jpg" alt="My House is on FIRE atmosphere image showing a house and pool with wildfire glow in the background">
                 </figure>
                 <figure class="marquee-card wide medium align-center tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/fallen-spine.jpg" alt="I've Fallen and I Can't Get Up concept art showing spine damage contrasted with recovery and treatment">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fallen-spine-thumb.jpg" data-full-src="conflab-assets/images/fallen-spine.jpg" alt="I've Fallen and I Can't Get Up concept art showing spine damage contrasted with recovery and treatment">
                 </figure>
                 <figure class="marquee-card tall align-start tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/lightning-pyramids.jpg" alt="Lightning in a Bottle concept art showing floating metallic pyramids suspended in a charged storm">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/lightning-pyramids-thumb.jpg" data-full-src="conflab-assets/images/lightning-pyramids.jpg" alt="Lightning in a Bottle concept art showing floating metallic pyramids suspended in a charged storm">
                 </figure>
                 <figure class="marquee-card short align-end tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/fire-aerial.jpg" alt="My House is on FIRE concept art showing an aerial view of a sprinkler-protected house facing an approaching wildfire">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fire-aerial-thumb.jpg" data-full-src="conflab-assets/images/fire-aerial.jpg" alt="My House is on FIRE concept art showing an aerial view of a sprinkler-protected house facing an approaching wildfire">
                 </figure>
                 <figure class="marquee-card medium wide align-center tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/fallen-jaw.jpg" alt="I've Fallen and I Can't Get Up medical illustration showing jawbone deterioration under close examination">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/fallen-jaw-thumb.jpg" data-full-src="conflab-assets/images/fallen-jaw.jpg" alt="I've Fallen and I Can't Get Up medical illustration showing jawbone deterioration under close examination">
                 </figure>
                 <figure class="marquee-card medium align-start tilt-left">
-                  <img class="zoomable" src="conflab-assets/images/lightning-saucer.jpg" alt="Lightning in a Bottle concept art showing a storm-lit saucer-shaped energy collector under lightning">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/lightning-saucer-thumb.jpg" data-full-src="conflab-assets/images/lightning-saucer.jpg" alt="Lightning in a Bottle concept art showing a storm-lit saucer-shaped energy collector under lightning">
                 </figure>
                 <figure class="marquee-card short align-end tilt-right">
-                  <img class="zoomable" src="conflab-assets/images/lightning-closeup.jpg" alt="Lightning in a Bottle concept art showing a close-up energy discharge arcing through a circular chamber">
+                  <img class="zoomable" src="conflab-assets/images/montage-thumbs/lightning-closeup-thumb.jpg" data-full-src="conflab-assets/images/lightning-closeup.jpg" alt="Lightning in a Bottle concept art showing a close-up energy discharge arcing through a circular chamber">
                 </figure>
               </div>
             </div>
@@ -1232,7 +1240,7 @@
           </p>
           <div class="cta-actions">
             <a class="button ghost" href="index.html">Return to Product Chooser</a>
-            <a class="button primary" href="conflab-assets/Conflab.zip" download>Download for Windows</a>
+            <a class="button primary is-disabled" data-release-asset="Conflab.zip" aria-disabled="true" tabindex="-1" title="Checking download availability">Download for Windows</a>
             <a class="button secondary" href="conflab-assets/Conflab-Users-Guide.html" target="_blank" rel="noopener">User's Guide</a>
           </div>
         </div>
@@ -1259,6 +1267,7 @@
   </div>
   <div class="cursor-tooltip" id="cursor-tooltip" role="tooltip" hidden></div>
 
+  <script src="release-downloads.js"></script>
   <script>
     (function(){
       const fullscreenButton=document.querySelector('.fullscreen-toggle');
@@ -1278,6 +1287,10 @@
 
       function setupFullscreenToggle(){
         if(!fullscreenButton) return;
+        if(document.documentElement.classList.contains('is-embedded')){
+          fullscreenButton.hidden=true;
+          return;
+        }
         if(!document.fullscreenEnabled||!document.documentElement.requestFullscreen){
           fullscreenButton.hidden=true;
           return;
@@ -1303,6 +1316,26 @@
         sync();
       }
 
+      function setupEmbeddedShellLinks(){
+        const params=new URLSearchParams(window.location.search);
+        const embedded=window.self!==window.top&&params.get('embed')==='1';
+        if(!embedded) return;
+        document.documentElement.classList.add('is-embedded');
+        document.querySelectorAll('a[href="index.html"]').forEach((link)=>{
+          link.addEventListener('click',(event)=>{
+            event.preventDefault();
+            window.parent.postMessage({type:'conflab-shell-close'},'*');
+          });
+        });
+        document.querySelectorAll('a[href$="Conflab-Users-Guide.html"]').forEach((link)=>{
+          link.addEventListener('click',(event)=>{
+            event.preventDefault();
+            window.parent.postMessage({type:'conflab-shell-open',url:link.href},'*');
+          });
+        });
+      }
+
+      setupEmbeddedShellLinks();
       setupFullscreenToggle();
 
       function moveTooltip(event){
@@ -1385,7 +1418,7 @@
       if(!zoomables.length||!lightbox||!lightboxImage||!lightboxCaption||!backdrop||!closeButton) return;
 
       function openLightbox(img,event){
-        lightboxImage.src=img.currentSrc||img.src;
+        lightboxImage.src=img.dataset.fullSrc||img.currentSrc||img.src;
         lightboxImage.alt=img.alt||'Expanded image';
         lightboxCaption.textContent=img.alt||'';
         lightbox.classList.toggle('is-screenshot',Boolean(img.closest('.screenshot-frame')));
