@@ -269,25 +269,10 @@
     }
     .hero-actions{
       display:grid;
-      grid-template-columns:repeat(2, max-content);
+      grid-template-columns:repeat(3, max-content);
       gap:14px;
       justify-content:start;
       margin:28px 0 22px;
-    }
-    .hero-actions .button.secondary{
-      grid-column:1 / -1;
-      justify-self:start;
-    }
-    .license-strip{
-      width:100%;
-      margin-top:14px;
-      padding:10px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.025);
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.55;
     }
     .button{
       display:inline-flex;
@@ -1061,8 +1046,15 @@
                   <strong>One-click consensus</strong>
                   <span>Pool what both agents see into one consolidated opinion.</span>
                 </div>
+                <div class="hero-point">
+                  <strong>No API keys required</strong>
+                  <span>Use your existing Claude Code and Codex subscriptions, or configure API keys if you prefer.</span>
+                </div>
+                <div class="hero-point">
+                  <strong>MIT licensed</strong>
+                  <span>Free to use, copy, modify, and distribute.</span>
+                </div>
               </div>
-              <div class="license-strip">Free to use, copy, modify, and distribute under the MIT License.</div>
               <div class="hero-actions">
                 <a class="button primary is-disabled" data-release-asset="ConflabCode-Windows.zip" aria-disabled="true" tabindex="-1" title="Checking download availability">Download for Windows</a>
                 <a class="button macos is-disabled" data-release-asset="ConflabCode-macOS.zip" aria-disabled="true" tabindex="-1" title="Checking download availability">Download for macOS</a>
