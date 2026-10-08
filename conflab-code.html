@@ -268,10 +268,26 @@
       line-height:1.72;
     }
     .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
+      display:grid;
+      grid-template-columns:repeat(2, max-content);
       gap:14px;
+      justify-content:start;
       margin:28px 0 22px;
+    }
+    .hero-actions .button.secondary{
+      grid-column:1 / -1;
+      justify-self:start;
+    }
+    .license-strip{
+      width:100%;
+      margin-top:14px;
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.025);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
     }
     .button{
       display:inline-flex;
@@ -869,9 +885,12 @@
     }
     .cta-actions{
       display:flex;
-      flex-wrap:wrap;
+      flex-wrap:nowrap;
       gap:14px;
       margin-top:22px;
+    }
+    .cta-actions .button{
+      flex:0 0 auto;
     }
     .site-footer{
       padding:0 0 42px;
@@ -919,6 +938,11 @@
         transform:none;
       }
     }
+    @media (max-width: 860px){
+      .cta-actions{
+        flex-wrap:wrap;
+      }
+    }
     @media (max-width: 760px){
       .shell{
         width:min(100vw - 22px, 100%);
@@ -961,6 +985,16 @@
       }
       .hero-points{
         grid-template-columns:1fr;
+      }
+      .hero-actions{
+        grid-template-columns:1fr;
+      }
+      .hero-actions .button,
+      .cta-actions .button{
+        width:100%;
+      }
+      .cta-actions{
+        flex-wrap:wrap;
       }
       h1{
         max-width:none;
@@ -1028,8 +1062,8 @@
                   <span>Pool what both agents see into one consolidated opinion.</span>
                 </div>
               </div>
+              <div class="license-strip">Free to use, copy, modify, and distribute under the MIT License.</div>
               <div class="hero-actions">
-                <a class="button ghost" href="index.html">Back to Product Chooser</a>
                 <a class="button primary is-disabled" data-release-asset="ConflabCode-Windows.zip" aria-disabled="true" tabindex="-1" title="Checking download availability">Download for Windows</a>
                 <a class="button macos is-disabled" data-release-asset="ConflabCode-macOS.zip" aria-disabled="true" tabindex="-1" title="Checking download availability">Download for macOS</a>
                 <a class="button secondary" href="conflab-code-assets/Users-Guide.html" target="_blank" rel="noopener">User's Guide</a>
