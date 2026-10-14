@@ -70,6 +70,64 @@
     </image:image>
   </url>
   <url>
+    <loc>https://conflab.ai/conflab-assets/Conflab-Users-Guide.html</loc>
+    <lastmod>2026-10-14</lastmod>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-multi-agent-workspace-overview.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-ai-provider-settings-drawer.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-workspace-root-folder-picker.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-workspace-setup-confirmation.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-directed-conversation-editor.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-live-multi-agent-conversation-workspace.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-persistent-results-artifacts-drawer.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-four-agent-panel-layout.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-saved-conversations-library.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-ai-personas-drawer.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-ai-persona-editor.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-conversation-file-attachments.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-expanded-results-artifact-browser.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-cross-conversation-results-browser.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-generated-summary-viewer.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-summary-print-pdf-export.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-persistent-conversation-log-viewer.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-summary-image-generation-dialog.jpg</image:loc>
+    </image:image>
+  </url>
+  <url>
     <loc>https://conflab.ai/conflab-code.html</loc>
     <lastmod>2026-10-14</lastmod>
     <image:image>
