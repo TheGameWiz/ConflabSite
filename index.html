@@ -3,10 +3,79 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Conflab Products</title>
-  <meta name="description" content="Choose between ConflabCode for directed multi-agent software work and Conflab for broad multi-provider conversation.">
-  <link rel="preload" as="image" href="conflab-code-assets/images/conflabcode-title.jpg">
-  <link rel="preload" as="image" href="conflab-assets/images/conflab-title.jpg">
+  <meta name="robots" content="max-image-preview:large">
+  <title>Conflab &amp; ConflabCode | Multi-Agent AI Collaboration</title>
+  <meta name="description" content="Explore Conflab for simultaneous multi-provider AI conversations and ConflabCode for directed Claude Code and Codex software workflows with durable context.">
+  <link rel="canonical" href="https://conflab.ai/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Conflab">
+  <meta property="og:title" content="Conflab &amp; ConflabCode | Multi-Agent AI Collaboration">
+  <meta property="og:description" content="Choose a multi-agent AI workspace for simultaneous multi-provider conversations or directed Claude Code and Codex software development.">
+  <meta property="og:url" content="https://conflab.ai/">
+  <meta property="og:image" content="https://conflab.ai/conflab-assets/images/conflab-multi-agent-conversation-workspace.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="1080">
+  <meta property="og:image:alt" content="Conflab splash artwork showing a diverse panel collaborating in a multi-agent AI workspace">
+  <meta property="og:image" content="https://conflab.ai/conflab-code-assets/images/conflabcode-claude-code-codex-workspace.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="1080">
+  <meta property="og:image:alt" content="ConflabCode splash artwork showing Claude Code and Codex as two AI minds in one software-development workspace">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Conflab &amp; ConflabCode | Multi-Agent AI Collaboration">
+  <meta name="twitter:description" content="Simultaneous multi-provider AI conversations and directed Claude Code and Codex software workflows.">
+  <meta name="twitter:image" content="https://conflab.ai/conflab-assets/images/conflab-multi-agent-conversation-workspace.jpg">
+  <meta name="twitter:image:alt" content="Conflab splash artwork showing a diverse panel collaborating in a multi-agent AI workspace">
+  <link rel="preload" as="image" href="conflab-code-assets/images/conflabcode-claude-code-codex-workspace.jpg">
+  <link rel="preload" as="image" href="conflab-assets/images/conflab-multi-agent-conversation-workspace.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://conflab.ai/#website",
+        "url": "https://conflab.ai/",
+        "name": "Conflab",
+        "alternateName": "Conflab Products",
+        "description": "Multi-agent AI workspaces for simultaneous multi-provider conversations and directed software development.",
+        "inLanguage": "en",
+        "image": [
+          {
+            "@type": "ImageObject",
+            "@id": "https://conflab.ai/#conflab-splash-image",
+            "url": "https://conflab.ai/conflab-assets/images/conflab-multi-agent-conversation-workspace.jpg",
+            "contentUrl": "https://conflab.ai/conflab-assets/images/conflab-multi-agent-conversation-workspace.jpg",
+            "width": 1920,
+            "height": 1080,
+            "caption": "Conflab multi-agent AI conversation workspace"
+          },
+          {
+            "@type": "ImageObject",
+            "@id": "https://conflab.ai/#conflabcode-splash-image",
+            "url": "https://conflab.ai/conflab-code-assets/images/conflabcode-claude-code-codex-workspace.jpg",
+            "contentUrl": "https://conflab.ai/conflab-code-assets/images/conflabcode-claude-code-codex-workspace.jpg",
+            "width": 1920,
+            "height": 1080,
+            "caption": "ConflabCode Claude Code and Codex software-development workspace"
+          }
+        ]
+      },
+      {
+        "@type": "Brand",
+        "@id": "https://conflab.ai/#brand",
+        "name": "Conflab",
+        "url": "https://conflab.ai/",
+        "logo": "https://conflab.ai/conflab-assets/images/conflab-logo.png",
+        "image": [
+          { "@id": "https://conflab.ai/#conflab-splash-image" },
+          { "@id": "https://conflab.ai/#conflabcode-splash-image" }
+        ]
+      }
+    ]
+  }
+  </script>
   <style>
     :root{
       --edge:30px;
@@ -134,11 +203,11 @@
       display:none;
     }
     .product-panel[data-product="code"]{
-      --panel-image:url("conflab-code-assets/images/conflabcode-title.jpg");
+      --panel-image:url("conflab-code-assets/images/conflabcode-claude-code-codex-workspace.jpg");
       transform-origin:bottom left;
     }
     .product-panel[data-product="conflab"]{
-      --panel-image:url("conflab-assets/images/conflab-title.jpg");
+      --panel-image:url("conflab-assets/images/conflab-multi-agent-conversation-workspace.jpg");
       transform-origin:top left;
     }
     body[data-active="code"] .product-panel[data-product="code"],
