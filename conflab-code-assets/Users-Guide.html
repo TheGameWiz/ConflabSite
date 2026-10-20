@@ -177,7 +177,18 @@
 </section>
 <section class="part" aria-labelledby="part-2-getting-set-up">
 <h2 id="part-2-getting-set-up">Part 2 - Getting set up</h2>
-<p>Getting set up is three separate things: pick a workspace, tell ConflabCode which providers you're using, and create your first task. None of it takes long.</p><section class="subsection" aria-labelledby="launching-conflabcode-and-picking-a-workspace">
+<p>Getting set up is three separate things: pick a workspace, tell ConflabCode which providers you're using, and create your first task. None of it takes long.</p>
+<div class="practical-note">
+  <p><strong>Before you begin: provider CLIs and accounts.</strong> ConflabCode runs the Claude Code and Codex command-line tools, or CLIs, on your computer. A CLI is the local coding-agent program that ConflabCode launches for you; you do not need to work in a terminal yourself.</p>
+  <p>ConflabCode must detect both a Claude Code CLI and a Codex CLI. It may find a standalone installation or a compatible CLI bundled with a supported editor extension.</p>
+  <p>Each provider also requires credentials. Choose one method for each provider:</p>
+  <ul>
+    <li><strong>Provider login:</strong> Authorize with a provider account whose plan includes access to that coding agent. ConflabCode opens the provider's sign-in flow when authorization is needed.</li>
+    <li><strong>API key:</strong> Create a key in the provider account and make sure API usage or billing is enabled.</li>
+  </ul>
+  <p>You do not need both credential methods for the same provider. Installing a CLI does not create a provider account or grant subscription or API access. Settings will identify anything still missing and provide links for installation, CLI sign-in, and account or API-key management.</p>
+</div>
+<section class="subsection" aria-labelledby="launching-conflabcode-and-picking-a-workspace">
 <h3 id="launching-conflabcode-and-picking-a-workspace">Launching ConflabCode and picking a workspace</h3>
 <p>The first time you launch ConflabCode, you'll see a splash screen, then a folder picker, unless you launched with a specific path or a recent workspace already in hand, in which case ConflabCode drops you straight into it.</p>
 <p>The folder picker gives you breadcrumbs, root shortcuts, Go Up and Home buttons, a toggle for hidden files, and a Recent row along the bottom showing your last several workspaces.</p>
