@@ -11,13 +11,12 @@
 <meta property="og:title" content="Conflab User's Guide | Multi-Agent AI Workspace">
 <meta property="og:description" content="Set up Conflab, direct multi-agent conversations across AI providers, and save summaries, logs, images, and reusable artifacts.">
 <meta property="og:url" content="https://conflab.ai/conflab-assets/Conflab-Users-Guide.html">
-<meta property="og:image" content="https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-multi-agent-workspace-overview.jpg">
+<meta property="og:image" content="https://conflab.ai/conflab-assets/Users-Guide-Assets/01-startup-overview.png">
 <meta property="og:image:alt" content="Conflab multi-agent conversation workspace startup overview">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Conflab User's Guide | Multi-Agent AI Workspace">
 <meta name="twitter:description" content="Set up Conflab, direct multi-agent conversations across AI providers, and save reusable results.">
-<meta name="twitter:image" content="https://conflab.ai/conflab-assets/Users-Guide-Assets/conflab-multi-agent-workspace-overview.jpg">
-<title>Conflab User's Guide | Multi-Agent AI Workspace</title>
+<meta name="twitter:image" content="https://conflab.ai/conflab-assets/Users-Guide-Assets/01-startup-overview.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -35,6 +34,7 @@
   }
 }
 </script>
+<title>Conflab User's Guide</title>
 <style>
 * { box-sizing: border-box; }
 
@@ -322,6 +322,11 @@ hr {
         <div class="toc">
 <ul>
 <li><a href="#what-conflab-is">What Conflab Is</a></li>
+<li><a href="#installing-starting-and-stopping">Installing, Starting, and Stopping</a><ul>
+<li><a href="#windows">Windows</a></li>
+<li><a href="#macos">macOS</a></li>
+</ul>
+</li>
 <li><a href="#setup">Setup</a><ul>
 <li><a href="#step-1-pick-a-root-folder">Step 1: Pick a root folder</a></li>
 <li><a href="#step-2-set-up-openrouter-required">Step 2: Set up OpenRouter (required)</a></li>
@@ -497,9 +502,27 @@ hr {
 <li><code>PERSONAS</code></li>
 <li><code>RESULTS</code></li>
 </ul>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Conflab multi-agent workspace overview"><img src="Users-Guide-Assets/conflab-multi-agent-workspace-overview.jpg" alt="Conflab overview showing use cases for its multi-agent AI conversation workspace" loading="lazy"><figcaption>Conflab multi-agent workspace overview <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Startup overview"><img src="Users-Guide-Assets/01-startup-overview.png" alt="Startup overview" loading="lazy"><figcaption>Startup overview <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>On first launch, the main panel can show an overview screen. Once you open a conversation, that same space becomes the live workspace.</p>
+<h2 id="installing-starting-and-stopping">Installing, Starting, and Stopping</h2>
+<p>Conflab is distributed as separate Windows and macOS packages with the same product version. Extract the package for your operating system before starting.</p>
+<h3 id="windows">Windows</h3>
+<ol>
+<li>Extract <code>Conflab-Windows.zip</code> to a folder you want to keep.</li>
+<li>Open the extracted <code>Conflab</code> folder and double-click <code>Install.cmd</code>.</li>
+<li>Start Conflab from the shortcut in that folder or on the Desktop.</li>
+<li>To stop the local server, double-click <code>Stop-Conflab-Server.cmd</code>.</li>
+</ol>
+<p>Windows uses the built-in Windows PowerShell 5.1; PowerShell 7 is not required. Node.js 20 or newer is needed only for Claude/Codex CLI provider sessions.</p>
+<h3 id="macos">macOS</h3>
+<ol>
+<li>Extract <code>Conflab-macOS.zip</code> to a folder you want to keep.</li>
+<li>Open the extracted <code>Conflab</code> folder and double-click <code>Conflab.command</code>.</li>
+<li>To stop the local server and its CLI descendants, double-click <code>Stop-Conflab-Server.command</code>.</li>
+</ol>
+<p>There is no macOS installer. The launcher requires PowerShell 7 or newer and gives Homebrew and Microsoft package guidance when it is missing. Node.js 20 or newer is needed only for Claude/Codex CLI provider sessions.</p>
+<p>On first launch, macOS may require the standard Gatekeeper approval: Control-click <code>Conflab.command</code>, choose <strong>Open</strong>, and confirm. If needed, use <strong>System Settings &gt; Privacy &amp; Security &gt; Open Anyway</strong>. The launcher does not remove quarantine automatically. Only if the standard approval flow still fails and you have verified the official download, the macOS README documents a manual <code>xattr</code> troubleshooting command.</p>
 <h2 id="setup">Setup</h2>
 <p>Setup is a one-time job. Do it once and Conflab is ready for any conversation you want to run.</p>
 <p>Two things have to be in place before the app is really usable:</p>
@@ -507,15 +530,15 @@ hr {
 <li>A <strong>root folder</strong> so Conflab has somewhere to save workspace data to disk.</li>
 <li><strong>API keys and a helper model</strong> so Conflab's AI features can actually run.</li>
 </ol>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: AI provider settings in Conflab"><img src="Users-Guide-Assets/conflab-ai-provider-settings-drawer.jpg" alt="Conflab settings drawer for configuring AI providers and workspace behavior" loading="lazy"><figcaption>AI provider settings in Conflab <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Settings drawer"><img src="Users-Guide-Assets/02-settings-drawer-initial-setup.png" alt="Settings drawer" loading="lazy"><figcaption>Settings drawer <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <h3 id="step-1-pick-a-root-folder">Step 1: Pick a root folder</h3>
 <p>The root folder is where Conflab stores everything you produce: workspace settings, conversations, personas, and results such as summaries, logs, and images. Without a root folder, there is nowhere for the app to save working state.</p>
 <p>Pick a location you can find again. A dedicated folder like <code>Documents/Conflab</code> or similar works well. Everything Conflab writes will land under that folder.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Choose a root folder for persistent work"><img src="Users-Guide-Assets/conflab-workspace-root-folder-picker.jpg" alt="Conflab root folder picker for a persistent workspace" loading="lazy"><figcaption>Choose a root folder for persistent work <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Root folder picker"><img src="Users-Guide-Assets/03-root-folder-picker.png" alt="Root folder picker" loading="lazy"><figcaption>Root folder picker <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>After you choose the folder, Conflab asks you to confirm the workspace choice.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Confirm the active Conflab workspace"><img src="Users-Guide-Assets/conflab-workspace-setup-confirmation.jpg" alt="Conflab workspace confirmation after selecting a root folder" loading="lazy"><figcaption>Confirm the active Conflab workspace <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Workspace confirmation"><img src="Users-Guide-Assets/04-workspace-confirmation-dialog.png" alt="Workspace confirmation" loading="lazy"><figcaption>Workspace confirmation <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <h3 id="step-2-set-up-openrouter-required">Step 2: Set up OpenRouter (required)</h3>
 <p>Conflab's AI features run through OpenRouter. The workspace only becomes fully ready once Settings are saved with a valid OpenRouter configuration. That means you need to:</p>
@@ -566,7 +589,7 @@ hr {
 <p>Click <code>CONVERSATIONS</code> on the left edge. The drawer opens.</p>
 <h3 id="2-create-a-new-conversation">2. Create a new conversation</h3>
 <p>Click <code>+ Conversation</code>. The conversation editor opens.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Direct a conversation with objectives and participant guidance"><img src="Users-Guide-Assets/conflab-directed-conversation-editor.png" alt="Conflab directed conversation editor with objective and participant guidance fields" loading="lazy"><figcaption>Direct a conversation with objectives and participant guidance <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Conversation editor"><img src="Users-Guide-Assets/15-conversation-editor.png" alt="Conversation editor" loading="lazy"><figcaption>Conversation editor <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>Fill in:</p>
 <ul>
@@ -576,7 +599,7 @@ hr {
 </ul>
 <h3 id="3-click-go">3. Click <code>Go</code></h3>
 <p><code>Go</code> saves the conversation and drops you into the live workspace with agent slots pre-created.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Live multi-agent conversation workspace"><img src="Users-Guide-Assets/conflab-live-multi-agent-conversation-workspace.jpg" alt="Conflab live workspace with multiple AI agents contributing simultaneously" loading="lazy"><figcaption>Live multi-agent conversation workspace <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Main workspace"><img src="Users-Guide-Assets/05-main-workspace-active-conversation.png" alt="Main workspace" loading="lazy"><figcaption>Main workspace <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <h3 id="4-assign-personas-to-the-agent-slots">4. Assign personas to the agent slots</h3>
 <p>Each agent panel has a header label. Click it to assign a persona or pick a model. You can:</p>
@@ -603,7 +626,7 @@ hr {
 <p>Click <code>Log</code>. This saves a full transcript of the conversation (no AI generation involved: just a clean conversion of the rounds to a readable document).</p>
 <h3 id="11-open-your-artifacts-from-results">11. Open your artifacts from RESULTS</h3>
 <p>Click the <code>RESULTS</code> tab on the left. Expand your conversation. You should see <code>summaries</code> and <code>logs</code> folders with the artifacts you just saved.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Saved summaries, logs, images, and other results"><img src="Users-Guide-Assets/conflab-persistent-results-artifacts-drawer.jpg" alt="Conflab results drawer with persistent summaries, logs, images, and artifacts" loading="lazy"><figcaption>Saved summaries, logs, images, and other results <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Results drawer"><img src="Users-Guide-Assets/08-results-drawer.png" alt="Results drawer" loading="lazy"><figcaption>Results drawer <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>Click a summary or a log once to open it in the viewer modal. From the viewer you can:</p>
 <ul>
@@ -622,7 +645,7 @@ hr {
 <li>the Director toolbar</li>
 <li>the agent grid</li>
 </ul>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Four AI agents working in parallel"><img src="Users-Guide-Assets/conflab-four-agent-panel-layout.jpg" alt="Conflab four-agent panel layout showing simultaneous AI responses" loading="lazy"><figcaption>Four AI agents working in parallel <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Four-agent layout"><img src="Users-Guide-Assets/09-main-workspace-four-agent-layout.png" alt="Four-agent layout" loading="lazy"><figcaption>Four-agent layout <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>Each agent panel is a live participant window. The Director steers the conversation from the center controls, and the individual agent panels show the resulting outputs.</p>
 <h2 id="director-toolbar">Director Toolbar</h2>
@@ -820,7 +843,7 @@ hr {
 <p><strong>Why this is powerful:</strong> you can course-correct a conversation by changing who is at the table. If one voice is dominating or being useless, swap it. If a discussion would benefit from an expert you did not invite, add an agent and assign the right persona mid-session. The discussion does not have to be frozen at setup.</p>
 <h2 id="conversations-drawer">Conversations Drawer</h2>
 <p>The <code>CONVERSATIONS</code> drawer is where you organize and reopen discussions.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Browse and reopen saved conversations"><img src="Users-Guide-Assets/conflab-saved-conversations-library.jpg" alt="Conflab saved conversations library for browsing and reopening prior work" loading="lazy"><figcaption>Browse and reopen saved conversations <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Conversations drawer"><img src="Users-Guide-Assets/06-conversations-drawer.png" alt="Conversations drawer" loading="lazy"><figcaption>Conversations drawer <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>Controls:</p>
 <ul>
@@ -838,7 +861,7 @@ hr {
 <p>Browse saved conversations under the current root folder. Click to reopen.</p>
 <h2 id="conversation-editor">Conversation Editor</h2>
 <p>Opens when you create or edit a conversation.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Edit objectives and participants for a conversation"><img src="Users-Guide-Assets/conflab-directed-conversation-editor.png" alt="Conflab conversation editor for updating objectives and AI participant guidance" loading="lazy"><figcaption>Edit objectives and participants for a conversation <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Conversation editor"><img src="Users-Guide-Assets/15-conversation-editor.png" alt="Conversation editor" loading="lazy"><figcaption>Conversation editor <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 
 <p>Fields and controls:</p>
@@ -868,7 +891,7 @@ hr {
 <p>Some conversation-editor fields become locked after the conversation has recorded rounds. This is by design: changing the objective mid-conversation would retroactively misrepresent what the earlier rounds were doing.</p>
 <h2 id="personas-drawer">Personas Drawer</h2>
 <p>The <code>PERSONAS</code> drawer stores reusable participant identities.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Manage reusable AI personas"><img src="Users-Guide-Assets/conflab-ai-personas-drawer.jpg" alt="Conflab personas drawer for managing reusable AI participants" loading="lazy"><figcaption>Manage reusable AI personas <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Personas drawer"><img src="Users-Guide-Assets/07-personas-drawer.png" alt="Personas drawer" loading="lazy"><figcaption>Personas drawer <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>Controls:</p>
 <ul>
@@ -887,7 +910,7 @@ hr {
 <p>Reopen existing personas for editing or reuse.</p>
 <h2 id="persona-editor">Persona Editor</h2>
 <p>The persona editor combines model selection, voice, structured identity fields, and a narrative persona description.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Build a persona with role, voice, and provider settings"><img src="Users-Guide-Assets/conflab-ai-persona-editor.jpg" alt="Conflab AI persona editor with role, voice, and model provider settings" loading="lazy"><figcaption>Build a persona with role, voice, and provider settings <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Persona editor"><img src="Users-Guide-Assets/17-persona-editor.png" alt="Persona editor" loading="lazy"><figcaption>Persona editor <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>Fields and controls:</p>
 <ul>
@@ -963,7 +986,7 @@ hr {
 <p>Removes the agent from the conversation. Panel history is lost, so this is more destructive than simply marking inactive. Prefer <code>Inactive</code> if you might want that voice back.</p>
 <h2 id="file-attachments">File Attachments</h2>
 <p>The Director toolbar attachment button opens a file picker.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Attach source files as conversation context"><img src="Users-Guide-Assets/conflab-conversation-file-attachments.jpg" alt="Conflab file attachment picker for adding source material to a conversation" loading="lazy"><figcaption>Attach source files as conversation context <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: File attachment picker"><img src="Users-Guide-Assets/18-file-attachment-picker.png" alt="File attachment picker" loading="lazy"><figcaption>File attachment picker <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>Select one or more local files to bring into the conversation.</p>
 <p><strong>When to use it:</strong></p>
@@ -975,11 +998,11 @@ hr {
 <p>Attachments become part of what agents can reference. Combine this with specific Director instructions ("use only the attached document; do not speculate beyond it") for constrained analysis.</p>
 <h2 id="results-drawer-getting-things-out">Results Drawer: Getting Things Out</h2>
 <p>The <code>RESULTS</code> drawer is the persistent browser for saved artifacts. It is labeled <code>RESULTS</code> but it is effectively the output inventory for the workspace.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Open persistent results from any conversation"><img src="Users-Guide-Assets/conflab-persistent-results-artifacts-drawer.jpg" alt="Conflab persistent results drawer opened for a saved conversation" loading="lazy"><figcaption>Open persistent results from any conversation <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Results drawer"><img src="Users-Guide-Assets/08-results-drawer.png" alt="Results drawer" loading="lazy"><figcaption>Results drawer <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Browse expanded summaries, logs, and generated images"><img src="Users-Guide-Assets/conflab-expanded-results-artifact-browser.jpg" alt="Expanded Conflab results browser with summaries, logs, and generated images" loading="lazy"><figcaption>Browse expanded summaries, logs, and generated images <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Expanded results drawer"><img src="Users-Guide-Assets/12-results-drawer-expanded.png" alt="Expanded results drawer" loading="lazy"><figcaption>Expanded results drawer <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Compare results across multiple saved conversations"><img src="Users-Guide-Assets/conflab-cross-conversation-results-browser.jpg" alt="Conflab results browser spanning multiple saved conversations" loading="lazy"><figcaption>Compare results across multiple saved conversations <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Results with multiple conversations"><img src="Users-Guide-Assets/14-results-drawer-multiple-conversations.png" alt="Results with multiple conversations" loading="lazy"><figcaption>Results with multiple conversations <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>The tree groups artifacts under each conversation. The main types you will see:</p>
 <ul>
@@ -1008,7 +1031,7 @@ hr {
 <p>All of those land in your browser's downloads folder. Move them into whatever archive location you use.</p>
 <h2 id="summary-workflow">Summary Workflow</h2>
 <p>The <code>Summary</code> button on the Director toolbar is not quite a one-click save: it is a small decision point.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Read a generated conversation summary"><img src="Users-Guide-Assets/conflab-generated-summary-viewer.jpg" alt="Conflab generated conversation summary in the dedicated viewer" loading="lazy"><figcaption>Read a generated conversation summary <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Summary viewer"><img src="Users-Guide-Assets/11-summary-viewer-modal.png" alt="Summary viewer" loading="lazy"><figcaption>Summary viewer <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <h3 id="how-the-summary-button-behaves">How the Summary button behaves</h3>
 <ul>
@@ -1028,7 +1051,7 @@ hr {
 <li><strong>Print</strong>: open the browser print dialog, which lets you save as PDF</li>
 <li><strong>Delete</strong>: remove the saved summary</li>
 </ul>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Print or save a generated summary as PDF"><img src="Users-Guide-Assets/conflab-summary-print-pdf-export.png" alt="Conflab generated summary prepared for printing or PDF export" loading="lazy"><figcaption>Print or save a generated summary as PDF <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Print or save summary as PDF"><img src="Users-Guide-Assets/19-summary-print-save-pdf.png" alt="Print or save summary as PDF" loading="lazy"><figcaption>Print or save summary as PDF <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>The print-preview-with-PDF-option screenshot above is not a separate Conflab screen: it is the browser's native print dialog that appears after clicking the print icon inside the summary viewer. Use its <code>Save as PDF</code> destination to produce a shareable PDF of the rendered summary.</p>
 <h3 id="summaries-with-associated-images">Summaries with associated images</h3>
@@ -1036,7 +1059,7 @@ hr {
 <p>Because that image is referenced from workspace storage rather than embedded in the HTML, the image is visible inside Conflab but not in an exported standalone HTML file. If you want a shareable deliverable with image included, use Print -&gt; Save as PDF while viewing the summary in Conflab.</p>
 <h2 id="log-workflow">Log Workflow</h2>
 <p>The <code>Log</code> button saves a full transcript. Unlike <code>Summary</code>, this is not an AI-generated artifact: it is a clean conversion of the conversation rounds into a readable document.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Review the persistent conversation log"><img src="Users-Guide-Assets/conflab-persistent-conversation-log-viewer.jpg" alt="Conflab persistent conversation log viewer with saved agent dialogue" loading="lazy"><figcaption>Review the persistent conversation log <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Conversation log viewer"><img src="Users-Guide-Assets/13-conversation-log-viewer-modal.png" alt="Conversation log viewer" loading="lazy"><figcaption>Conversation log viewer <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <h3 id="how-the-log-button-behaves">How the Log button behaves</h3>
 <p>Same scope behavior as Summary:</p>
@@ -1062,7 +1085,7 @@ hr {
 <p>That makes logs useful both for review and for recordkeeping. If you ever need to prove exactly what a discussion said, or rerun a later analysis against the raw material, the log is your source.</p>
 <h2 id="image-generation">Image Generation</h2>
 <p>The <code>Image</code> button opens Conflab's image workflow.</p>
-<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Generate an image from a conversation summary"><img src="Users-Guide-Assets/conflab-summary-image-generation-dialog.jpg" alt="Conflab image generation dialog using a saved conversation summary" loading="lazy"><figcaption>Generate an image from a conversation summary <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
+<figure class="screenshot" tabindex="0" role="button" aria-label="Click to view full-size: Image generation dialog"><img src="Users-Guide-Assets/10-image-generation-dialog-from-summary.png" alt="Image generation dialog" loading="lazy"><figcaption>Image generation dialog <span class="zoom-hint">(click to enlarge)</span></figcaption></figure>
 
 <p>The dialog includes:</p>
 <ul>
