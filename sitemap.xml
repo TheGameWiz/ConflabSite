@@ -13,7 +13,7 @@
   </url>
   <url>
     <loc>https://conflab.ai/conflab.html</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <image:image>
       <image:loc>https://conflab.ai/conflab-assets/images/conflab-multi-agent-conversation-workspace.jpg</image:loc>
     </image:image>
@@ -154,5 +154,82 @@
     <image:image>
       <image:loc>https://conflab.ai/conflab-code-assets/images/conflabcode-editable-agent-behavior-policy.png</image:loc>
     </image:image>
+  </url>
+  <url>
+    <loc>https://conflab.ai/conflab-code-assets/Users-Guide.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/conflabcode-logo.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/overview.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/workspace-picker.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/provider-credentials.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/task-tree.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/task-editor.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/agent-targeting.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/documents-tab.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/structured-design.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/consensus-diagnosis.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/consensus-agreement.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/consensus-implementation.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/consensus-history.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/freeform-objectives.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/freeform-review.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/provenance-record.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/behavior-policy.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/baton-settings.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://conflab.ai/conflab-code-assets/Users-Guide-Assets/baton-handoff.png</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://conflab.ai/conflab-assets/artifacts/lightning-summary.html</loc>
+    <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://conflab.ai/conflab-assets/artifacts/lightning-log.html</loc>
+    <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://conflab.ai/conflab-assets/artifacts/fire-summary.html</loc>
+    <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://conflab.ai/conflab-assets/artifacts/fire-log.html</loc>
+    <lastmod>2026-09-28</lastmod>
   </url>
 </urlset>
